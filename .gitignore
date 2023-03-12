@@ -1,0 +1,50 @@
+##
+## Application artifacts
+##
+
+# direnv cache for Nix shells
+/.direnv/
+
+# Elixir build directory
+/_build/
+
+# Elixir dependencies
+/deps/
+/.fetch
+
+# Elixir binary files
+*.beam
+*.ez
+/prepair_landing_page-*.tar
+/prepair_landing_page
+
+# Static digests
+/priv/static/cache_manifest.json
+/priv/static/favicon-*
+/priv/static/assets/
+/priv/static/cache_manifest.json
+
+# Test coverage and documentation
+/cover/
+/doc/
+
+##
+## Editor artifacts
+##
+
+/.elixir_ls/
+/.history/
+
+##
+## Crash dumps
+##
+
+# Erang VM
+erl_crash.dump
+
+##
+## Local files
+##
+
+# Secret configuration files
+/config/*.secret.exs
