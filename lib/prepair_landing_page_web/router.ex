@@ -18,6 +18,7 @@ defmodule PrepairLandingPageWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    post "/subscribe", PageController, :subscribe
   end
 
   # Other scopes may use custom stacks.
