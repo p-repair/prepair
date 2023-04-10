@@ -43,7 +43,6 @@ defmodule PrepairLandingPage.MixProject do
       {:phoenix_live_dashboard, "~> 0.7.2"},
       {:phoenix_live_view, "~> 0.18.16"},
       {:plug_cowboy, "~> 2.5"},
-      {:sendinblue, "~> 0.1.0"},
       {:swoosh, "~> 1.3"},
       {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 0.6"},
@@ -57,12 +56,9 @@ defmodule PrepairLandingPage.MixProject do
 
       # Development and test dependencies
       {:ex_check, "~> 0.11.0", only: :dev, runtime: false},
-      # TODO: Add only: :dev once it is fixed in :sendinblue
-      {:credo, "~> 1.0", runtime: false},
-      # TODO: Add only: :dev once it is fixed in :sendinblue
-      {:dialyxir, "~> 1.0", runtime: false},
-      # TODO: Add only: :dev once it is fixed in :sendinblue
-      {:excoveralls, ">= 0.0.0", runtime: false},
+      {:credo, "~> 1.0", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.0", only: :dev, runtime: false},
+      {:excoveralls, ">= 0.0.0", only: :dev, runtime: false},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
 
       # Documentation dependencies
