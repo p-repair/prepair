@@ -8,6 +8,8 @@ defmodule PrepairLandingPage.Newsletter do
 
   alias PrepairLandingPage.Newsletter.Contact
 
+  @mailerlite_group 85_000_079_548_614_620
+
   @doc """
   Returns the list of contacts.
 
@@ -53,6 +55,32 @@ defmodule PrepairLandingPage.Newsletter do
     %Contact{}
     |> Contact.changeset(attrs)
     |> Repo.insert()
+    |> case do
+      {:ok, %Contact{} = contact} ->
+        add_to_mailerlite(contact)
+
+      error ->
+        error
+    end
+  end
+
+  defp add_to_mailerlite(%Contact{} = contact) do
+    @mailerlite_group
+    |> MailerLite.Groups.add_subscriber(%{
+      "autoresponders" => false,
+      "email" => contact.email
+    })
+    |> case do
+      {:ok, subscriber} ->
+        update_contact(contact, %{mailerlite_id: subscriber.id})
+
+      error ->
+        :logger.error(
+          "Unable to add the contact on MailerLite: #{inspect(error)}"
+        )
+
+        {:ok, contact}
+    end
   end
 
   @doc """
