@@ -36,6 +36,7 @@ defmodule PrepairLandingPage.MixProject do
       {:finch, "~> 0.13"},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
+      {:mailerlite, "~> 0.3.0"},
       {:phoenix, "~> 1.7.1"},
       {:phoenix_ecto, "~> 4.4"},
       {:phoenix_html, "~> 3.3"},
