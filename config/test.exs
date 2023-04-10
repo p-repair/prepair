@@ -2,6 +2,17 @@ import Config
 
 # Configure your database
 #
+# The MIX_TEST_PARTITION environment variable can be used
+# to provide built-in test partitioning in CI environment.
+# Run `mix help test` for more information.
+config :prepair_landing_page, PrepairLandingPage.Repo,
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost",
+  database: "prepair_landing_page_test#{System.get_env("MIX_TEST_PARTITION")}",
+  pool: Ecto.Adapters.SQL.Sandbox,
+  pool_size: 10
+
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :prepair_landing_page, PrepairLandingPageWeb.Endpoint,
@@ -9,6 +20,13 @@ config :prepair_landing_page, PrepairLandingPageWeb.Endpoint,
   secret_key_base:
     "yawL/JaqMcaT7WsXVxyGAlYX9IVkpbYmqus9RIKGqOqyWf/Yyo8mU8kWWC1yMd5r",
   server: false
+
+# In test we don't send emails.
+config :prepair_landing_page, PrepairLandingPage.Mailer,
+  adapter: Swoosh.Adapters.Test
+
+# Disable swoosh api client as it is only required for production adapters.
+config :swoosh, :api_client, false
 
 # Print only warnings and errors during test
 config :logger, level: :warning

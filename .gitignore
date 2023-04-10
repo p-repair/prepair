@@ -28,6 +28,9 @@
 /cover/
 /doc/
 
+# PostgreSQL databases.
+/db/
+
 ##
 ## Editor artifacts
 ##

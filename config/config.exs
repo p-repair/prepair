@@ -7,6 +7,9 @@
 # General application configuration
 import Config
 
+config :prepair_landing_page,
+  ecto_repos: [PrepairLandingPage.Repo]
+
 # Configures the endpoint
 config :prepair_landing_page, PrepairLandingPageWeb.Endpoint,
   url: [host: "localhost"],

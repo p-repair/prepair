@@ -33,6 +33,7 @@ defmodule PrepairLandingPage.MixProject do
   defp deps do
     [
       # Project dependencies
+      {:ecto_sql, "~> 3.6"},
       {:finch, "~> 0.13"},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
@@ -42,11 +43,13 @@ defmodule PrepairLandingPage.MixProject do
       {:phoenix_html, "~> 3.3"},
       {:phoenix_live_dashboard, "~> 0.7.2"},
       {:phoenix_live_view, "~> 0.18.16"},
+      {:postgrex, ">= 0.0.0"},
       {:plug_cowboy, "~> 2.5"},
       {:swoosh, "~> 1.3"},
       {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
+      {:typed_ecto_schema, "~> 0.4.1"},
 
       # Build dependencies
       {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
@@ -88,6 +91,10 @@ defmodule PrepairLandingPage.MixProject do
 
   defp aliases do
     [
+      setup: ["deps.get", "ecto.setup"],
+      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+      "ecto.reset": ["ecto.drop", "ecto.setup"],
+      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.build": ["tailwind default", "esbuild default"],
       "assets.deploy": [
         "tailwind default --minify",

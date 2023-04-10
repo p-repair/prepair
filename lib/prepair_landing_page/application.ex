@@ -8,6 +8,8 @@ defmodule PrepairLandingPage.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      # Start the repository
+      PrepairLandingPage.Repo,
       # Start the Telemetry supervisor
       PrepairLandingPageWeb.Telemetry,
       # Start the PubSub system
