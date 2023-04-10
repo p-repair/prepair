@@ -1,58 +1,60 @@
 defmodule PrepairLandingPageWeb.PageController do
   use PrepairLandingPageWeb, :controller
-  alias PrepairLandingPage.SubscribeData
+
+  alias PrepairLandingPage.Newsletter
+  alias PrepairLandingPage.Newsletter.Contact
   alias Ecto.Changeset
 
   def home(conn, _params) do
     conn
     |> render(
       :home,
-      changeset: SubscribeData.changeset(%SubscribeData{}),
+      changeset: Newsletter.change_contact(%Contact{}),
       layout: false
     )
   end
 
   def subscribe(conn, params) do
-    changeset =
-      SubscribeData.changeset(%SubscribeData{}, params["subscribe_data"])
+    case Newsletter.create_contact(params["contact"]) do
+      {:ok, _} ->
+        conn
+        |> put_flash(
+          :info,
+          "Merci !! Votre inscription a bien été prise en compte."
+        )
+        |> redirect(to: "/")
 
-    if(changeset.valid?) do
-      email = Changeset.fetch_change!(changeset, :email)
-
-      case MailerLite.Groups.add_subscriber(
-             85_000_079_548_614_620,
-             %{
-               "autoresponders" => false,
-               "email" => email
-             }
+      {:error, %Changeset{} = changeset} ->
+        if Enum.member?(
+             changeset.errors,
+             {:email,
+              {"has already been taken",
+               [constraint: :unique, constraint_name: "contacts_email_index"]}}
            ) do
-        {:error, _} ->
-          conn
-          |> put_flash(
-            :error,
-            "Nous sommes désolés du probleme…
-            Il y a eu une erreur lors de l’inscription.
-            Réessayez plus tard s’il vous plait !"
-          )
-          |> redirect(to: "/")
-          |> render(conn, changeset: changeset)
-
-        {:ok, _} ->
           conn
           |> put_flash(
             :info,
             "Merci !! Votre inscription a bien été prise en compte."
           )
           |> redirect(to: "/")
-      end
-    else
-      conn
-      |> put_flash(
-        :error,
-        "Essayez encore ! L’adresse email saisie n’est pas valide."
-      )
-      |> redirect(to: "/")
-      |> render(conn, changeset: changeset)
+        else
+          conn
+          |> put_flash(
+            :error,
+            "Essayez encore ! L’adresse email saisie n’est pas valide."
+          )
+          |> redirect(to: "/")
+        end
+
+      {:error, _} ->
+        conn
+        |> put_flash(
+          :error,
+          "Nous sommes désolés du probleme…
+            Il y a eu une erreur lors de l’inscription.
+            Réessayez plus tard s’il vous plait !"
+        )
+        |> redirect(to: "/")
     end
   end
 end
