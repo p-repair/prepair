@@ -1,0 +1,8 @@
+<.header>
+  Edit Contact <%= @contact.id %>
+  <:subtitle>Use this form to manage contact records in your database.</:subtitle>
+</.header>
+
+<.contact_form changeset={@changeset} action={~p"/contacts/#{@contact}"} />
+
+<.back navigate={~p"/contacts"}>Back to contacts</.back>

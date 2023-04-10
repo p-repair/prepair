@@ -1,0 +1,17 @@
+<.header>
+  Contact <%= @contact.id %>
+  <:subtitle>This is a contact record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/contacts/#{@contact}/edit"}>
+      <.button>Edit contact</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Email"><%= @contact.email %></:item>
+  <:item title="Lang"><%= @contact.lang %></:item>
+  <:item title="Mailerlite ID"><%= @contact.mailerlite_id %></:item>
+</.list>
+
+<.back navigate={~p"/contacts"}>Back to contacts</.back>

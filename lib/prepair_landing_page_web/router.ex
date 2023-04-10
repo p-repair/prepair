@@ -19,6 +19,7 @@ defmodule PrepairLandingPageWeb.Router do
 
     get "/", PageController, :home
     post "/subscribe", PageController, :subscribe
+    resources "/contacts", ContactController
   end
 
   # Other scopes may use custom stacks.

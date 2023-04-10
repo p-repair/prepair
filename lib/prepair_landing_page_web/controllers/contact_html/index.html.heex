@@ -1,0 +1,25 @@
+<.header>
+  Listing Contacts
+  <:actions>
+    <.link href={~p"/contacts/new"}>
+      <.button>New Contact</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="contacts" rows={@contacts} row_click={&JS.navigate(~p"/contacts/#{&1}")}>
+  <:col :let={contact} label="Email"><%= contact.email %></:col>
+  <:col :let={contact} label="Lang"><%= contact.lang %></:col>
+  <:col :let={contact} label="Mailerlite ID"><%= contact.mailerlite_id %></:col>
+  <:action :let={contact}>
+    <div class="sr-only">
+      <.link navigate={~p"/contacts/#{contact}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/contacts/#{contact}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={contact}>
+    <.link href={~p"/contacts/#{contact}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
