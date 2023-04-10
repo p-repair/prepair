@@ -19,10 +19,13 @@ defmodule PrepairLandingPageWeb.PageController do
     if(changeset.valid?) do
       email = Changeset.fetch_change!(changeset, :email)
 
-      case Sendinblue.DefaultImpl.create_a_contact(%{
-             "udpateEnabled" => true,
-             "email" => email
-           }) do
+      case MailerLite.Groups.add_subscriber(
+             85_000_079_548_614_620,
+             %{
+               "autoresponders" => false,
+               "email" => email
+             }
+           ) do
         {:error, _} ->
           conn
           |> put_flash(
