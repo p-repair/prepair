@@ -33,6 +33,13 @@ config :prepair_landing_page, PrepairLandingPageWeb.Endpoint,
 config :prepair_landing_page, PrepairLandingPage.Mailer,
   adapter: Swoosh.Adapters.Local
 
+config :prepair_landing_page, :emails,
+  sender: {"(p)repair", "app@p-repair.org"},
+  admin_contacts: [
+    {"Guillaume Cugnet", "guillaume+prepair@ejpcmac.net"},
+    {"Jean-Philippe Cugnet", "jpc+prepair@ejpcmac.net"}
+  ]
+
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.14.41",

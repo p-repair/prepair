@@ -4,6 +4,9 @@ defmodule PrepairLandingPage.Newsletter do
   """
 
   import Ecto.Query, warn: false
+
+  alias PrepairLandingPage.AdminEmail
+  alias PrepairLandingPage.Mailer
   alias PrepairLandingPage.Repo
 
   alias PrepairLandingPage.Newsletter.Contact
@@ -57,11 +60,18 @@ defmodule PrepairLandingPage.Newsletter do
     |> Repo.insert()
     |> case do
       {:ok, %Contact{} = contact} ->
+        _ = notify_subscription(contact)
         add_to_mailerlite(contact)
 
       error ->
         error
     end
+  end
+
+  defp notify_subscription(%Contact{} = contact) do
+    contact.email
+    |> AdminEmail.new_subscriber()
+    |> Mailer.deliver()
   end
 
   defp add_to_mailerlite(%Contact{} = contact) do
@@ -79,8 +89,16 @@ defmodule PrepairLandingPage.Newsletter do
           "Unable to add the contact on MailerLite: #{inspect(error)}"
         )
 
+        _ = notify_mailerlite_error(error)
+
         {:ok, contact}
     end
+  end
+
+  defp notify_mailerlite_error(error) do
+    error
+    |> AdminEmail.mailerlite_error()
+    |> Mailer.deliver()
   end
 
   @doc """
