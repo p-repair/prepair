@@ -22,11 +22,12 @@ defmodule PrepairLandingPageWeb.Router do
 
     get "/", PageController, :home
     post "/subscribe", PageController, :subscribe
-    resources "/contacts", ContactController
   end
 
   scope "/", PrepairLandingPageWeb do
     pipe_through [:browser, :require_authenticated_user]
+
+    resources "/contacts", ContactController
   end
 
   # Other scopes may use custom stacks.
