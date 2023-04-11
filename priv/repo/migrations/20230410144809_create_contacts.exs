@@ -3,7 +3,7 @@ defmodule PrepairLandingPage.Repo.Migrations.CreateContacts do
 
   def change do
     create table(:contacts) do
-      add :email, :string
+      add :email, :string, null: false
       add :lang, :string
       add :mailerlite_id, :integer
 
