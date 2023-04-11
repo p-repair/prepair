@@ -32,6 +32,7 @@ defmodule PrepairLandingPage.MixProject do
 
   defp deps do
     [
+      {:bcrypt_elixir, "~> 3.0"},
       # Project dependencies
       {:ecto_sql, "~> 3.6"},
       {:finch, "~> 0.13"},
