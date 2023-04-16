@@ -44,10 +44,3 @@ db
 
 # Erang VM
 **/erl_crash.dump
-
-##
-## Local files
-##
-
-# Secret configuration files
-config/*.secret.exs
