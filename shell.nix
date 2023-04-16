@@ -8,7 +8,7 @@ let
 in
 
 mkShell {
-  buildInputs = [ elixir_1_14 git gitflow postgresql_15 ]
+  buildInputs = [ elixir_1_14 git gitflow postgresql_15 flyctl ]
     ++ optional stdenv.isLinux libnotify # For ExUnit Notifier on Linux.
     ++ optional stdenv.isLinux inotify-tools # For file_system on Linux.
     ++ optional stdenv.isDarwin terminal-notifier # For ExUnit Notifier on macOS.
