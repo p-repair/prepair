@@ -69,9 +69,11 @@ defmodule PrepairLandingPage.Newsletter do
   end
 
   defp notify_subscription(%Contact{} = contact) do
-    contact.email
-    |> AdminEmail.new_subscriber()
-    |> Mailer.deliver()
+    Task.Supervisor.start_child(PrepairLandingPage.AsyncEmailSupervisor, fn ->
+      contact.email
+      |> AdminEmail.new_subscriber()
+      |> Mailer.deliver()
+    end)
   end
 
   defp add_to_mailerlite(%Contact{} = contact) do
@@ -96,9 +98,11 @@ defmodule PrepairLandingPage.Newsletter do
   end
 
   defp notify_mailerlite_error(error) do
-    error
-    |> AdminEmail.mailerlite_error()
-    |> Mailer.deliver()
+    Task.Supervisor.start_child(PrepairLandingPage.AsyncEmailSupervisor, fn ->
+      error
+      |> AdminEmail.mailerlite_error()
+      |> Mailer.deliver()
+    end)
   end
 
   @doc """

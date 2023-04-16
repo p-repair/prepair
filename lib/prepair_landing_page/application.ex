@@ -12,10 +12,12 @@ defmodule PrepairLandingPage.Application do
       PrepairLandingPage.Repo,
       # Start the Telemetry supervisor
       PrepairLandingPageWeb.Telemetry,
+      # Start the async mailer task supervisor.
+      {Task.Supervisor, name: PrepairLandingPage.AsyncEmailSupervisor},
       # Start the PubSub system
       {Phoenix.PubSub, name: PrepairLandingPage.PubSub},
       # Start Finch
-      {Finch, name: PrepairLandingPage.Finch},
+      # {Finch, name: PrepairLandingPage.Finch},
       # Start the Endpoint (http/https)
       PrepairLandingPageWeb.Endpoint
       # Start a worker by calling: PrepairLandingPage.Worker.start_link(arg)
