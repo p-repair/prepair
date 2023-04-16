@@ -28,7 +28,8 @@ if config_env() == :prod do
       For example: ecto://USER:PASS@HOST/DATABASE
       """
 
-  maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
+  maybe_ipv6 =
+    if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
   config :prepair_landing_page, PrepairLandingPage.Repo,
     # ssl: true,
@@ -62,6 +63,22 @@ if config_env() == :prod do
       port: port
     ],
     secret_key_base: secret_key_base
+
+  smtp_password =
+    System.get_env("SMTP_PASSWORD") ||
+      raise "environment variable SMTP_PASSWORD is missing."
+
+  config :prepair_landing_page, PrepairLandingPage.Mailer,
+    adapter: Swoosh.Adapters.SMTP,
+    relay: "smtp.ejpcmac.net",
+    username: "p-repair@ejpcmac.net",
+    password: smtp_password,
+    ssl: true,
+    tls: :always,
+    auth: :always,
+    port: 465,
+    retries: 3,
+    no_mx_lookups: false
 
   # ## SSL Support
   #
