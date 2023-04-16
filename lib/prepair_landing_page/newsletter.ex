@@ -84,7 +84,7 @@ defmodule PrepairLandingPage.Newsletter do
     })
     |> case do
       {:ok, subscriber} ->
-        update_contact(contact, %{mailerlite_id: subscriber.id})
+        update_contact(contact, %{mailerlite_id: subscriber["id"]})
 
       error ->
         :logger.error(
