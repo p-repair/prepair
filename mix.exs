@@ -23,7 +23,7 @@ defmodule PrepairLandingPage.MixProject do
   def application do
     [
       mod: {PrepairLandingPage.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :gen_smtp]
     ]
   end
 
@@ -51,6 +51,7 @@ defmodule PrepairLandingPage.MixProject do
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
       {:typed_ecto_schema, "~> 0.4.1"},
+      {:gen_smtp, "~> 1.1"},
 
       # Build dependencies
       {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
