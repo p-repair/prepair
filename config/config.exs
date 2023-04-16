@@ -34,9 +34,9 @@ config :prepair_landing_page, PrepairLandingPage.Mailer,
   adapter: Swoosh.Adapters.Local
 
 config :prepair_landing_page, :emails,
-  sender: {"(p)repair", "app@p-repair.org"},
+  sender: {"(p)repair", "p-repair@ejpcamc.net"},
   admin_contacts: [
-    {"Guillaume Cugnet", "guillaume+prepair@ejpcmac.net"},
+    {"Guillaume Cugnet", "guillaume+prepair@cugnet.eu"},
     {"Jean-Philippe Cugnet", "jpc+prepair@ejpcmac.net"}
   ]
 
