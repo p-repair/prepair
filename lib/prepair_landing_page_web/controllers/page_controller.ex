@@ -14,6 +14,16 @@ defmodule PrepairLandingPageWeb.PageController do
     )
   end
 
+  def my_data(conn, _params) do
+    conn
+    |> render(:"my-data")
+  end
+
+  def delete_my_data(conn, _params) do
+    conn
+    |> render(:"delete-my-data")
+  end
+
   def subscribe(conn, params) do
     case Newsletter.create_contact(params["contact"]) do
       {:ok, _} ->

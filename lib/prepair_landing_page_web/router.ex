@@ -21,6 +21,8 @@ defmodule PrepairLandingPageWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/my-data", PageController, :my_data
+    get "/delete-my-data", PageController, :delete_my_data
     post "/subscribe", PageController, :subscribe
   end
 
