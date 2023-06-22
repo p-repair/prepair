@@ -9,8 +9,7 @@ defmodule PrepairLandingPageWeb.PageController do
     conn
     |> render(
       :home,
-      changeset: Newsletter.change_contact(%Contact{}),
-      layout: false
+      changeset: Newsletter.change_contact(%Contact{})
     )
   end
 
