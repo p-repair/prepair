@@ -1,7 +1,7 @@
 defmodule PrepairWeb.UserSessionController do
   use PrepairWeb, :controller
 
-  alias Prepair.Accounts
+  alias Prepair.Account
   alias PrepairWeb.UserAuth
 
   def new(conn, _params) do
@@ -11,7 +11,7 @@ defmodule PrepairWeb.UserSessionController do
   def create(conn, %{"user" => user_params}) do
     %{"email" => email, "password" => password} = user_params
 
-    if user = Accounts.get_user_by_email_and_password(email, password) do
+    if user = Account.get_user_by_email_and_password(email, password) do
       conn
       |> put_flash(:info, "Welcome back!")
       |> UserAuth.log_in_user(user, user_params)
