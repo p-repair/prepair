@@ -1,4 +1,4 @@
-defmodule PrepairLandingPage.Repo.Migrations.UpdateContacts do
+defmodule Prepair.Repo.Migrations.UpdateContacts do
   use Ecto.Migration
 
   def change do

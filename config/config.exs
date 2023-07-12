@@ -7,20 +7,20 @@
 # General application configuration
 import Config
 
-config :prepair_landing_page,
-  ecto_repos: [PrepairLandingPage.Repo]
+config :prepair,
+  ecto_repos: [Prepair.Repo]
 
 # Configures the endpoint
-config :prepair_landing_page, PrepairLandingPageWeb.Endpoint,
+config :prepair, PrepairWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [
     formats: [
-      html: PrepairLandingPageWeb.ErrorHTML,
-      json: PrepairLandingPageWeb.ErrorJSON
+      html: PrepairWeb.ErrorHTML,
+      json: PrepairWeb.ErrorJSON
     ],
     layout: false
   ],
-  pubsub_server: PrepairLandingPage.PubSub,
+  pubsub_server: Prepair.PubSub,
   live_view: [signing_salt: "QOrvxyAg"]
 
 # Configures the mailer
@@ -30,10 +30,9 @@ config :prepair_landing_page, PrepairLandingPageWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :prepair_landing_page, PrepairLandingPage.Mailer,
-  adapter: Swoosh.Adapters.Local
+config :prepair, Prepair.Mailer, adapter: Swoosh.Adapters.Local
 
-config :prepair_landing_page, :emails,
+config :prepair, :emails,
   sender: {"(p)repair", "p-repair@ejpcamc.net"},
   admin_contacts: [
     {"Guillaume Cugnet", "guillaume+prepair@cugnet.eu"},

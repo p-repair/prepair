@@ -15,8 +15,8 @@ deps
 # Elixir binary files
 **/*.beam
 **/*.ez
-prepair_landing_page-*.tar
-prepair_landing_page
+prepair-*.tar
+prepair
 
 # Static digests
 priv/static/cache_manifest.json

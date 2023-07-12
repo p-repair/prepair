@@ -1,11 +1,11 @@
-defmodule PrepairLandingPage.MixProject do
+defmodule Prepair.MixProject do
   use Mix.Project
 
   @version "0.0.1"
 
   def project do
     [
-      app: :prepair_landing_page,
+      app: :prepair,
       version: @version <> dev(),
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -22,7 +22,7 @@ defmodule PrepairLandingPage.MixProject do
 
   def application do
     [
-      mod: {PrepairLandingPage.Application, []},
+      mod: {Prepair.Application, []},
       extra_applications: [:logger, :runtime_tools, :gen_smtp]
     ]
   end

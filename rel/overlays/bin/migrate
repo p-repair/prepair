@@ -1,3 +1,3 @@
 #!/bin/sh
 cd -P -- "$(dirname -- "$0")"
-exec ./prepair_landing_page eval PrepairLandingPage.Release.migrate
+exec ./prepair eval Prepair.Release.migrate

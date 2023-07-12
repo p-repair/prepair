@@ -1,7 +1,7 @@
-# Landing page for (p)repair
+# (p)repair
 
-This is the landing page of (p)repair, a Cooperative platform to federate people
-and companies around reparation.
+(p)repair is a Cooperative platform to federate people and companies around
+reparation.
 
 *This is a work in progress, please look at the `develop` branch for ongoing
 development.*

@@ -1,5 +1,5 @@
 {
-  description = "The landing page for (p)repair.";
+  description = "(p)repair";
 
   inputs = {
     nixpkgs.url = "github:NixOs/nixpkgs";
