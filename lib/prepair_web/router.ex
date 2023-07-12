@@ -42,7 +42,11 @@ defmodule PrepairWeb.Router do
   scope "/", PrepairWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
-    get "/users/log_in", UserSessionController, :new
+    live_session :redirect_if_user_is_authenticated,
+      on_mount: [{PrepairWeb.UserAuth, :redirect_if_user_is_authenticated}] do
+      live "/users/log_in", UserLoginLive, :new
+    end
+
     post "/users/log_in", UserSessionController, :create
   end
 
