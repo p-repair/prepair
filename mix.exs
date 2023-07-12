@@ -65,6 +65,7 @@ defmodule Prepair.MixProject do
 
       # Development and test dependencies
       {:ex_check, "~> 0.15.0", only: :dev, runtime: false},
+      {:mix_test_watch, ">= 0.0.0", only: :test, runtime: false},
       {:credo, "~> 1.0", only: :dev, runtime: false},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
       {:excoveralls, ">= 0.0.0", only: :dev, runtime: false},
@@ -93,6 +94,7 @@ defmodule Prepair.MixProject do
     [
       # Use a custom env for docs.
       docs: :docs,
+      "test.watch": :test,
 
       # Always run coveralls mix tasks in `:test` env.
       coveralls: :test,
