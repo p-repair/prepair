@@ -1,0 +1,214 @@
+defmodule Prepair.ProductsTest do
+  use Prepair.DataCase
+
+  alias Prepair.Products
+
+  describe "products" do
+    alias Prepair.Products.Product
+
+    import Prepair.ProductsFixtures
+
+    @invalid_attrs %{
+      average_lifetime_m: nil,
+      country_of_origin: nil,
+      description: nil,
+      end_of_production: nil,
+      image: nil,
+      name: nil,
+      reference: nil,
+      start_of_production: nil
+    }
+
+    test "list_products/0 returns all products" do
+      product = product_fixture()
+      assert Products.list_products() == [product]
+    end
+
+    test "get_product!/1 returns the product with given id" do
+      product = product_fixture()
+      assert Products.get_product!(product.id) == product
+    end
+
+    test "create_product/1 with valid data creates a product" do
+      valid_attrs = %{
+        average_lifetime_m: 42,
+        country_of_origin: "some country_of_origin",
+        description: "some description",
+        end_of_production: ~D[2023-07-11],
+        image: "some image",
+        name: "some name",
+        reference: "some reference",
+        start_of_production: ~D[2023-07-11]
+      }
+
+      assert {:ok, %Product{} = product} = Products.create_product(valid_attrs)
+      assert product.average_lifetime_m == 42
+      assert product.country_of_origin == "some country_of_origin"
+      assert product.description == "some description"
+      assert product.end_of_production == ~D[2023-07-11]
+      assert product.image == "some image"
+      assert product.name == "some name"
+      assert product.reference == "some reference"
+      assert product.start_of_production == ~D[2023-07-11]
+    end
+
+    test "create_product/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} =
+               Products.create_product(@invalid_attrs)
+    end
+
+    test "update_product/2 with valid data updates the product" do
+      product = product_fixture()
+
+      update_attrs = %{
+        average_lifetime_m: 43,
+        country_of_origin: "some updated country_of_origin",
+        description: "some updated description",
+        end_of_production: ~D[2023-07-12],
+        image: "some updated image",
+        name: "some updated name",
+        reference: "some updated reference",
+        start_of_production: ~D[2023-07-12]
+      }
+
+      assert {:ok, %Product{} = product} =
+               Products.update_product(product, update_attrs)
+
+      assert product.average_lifetime_m == 43
+      assert product.country_of_origin == "some updated country_of_origin"
+      assert product.description == "some updated description"
+      assert product.end_of_production == ~D[2023-07-12]
+      assert product.image == "some updated image"
+      assert product.name == "some updated name"
+      assert product.reference == "some updated reference"
+      assert product.start_of_production == ~D[2023-07-12]
+    end
+
+    test "update_product/2 with invalid data returns error changeset" do
+      product = product_fixture()
+
+      assert {:error, %Ecto.Changeset{}} =
+               Products.update_product(product, @invalid_attrs)
+
+      assert product == Products.get_product!(product.id)
+    end
+
+    test "delete_product/1 deletes the product" do
+      product = product_fixture()
+      assert {:ok, %Product{}} = Products.delete_product(product)
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Products.get_product!(product.id)
+      end
+    end
+
+    test "change_product/1 returns a product changeset" do
+      product = product_fixture()
+      assert %Ecto.Changeset{} = Products.change_product(product)
+    end
+  end
+
+  describe "parts" do
+    alias Prepair.Products.Part
+
+    import Prepair.ProductsFixtures
+
+    @invalid_attrs %{
+      average_lifetime_m: nil,
+      country_of_origin: nil,
+      description: nil,
+      end_of_production: nil,
+      image: nil,
+      main_material: nil,
+      name: nil,
+      reference: nil,
+      start_of_production: nil
+    }
+
+    test "list_parts/0 returns all parts" do
+      part = part_fixture()
+      assert Products.list_parts() == [part]
+    end
+
+    test "get_part!/1 returns the part with given id" do
+      part = part_fixture()
+      assert Products.get_part!(part.id) == part
+    end
+
+    test "create_part/1 with valid data creates a part" do
+      valid_attrs = %{
+        average_lifetime_m: 42,
+        country_of_origin: "some country_of_origin",
+        description: "some description",
+        end_of_production: ~D[2023-07-11],
+        image: "some image",
+        main_material: "some main_material",
+        name: "some name",
+        reference: "some reference",
+        start_of_production: ~D[2023-07-11]
+      }
+
+      assert {:ok, %Part{} = part} = Products.create_part(valid_attrs)
+      assert part.average_lifetime_m == 42
+      assert part.country_of_origin == "some country_of_origin"
+      assert part.description == "some description"
+      assert part.end_of_production == ~D[2023-07-11]
+      assert part.image == "some image"
+      assert part.main_material == "some main_material"
+      assert part.name == "some name"
+      assert part.reference == "some reference"
+      assert part.start_of_production == ~D[2023-07-11]
+    end
+
+    test "create_part/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Products.create_part(@invalid_attrs)
+    end
+
+    test "update_part/2 with valid data updates the part" do
+      part = part_fixture()
+
+      update_attrs = %{
+        average_lifetime_m: 43,
+        country_of_origin: "some updated country_of_origin",
+        description: "some updated description",
+        end_of_production: ~D[2023-07-12],
+        image: "some updated image",
+        main_material: "some updated main_material",
+        name: "some updated name",
+        reference: "some updated reference",
+        start_of_production: ~D[2023-07-12]
+      }
+
+      assert {:ok, %Part{} = part} = Products.update_part(part, update_attrs)
+      assert part.average_lifetime_m == 43
+      assert part.country_of_origin == "some updated country_of_origin"
+      assert part.description == "some updated description"
+      assert part.end_of_production == ~D[2023-07-12]
+      assert part.image == "some updated image"
+      assert part.main_material == "some updated main_material"
+      assert part.name == "some updated name"
+      assert part.reference == "some updated reference"
+      assert part.start_of_production == ~D[2023-07-12]
+    end
+
+    test "update_part/2 with invalid data returns error changeset" do
+      part = part_fixture()
+
+      assert {:error, %Ecto.Changeset{}} =
+               Products.update_part(part, @invalid_attrs)
+
+      assert part == Products.get_part!(part.id)
+    end
+
+    test "delete_part/1 deletes the part" do
+      part = part_fixture()
+      assert {:ok, %Part{}} = Products.delete_part(part)
+      assert_raise Ecto.NoResultsError, fn -> Products.get_part!(part.id) end
+    end
+
+    test "change_part/1 returns a part changeset" do
+      part = part_fixture()
+      assert %Ecto.Changeset{} = Products.change_part(part)
+    end
+  end
+end

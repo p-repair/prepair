@@ -1,0 +1,49 @@
+<.header>
+  Listing Parts
+  <:actions>
+    <.link patch={~p"/parts/new"}>
+      <.button>New Part</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="parts"
+  rows={@streams.parts}
+  row_click={fn {_id, part} -> JS.navigate(~p"/parts/#{part}") end}
+>
+  <:col :let={{_id, part}} label="Name"><%= part.name %></:col>
+  <:col :let={{_id, part}} label="Reference"><%= part.reference %></:col>
+  <:col :let={{_id, part}} label="Description"><%= part.description %></:col>
+  <:col :let={{_id, part}} label="Image"><%= part.image %></:col>
+  <:col :let={{_id, part}} label="Average lifetime m"><%= part.average_lifetime_m %></:col>
+  <:col :let={{_id, part}} label="Country of origin"><%= part.country_of_origin %></:col>
+  <:col :let={{_id, part}} label="Main material"><%= part.main_material %></:col>
+  <:col :let={{_id, part}} label="Start of production"><%= part.start_of_production %></:col>
+  <:col :let={{_id, part}} label="End of production"><%= part.end_of_production %></:col>
+  <:action :let={{_id, part}}>
+    <div class="sr-only">
+      <.link navigate={~p"/parts/#{part}"}>Show</.link>
+    </div>
+    <.link patch={~p"/parts/#{part}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, part}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: part.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="part-modal" show on_cancel={JS.patch(~p"/parts")}>
+  <.live_component
+    module={PrepairWeb.PartLive.FormComponent}
+    id={@part.id || :new}
+    title={@page_title}
+    action={@live_action}
+    part={@part}
+    patch={~p"/parts"}
+  />
+</.modal>

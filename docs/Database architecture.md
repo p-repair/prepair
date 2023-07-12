@@ -64,6 +64,8 @@ erDiagram
         string name "required"
         string reference "required"
         string description
+        string image
+        integer average_lifetime_m
         string country_of_origin
         string main_material
         date start_of_production

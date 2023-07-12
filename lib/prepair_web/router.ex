@@ -30,6 +30,37 @@ defmodule PrepairWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     resources "/contacts", ContactController
+
+    live_session :require_authenticated_user,
+      on_mount: [{PrepairWeb.UserAuth, :ensure_authenticated}] do
+      live "/manufacturers", ManufacturerLive.Index, :index
+      live "/manufacturers/new", ManufacturerLive.Index, :new
+      live "/manufacturers/:id/edit", ManufacturerLive.Index, :edit
+
+      live "/manufacturers/:id", ManufacturerLive.Show, :show
+      live "/manufacturers/:id/show/edit", ManufacturerLive.Show, :edit
+
+      live "/categories", CategoryLive.Index, :index
+      live "/categories/new", CategoryLive.Index, :new
+      live "/categories/:id/edit", CategoryLive.Index, :edit
+
+      live "/categories/:id", CategoryLive.Show, :show
+      live "/categories/:id/show/edit", CategoryLive.Show, :edit
+
+      live "/products", ProductLive.Index, :index
+      live "/products/new", ProductLive.Index, :new
+      live "/products/:id/edit", ProductLive.Index, :edit
+
+      live "/products/:id", ProductLive.Show, :show
+      live "/products/:id/show/edit", ProductLive.Show, :edit
+
+      live "/parts", PartLive.Index, :index
+      live "/parts/new", PartLive.Index, :new
+      live "/parts/:id/edit", PartLive.Index, :edit
+
+      live "/parts/:id", PartLive.Show, :show
+      live "/parts/:id/show/edit", PartLive.Show, :edit
+    end
   end
 
   # Other scopes may use custom stacks.
