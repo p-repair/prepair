@@ -13,7 +13,7 @@
       <h1 class="text-3xl font-bold mb-6">Newsletter de (p)repair</h1>
       <p class="mb-8">Ensemble, (p)réparons notre avenir.</p>
       <.flash_group flash={@flash} />
-      <.form let={f} for={@changeset} action="/subscribe" class="max-w-[50%] mx-auto">
+      <.form :let={f} for={@changeset} action="/subscribe" class="max-w-[50%] mx-auto">
         <div class="flex items-end border-b-2 border-gray-300 py-4">
           <.input field={f[:email]} type="email" placeholder="Entrez votre adresse email"/>
           <div class="ml-2"><.button>

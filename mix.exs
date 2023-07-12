@@ -46,12 +46,12 @@ defmodule Prepair.MixProject do
       {:phoenix, "~> 1.7.1"},
       {:phoenix_ecto, "~> 4.4"},
       {:phoenix_html, "~> 3.3"},
-      {:phoenix_live_dashboard, "~> 0.7.2"},
-      {:phoenix_live_view, "~> 0.18.16"},
+      {:phoenix_live_dashboard, "~> 0.8.0"},
+      {:phoenix_live_view, "~> 0.19.4"},
       {:postgrex, ">= 0.0.0"},
       {:plug_cowboy, "~> 2.5"},
       {:swoosh, "~> 1.3"},
-      {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.2.1", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
       {:typed_ecto_schema, "~> 0.4.1"},
@@ -64,7 +64,7 @@ defmodule Prepair.MixProject do
       {:observer_cli, "~> 1.3", only: :prod},
 
       # Development and test dependencies
-      {:ex_check, "~> 0.11.0", only: :dev, runtime: false},
+      {:ex_check, "~> 0.15.0", only: :dev, runtime: false},
       {:credo, "~> 1.0", only: :dev, runtime: false},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
       {:excoveralls, ">= 0.0.0", only: :dev, runtime: false},
@@ -97,7 +97,7 @@ defmodule Prepair.MixProject do
       # Always run coveralls mix tasks in `:test` env.
       coveralls: :test,
       "coveralls.detail": :test,
-      "coveralls.html": :test,
+      "coveralls.html": :test
     ]
   end
 
