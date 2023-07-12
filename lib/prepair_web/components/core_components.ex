@@ -708,7 +708,7 @@ defmodule PrepairWeb.CoreComponents do
     # Because the error messages we show in our forms and APIs
     # are defined inside Ecto, we need to translate them dynamically.
     # This requires us to call the Gettext module passing our gettext
-    # backend as first argument.
+    # prepair as first argument.
     #
     # Note we use the "errors" domain, which means translations
     # should be written to the errors.po file. The :count option is

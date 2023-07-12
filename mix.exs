@@ -28,8 +28,12 @@ defmodule Prepair.MixProject do
   end
 
   # Specifies which paths to compile per environment.
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
+  # Specifies your project dependencies.
+  #
+  # Type `mix help deps` for examples and options.
   defp deps do
     [
       {:bcrypt_elixir, "~> 3.0"},
@@ -64,6 +68,7 @@ defmodule Prepair.MixProject do
       {:credo, "~> 1.0", only: :dev, runtime: false},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
       {:excoveralls, ">= 0.0.0", only: :dev, runtime: false},
+      {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
 
       # Documentation dependencies
@@ -87,10 +92,21 @@ defmodule Prepair.MixProject do
   defp cli_env do
     [
       # Use a custom env for docs.
-      docs: :docs
+      docs: :docs,
+
+      # Always run coveralls mix tasks in `:test` env.
+      coveralls: :test,
+      "coveralls.detail": :test,
+      "coveralls.html": :test,
     ]
   end
 
+  # Aliases are shortcuts or tasks specific to the current project.
+  # For example, to install project dependencies and perform other setup tasks, run:
+  #
+  #     $ mix setup
+  #
+  # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
       setup: ["deps.get", "ecto.setup"],
