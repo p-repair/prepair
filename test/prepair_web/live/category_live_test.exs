@@ -2,7 +2,7 @@ defmodule PrepairWeb.CategoryLiveTest do
   use PrepairWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import Prepair.ProductFixtures
+  import Prepair.ProductsFixtures
 
   @create_attrs %{
     average_lifetime_m: 42,
