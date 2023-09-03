@@ -2,10 +2,15 @@ defmodule Prepair.Products.Manufacturer do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Prepair.Products.{Product, Part}
+
   @fields [:name, :description, :image]
   @required_fields [:name]
 
   schema "manufacturers" do
+    has_many :products, Product
+    has_many :parts, Part
+
     field :description, :string
     field :image, :string
     field :name, :string

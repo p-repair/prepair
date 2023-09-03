@@ -4,6 +4,8 @@ defmodule Prepair.ProductsFixtures do
   entities via the `Prepair.Products` context.
   """
 
+  alias Prepair.Repo
+
   @doc """
   Generate a unique manufacturer name.
   """
@@ -58,9 +60,15 @@ defmodule Prepair.ProductsFixtures do
   Generate a product.
   """
   def product_fixture(attrs \\ %{}) do
+    category = category_fixture()
+    manufacturer = manufacturer_fixture()
+
     {:ok, product} =
       attrs
       |> Enum.into(%{
+        category_id: category.id,
+        manufacturer_id: manufacturer.id,
+        part_ids: [],
         average_lifetime_m: 42,
         country_of_origin: "some country_of_origin",
         description: "some description",
@@ -73,6 +81,7 @@ defmodule Prepair.ProductsFixtures do
       |> Prepair.Products.create_product()
 
     product
+    |> Repo.preload([:category, :manufacturer, :parts])
   end
 
   @doc """
@@ -85,9 +94,14 @@ defmodule Prepair.ProductsFixtures do
   Generate a part.
   """
   def part_fixture(attrs \\ %{}) do
+    manufacturer = manufacturer_fixture()
+    category = category_fixture()
+
     {:ok, part} =
       attrs
       |> Enum.into(%{
+        category_id: category.id,
+        manufacturer_id: manufacturer.id,
         average_lifetime_m: 42,
         country_of_origin: "some country_of_origin",
         description: "some description",
@@ -101,5 +115,6 @@ defmodule Prepair.ProductsFixtures do
       |> Prepair.Products.create_part()
 
     part
+    |> Repo.preload([:category, :manufacturer, :products])
   end
 end

@@ -19,6 +19,9 @@ defmodule PrepairWeb.PartLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
+        <.input field={@form[:category_id]} type="select" options={category_opts(@changeset)} label="Category" />
+        <.input field={@form[:manufacturer_id]} type="select" options={manufacturer_opts(@changeset)} label="Manufacturer" />
+        <.input field={@form[:product_ids]} type="select" options={products_opts((@changeset))} multiple={true} label="Compatible products" />
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:reference]} type="text" label="Reference" />
         <.input field={@form[:description]} type="text" label="Description" />
@@ -43,6 +46,7 @@ defmodule PrepairWeb.PartLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
+     |> assign(:changeset, changeset)
      |> assign_form(changeset)}
   end
 
@@ -58,6 +62,36 @@ defmodule PrepairWeb.PartLive.FormComponent do
 
   def handle_event("save", %{"part" => part_params}, socket) do
     save_part(socket, socket.assigns.action, part_params)
+  end
+
+  defp category_opts(changeset) do
+    existing_ids =
+      changeset
+      |> Ecto.Changeset.get_change(:categories, [])
+      |> Enum.map(& &1.data.id)
+
+    for cat <- Prepair.Products.list_categories(),
+        do: [key: cat.name, value: cat.id, selected: cat.id in existing_ids]
+  end
+
+  defp manufacturer_opts(changeset) do
+    existing_ids =
+      changeset
+      |> Ecto.Changeset.get_change(:manufacturers, [])
+      |> Enum.map(& &1.data.id)
+
+    for man <- Prepair.Products.list_manufacturers(),
+        do: [key: man.name, value: man.id, selected: man.id in existing_ids]
+  end
+
+  defp products_opts(changeset) do
+    existing_ids =
+      changeset
+      |> Ecto.Changeset.get_change(:products, [])
+      |> Enum.map(& &1.data.id)
+
+    for prod <- Prepair.Products.list_products(),
+        do: [key: prod.name, value: prod.id, selected: prod.id in existing_ids]
   end
 
   defp save_part(socket, :edit, part_params) do

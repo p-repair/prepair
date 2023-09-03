@@ -6,7 +6,7 @@ defmodule Prepair.Products do
   import Ecto.Query, warn: false
   alias Prepair.Repo
 
-  alias Prepair.Products.Manufacturer
+  alias Prepair.Products.{Manufacturer, Category, Part, Product}
 
   @doc """
   Returns the list of manufacturers.
@@ -214,6 +214,25 @@ defmodule Prepair.Products do
   end
 
   @doc """
+  Returns the list of products based on a list of ids.
+  """
+  def list_products_by_id(nil), do: []
+
+  def list_products_by_id(product_id) do
+    Repo.all(from p in Product, where: p.id in ^product_id)
+  end
+
+  @doc """
+  Returns the list of products from the given category.
+  """
+  def list_products_by_category_id(category_id) do
+    products = list_products()
+
+    products
+    |> Enum.filter(&(&1.category_id == category_id))
+  end
+
+  @doc """
   Gets a single product.
 
   Raises `Ecto.NoResultsError` if the Product does not exist.
@@ -227,7 +246,11 @@ defmodule Prepair.Products do
       ** (Ecto.NoResultsError)
 
   """
-  def get_product!(id), do: Repo.get!(Product, id)
+  def get_product!(id) do
+    Product
+    |> Repo.get!(id)
+    |> Repo.preload([:category, :manufacturer, :parts])
+  end
 
   @doc """
   Creates a product.
@@ -243,7 +266,7 @@ defmodule Prepair.Products do
   """
   def create_product(attrs \\ %{}) do
     %Product{}
-    |> Product.changeset(attrs)
+    |> change_product(attrs)
     |> Repo.insert()
   end
 
@@ -261,7 +284,7 @@ defmodule Prepair.Products do
   """
   def update_product(%Product{} = product, attrs) do
     product
-    |> Product.changeset(attrs)
+    |> change_product(attrs)
     |> Repo.update()
   end
 
@@ -291,7 +314,11 @@ defmodule Prepair.Products do
 
   """
   def change_product(%Product{} = product, attrs \\ %{}) do
-    Product.changeset(product, attrs)
+    parts = list_parts_by_id(attrs["part_ids"])
+
+    product
+    |> Product.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:parts, parts)
   end
 
   alias Prepair.Products.Part
@@ -310,6 +337,15 @@ defmodule Prepair.Products do
   end
 
   @doc """
+  Returns the list of products based on a list of ids.
+  """
+  def list_parts_by_id(nil), do: []
+
+  def list_parts_by_id(part_ids) do
+    Repo.all(from p in Part, where: p.id in ^part_ids)
+  end
+
+  @doc """
   Gets a single part.
 
   Raises `Ecto.NoResultsError` if the Part does not exist.
@@ -323,7 +359,11 @@ defmodule Prepair.Products do
       ** (Ecto.NoResultsError)
 
   """
-  def get_part!(id), do: Repo.get!(Part, id)
+  def get_part!(id) do
+    Part
+    |> Repo.get!(id)
+    |> Repo.preload([:category, :manufacturer, :products])
+  end
 
   @doc """
   Creates a part.
@@ -339,7 +379,7 @@ defmodule Prepair.Products do
   """
   def create_part(attrs \\ %{}) do
     %Part{}
-    |> Part.changeset(attrs)
+    |> change_part(attrs)
     |> Repo.insert()
   end
 
@@ -357,7 +397,7 @@ defmodule Prepair.Products do
   """
   def update_part(%Part{} = part, attrs) do
     part
-    |> Part.changeset(attrs)
+    |> change_part(attrs)
     |> Repo.update()
   end
 
@@ -387,6 +427,10 @@ defmodule Prepair.Products do
 
   """
   def change_part(%Part{} = part, attrs \\ %{}) do
-    Part.changeset(part, attrs)
+    products = list_products_by_id(attrs["product_ids"])
+
+    part
+    |> Part.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:products, products)
   end
 end

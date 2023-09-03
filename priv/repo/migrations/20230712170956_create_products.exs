@@ -11,13 +11,14 @@ defmodule Prepair.Repo.Migrations.CreateProducts do
       add :country_of_origin, :string
       add :start_of_production, :date
       add :end_of_production, :date
-      add :manufacturer_id, references(:manufacturers, on_delete: :nothing)
-      add :category_id, references(:categories, on_delete: :nothing)
+      add :manufacturer_id, references(:manufacturers, on_delete: :delete_all)
+      add :category_id, references(:categories, on_delete: :delete_all)
 
       timestamps(type: :utc_datetime)
     end
 
-    create unique_index(:products, [:reference])
+    create unique_index(:products, [:reference, :manufacturer_id])
+    create index(:products, [:name])
     create index(:products, [:manufacturer_id])
     create index(:products, [:category_id])
   end

@@ -2,6 +2,8 @@ defmodule Prepair.Products.Category do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Prepair.Products.Product
+
   @fields [
     :average_lifetime_m,
     :description,
@@ -12,6 +14,8 @@ defmodule Prepair.Products.Category do
   @required_fields [:name]
 
   schema "categories" do
+    has_many :products, Product
+
     field :average_lifetime_m, :integer
     field :description, :string
     field :image, :string

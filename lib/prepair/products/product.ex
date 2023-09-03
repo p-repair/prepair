@@ -2,6 +2,8 @@ defmodule Prepair.Products.Product do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Prepair.Products.{Manufacturer, Category, Part}
+
   @fields [
     :category_id,
     :manufacturer_id,
@@ -24,6 +26,14 @@ defmodule Prepair.Products.Product do
   ]
 
   schema "products" do
+    belongs_to :category, Category
+    belongs_to :manufacturer, Manufacturer
+
+    many_to_many :parts, Part,
+      join_through: "product_parts",
+      on_replace: :delete
+
+    field :part_ids, {:array, :integer}, virtual: true, default: []
     field :average_lifetime_m, :integer
     field :country_of_origin, :string
     field :description, :string
@@ -32,8 +42,6 @@ defmodule Prepair.Products.Product do
     field :name, :string
     field :reference, :string
     field :start_of_production, :date
-    field :manufacturer_id, :id
-    field :category_id, :id
 
     timestamps(type: :utc_datetime)
   end
@@ -43,6 +51,6 @@ defmodule Prepair.Products.Product do
     product
     |> cast(attrs, @fields)
     |> validate_required(@required_fields)
-    |> unique_constraint(:reference)
+    |> unique_constraint([:reference, :manufacturer_id])
   end
 end

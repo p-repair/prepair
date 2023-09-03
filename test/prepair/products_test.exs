@@ -185,7 +185,14 @@ defmodule Prepair.ProductsTest do
     }
 
     test "list_products/0 returns all products" do
-      product = product_fixture()
+      # Unload fields [:category, :manufacturer, :parts] to be aligned with
+      # list_products() where they are not preloaded.
+      product =
+        product_fixture()
+        |> unload(:category)
+        |> unload(:manufacturer)
+        |> unload(:parts, :many)
+
       assert Products.list_products() == [product]
     end
 
@@ -195,7 +202,12 @@ defmodule Prepair.ProductsTest do
     end
 
     test "create_product/1 with valid data creates a product" do
+      category = category_fixture()
+      manufacturer = manufacturer_fixture()
+
       valid_attrs = %{
+        category_id: category.id,
+        manufacturer_id: manufacturer.id,
         average_lifetime_m: 42,
         country_of_origin: "some country_of_origin",
         description: "some description",
@@ -291,7 +303,14 @@ defmodule Prepair.ProductsTest do
     }
 
     test "list_parts/0 returns all parts" do
-      part = part_fixture()
+      # Unload field :products to be aligned with list_parts() where they are
+      # not preloaded.
+      part =
+        part_fixture()
+        |> unload(:category)
+        |> unload(:manufacturer)
+        |> unload(:products, :many)
+
       assert Products.list_parts() == [part]
     end
 
@@ -301,7 +320,10 @@ defmodule Prepair.ProductsTest do
     end
 
     test "create_part/1 with valid data creates a part" do
+      manufacturer = manufacturer_fixture()
+
       valid_attrs = %{
+        manufacturer_id: manufacturer.id,
         average_lifetime_m: 42,
         country_of_origin: "some country_of_origin",
         description: "some description",

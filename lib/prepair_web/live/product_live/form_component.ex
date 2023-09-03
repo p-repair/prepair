@@ -19,6 +19,8 @@ defmodule PrepairWeb.ProductLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
+        <.input field={@form[:category_id]} type="select" options={category_opts(@changeset)} label="Category" />
+        <.input field={@form[:manufacturer_id]} type="select" options={manufacturer_opts(@changeset)} label="Manufacturer" />
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:reference]} type="text" label="Reference" />
         <.input field={@form[:description]} type="text" label="Description" />
@@ -42,6 +44,7 @@ defmodule PrepairWeb.ProductLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
+     |> assign(:changeset, changeset)
      |> assign_form(changeset)}
   end
 
@@ -57,6 +60,26 @@ defmodule PrepairWeb.ProductLive.FormComponent do
 
   def handle_event("save", %{"product" => product_params}, socket) do
     save_product(socket, socket.assigns.action, product_params)
+  end
+
+  defp category_opts(changeset) do
+    existing_ids =
+      changeset
+      |> Ecto.Changeset.get_change(:categories, [])
+      |> Enum.map(& &1.data.id)
+
+    for cat <- Prepair.Products.list_categories(),
+        do: [key: cat.name, value: cat.id, selected: cat.id in existing_ids]
+  end
+
+  defp manufacturer_opts(changeset) do
+    existing_ids =
+      changeset
+      |> Ecto.Changeset.get_change(:manufacturers, [])
+      |> Enum.map(& &1.data.id)
+
+    for man <- Prepair.Products.list_manufacturers(),
+        do: [key: man.name, value: man.id, selected: man.id in existing_ids]
   end
 
   defp save_product(socket, :edit, product_params) do
