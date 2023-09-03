@@ -2,6 +2,15 @@ defmodule Prepair.Products.Category do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @fields [
+    :average_lifetime_m,
+    :description,
+    :image,
+    :name
+  ]
+
+  @required_fields [:name]
+
   schema "categories" do
     field :average_lifetime_m, :integer
     field :description, :string
@@ -14,8 +23,8 @@ defmodule Prepair.Products.Category do
   @doc false
   def changeset(category, attrs) do
     category
-    |> cast(attrs, [:name, :description, :image, :average_lifetime_m])
-    |> validate_required([:name, :description, :image, :average_lifetime_m])
+    |> cast(attrs, @fields)
+    |> validate_required(@required_fields)
     |> unique_constraint(:name)
   end
 end
