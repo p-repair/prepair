@@ -21,18 +21,14 @@ defmodule Prepair.ProductsTest do
     end
 
     test "create_manufacturer/1 with valid data creates a manufacturer" do
-      valid_attrs = %{
-        description: "some description",
-        image: "some image",
-        name: "some name"
-      }
+      valid_attrs = manufacturer_valid_attrs()
 
       assert {:ok, %Manufacturer{} = manufacturer} =
                Products.create_manufacturer(valid_attrs)
 
-      assert manufacturer.description == "some description"
-      assert manufacturer.image == "some image"
-      assert manufacturer.name == "some name"
+      assert manufacturer.description == valid_attrs.description
+      assert manufacturer.image == valid_attrs.image
+      assert manufacturer.name == valid_attrs.name
     end
 
     test "create_manufacturer/1 with invalid data returns error changeset" do
@@ -104,20 +100,15 @@ defmodule Prepair.ProductsTest do
     end
 
     test "create_category/1 with valid data creates a category" do
-      valid_attrs = %{
-        average_lifetime_m: 42,
-        description: "some description",
-        image: "some image",
-        name: "some name"
-      }
+      valid_attrs = category_valid_attrs()
 
       assert {:ok, %Category{} = category} =
                Products.create_category(valid_attrs)
 
-      assert category.average_lifetime_m == 42
-      assert category.description == "some description"
-      assert category.image == "some image"
-      assert category.name == "some name"
+      assert category.average_lifetime_m == valid_attrs.average_lifetime_m
+      assert category.description == valid_attrs.description
+      assert category.image == valid_attrs.image
+      assert category.name == valid_attrs.name
     end
 
     test "create_category/1 with invalid data returns error changeset" do
@@ -202,31 +193,19 @@ defmodule Prepair.ProductsTest do
     end
 
     test "create_product/1 with valid data creates a product" do
-      category = category_fixture()
-      manufacturer = manufacturer_fixture()
-
-      valid_attrs = %{
-        category_id: category.id,
-        manufacturer_id: manufacturer.id,
-        average_lifetime_m: 42,
-        country_of_origin: "some country_of_origin",
-        description: "some description",
-        end_of_production: ~D[2023-07-11],
-        image: "some image",
-        name: "some name",
-        reference: "some reference",
-        start_of_production: ~D[2023-07-11]
-      }
+      valid_attrs = product_valid_attrs()
 
       assert {:ok, %Product{} = product} = Products.create_product(valid_attrs)
-      assert product.average_lifetime_m == 42
-      assert product.country_of_origin == "some country_of_origin"
-      assert product.description == "some description"
-      assert product.end_of_production == ~D[2023-07-11]
-      assert product.image == "some image"
-      assert product.name == "some name"
-      assert product.reference == "some reference"
-      assert product.start_of_production == ~D[2023-07-11]
+      assert product.category_id == valid_attrs.category_id
+      assert product.manufacturer_id == valid_attrs.manufacturer_id
+      assert product.average_lifetime_m == valid_attrs.average_lifetime_m
+      assert product.country_of_origin == valid_attrs.country_of_origin
+      assert product.description == valid_attrs.description
+      assert product.end_of_production == valid_attrs.end_of_production
+      assert product.image == valid_attrs.image
+      assert product.name == valid_attrs.name
+      assert product.reference == valid_attrs.reference
+      assert product.start_of_production == valid_attrs.start_of_production
     end
 
     test "create_product/1 with invalid data returns error changeset" do
@@ -320,31 +299,20 @@ defmodule Prepair.ProductsTest do
     end
 
     test "create_part/1 with valid data creates a part" do
-      manufacturer = manufacturer_fixture()
-
-      valid_attrs = %{
-        manufacturer_id: manufacturer.id,
-        average_lifetime_m: 42,
-        country_of_origin: "some country_of_origin",
-        description: "some description",
-        end_of_production: ~D[2023-07-11],
-        image: "some image",
-        main_material: "some main_material",
-        name: "some name",
-        reference: "some reference",
-        start_of_production: ~D[2023-07-11]
-      }
+      valid_attrs = part_valid_attrs()
 
       assert {:ok, %Part{} = part} = Products.create_part(valid_attrs)
-      assert part.average_lifetime_m == 42
-      assert part.country_of_origin == "some country_of_origin"
-      assert part.description == "some description"
-      assert part.end_of_production == ~D[2023-07-11]
-      assert part.image == "some image"
-      assert part.main_material == "some main_material"
-      assert part.name == "some name"
-      assert part.reference == "some reference"
-      assert part.start_of_production == ~D[2023-07-11]
+      assert part.category_id == valid_attrs.category_id
+      assert part.manufacturer_id == valid_attrs.manufacturer_id
+      assert part.average_lifetime_m == valid_attrs.average_lifetime_m
+      assert part.country_of_origin == valid_attrs.country_of_origin
+      assert part.description == valid_attrs.description
+      assert part.end_of_production == valid_attrs.end_of_production
+      assert part.image == valid_attrs.image
+      assert part.main_material == valid_attrs.main_material
+      assert part.name == valid_attrs.name
+      assert part.reference == valid_attrs.reference
+      assert part.start_of_production == valid_attrs.start_of_production
     end
 
     test "create_part/1 with invalid data returns error changeset" do

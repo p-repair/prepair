@@ -4,16 +4,6 @@ defmodule PrepairWeb.ProductLiveTest do
   import Phoenix.LiveViewTest
   import Prepair.ProductsFixtures
 
-  @create_attrs %{
-    average_lifetime_m: 42,
-    country_of_origin: "some country_of_origin",
-    description: "some description",
-    end_of_production: "2023-07-11",
-    image: "some image",
-    name: "some name",
-    reference: "some reference",
-    start_of_production: "2023-07-11"
-  }
   @update_attrs %{
     average_lifetime_m: 43,
     country_of_origin: "some updated country_of_origin",
@@ -51,6 +41,8 @@ defmodule PrepairWeb.ProductLiveTest do
     end
 
     test "saves new product", %{conn: conn} do
+      valid_attrs = product_valid_attrs()
+
       {:ok, index_live, _html} = live(conn, ~p"/products")
 
       assert index_live |> element("a", "New Product") |> render_click() =~
@@ -63,7 +55,7 @@ defmodule PrepairWeb.ProductLiveTest do
              |> render_change() =~ "can&#39;t be blank"
 
       assert index_live
-             |> form("#product-form", product: @create_attrs)
+             |> form("#product-form", product: valid_attrs)
              |> render_submit()
 
       assert_patch(index_live, ~p"/products")

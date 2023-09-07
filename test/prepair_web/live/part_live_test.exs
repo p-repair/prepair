@@ -4,17 +4,6 @@ defmodule PrepairWeb.PartLiveTest do
   import Phoenix.LiveViewTest
   import Prepair.ProductsFixtures
 
-  @create_attrs %{
-    average_lifetime_m: 42,
-    country_of_origin: "some country_of_origin",
-    description: "some description",
-    end_of_production: "2023-07-11",
-    image: "some image",
-    main_material: "some main_material",
-    name: "some name",
-    reference: "some reference",
-    start_of_production: "2023-07-11"
-  }
   @update_attrs %{
     average_lifetime_m: 43,
     country_of_origin: "some updated country_of_origin",
@@ -54,6 +43,8 @@ defmodule PrepairWeb.PartLiveTest do
     end
 
     test "saves new part", %{conn: conn} do
+      valid_attrs = part_valid_attrs()
+
       {:ok, index_live, _html} = live(conn, ~p"/parts")
 
       assert index_live |> element("a", "New Part") |> render_click() =~
@@ -66,7 +57,7 @@ defmodule PrepairWeb.PartLiveTest do
              |> render_change() =~ "can&#39;t be blank"
 
       assert index_live
-             |> form("#part-form", part: @create_attrs)
+             |> form("#part-form", part: valid_attrs)
              |> render_submit()
 
       assert_patch(index_live, ~p"/parts")

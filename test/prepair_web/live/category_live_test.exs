@@ -4,12 +4,6 @@ defmodule PrepairWeb.CategoryLiveTest do
   import Phoenix.LiveViewTest
   import Prepair.ProductsFixtures
 
-  @create_attrs %{
-    average_lifetime_m: 42,
-    description: "some description",
-    image: "some image",
-    name: "some name"
-  }
   @update_attrs %{
     average_lifetime_m: 43,
     description: "some updated description",
@@ -51,7 +45,7 @@ defmodule PrepairWeb.CategoryLiveTest do
              |> render_change() =~ "can&#39;t be blank"
 
       assert index_live
-             |> form("#category-form", category: @create_attrs)
+             |> form("#category-form", category: category_valid_attrs())
              |> render_submit()
 
       assert_patch(index_live, ~p"/categories")
