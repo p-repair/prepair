@@ -87,6 +87,22 @@ defmodule PrepairWeb.Router do
     delete "/users/log_out", UserSessionController, :delete
   end
 
+  scope "/api/v1", PrepairWeb do
+    pipe_through [:api]
+
+    resources "/products/categories", Api.Products.CategoryController,
+      except: [:new, :edit]
+
+    resources "/products/manufacturers", Api.Products.ManufacturerController,
+      except: [:new, :edit]
+
+    resources "/products/products", Api.Products.ProductController,
+      except: [:new, :edit]
+
+    resources "/products/parts", Api.Products.PartController,
+      except: [:new, :edit]
+  end
+
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:prepair, :dev_routes) do
     # If you want to use the LiveDashboard in production, you should put
