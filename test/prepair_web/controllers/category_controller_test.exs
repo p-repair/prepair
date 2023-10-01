@@ -27,6 +27,8 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
+  setup [:register_and_log_in_user]
+
   describe "index" do
     test "lists all categories", %{conn: conn} do
       conn = get(conn, ~p"/api/v1/products/categories")

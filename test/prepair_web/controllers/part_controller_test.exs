@@ -35,6 +35,8 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
+  setup [:register_and_log_in_user]
+
   describe "index" do
     test "lists all parts", %{conn: conn} do
       conn = get(conn, ~p"/api/v1/products/parts")

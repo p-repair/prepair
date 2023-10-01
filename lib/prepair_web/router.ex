@@ -2,6 +2,7 @@ defmodule PrepairWeb.Router do
   use PrepairWeb, :router
 
   import PrepairWeb.UserAuth
+  import PrepairWeb.ApiUserAuth
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -15,6 +16,7 @@ defmodule PrepairWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_api_user
   end
 
   scope "/", PrepairWeb do
@@ -89,6 +91,12 @@ defmodule PrepairWeb.Router do
 
   scope "/api/v1", PrepairWeb do
     pipe_through [:api]
+
+    post "/users/log_in", Api.SessionController, :create
+  end
+
+  scope "/api/v1", PrepairWeb do
+    pipe_through [:api, :require_authenticated_api_user]
 
     resources "/products/categories", Api.Products.CategoryController,
       except: [:new, :edit]
