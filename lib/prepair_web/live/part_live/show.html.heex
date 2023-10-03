@@ -1,0 +1,34 @@
+<.header>
+  Part <%= @part.id %>
+  <:subtitle>This is a part record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/parts/#{@part}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit part</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @part.name %></:item>
+  <:item title="Reference"><%= @part.reference %></:item>
+  <:item title="Description"><%= @part.description %></:item>
+  <:item title="Image"><%= @part.image %></:item>
+  <:item title="Average lifetime m"><%= @part.average_lifetime_m %></:item>
+  <:item title="Country of origin"><%= @part.country_of_origin %></:item>
+  <:item title="Main material"><%= @part.main_material %></:item>
+  <:item title="Start of production"><%= @part.start_of_production %></:item>
+  <:item title="End of production"><%= @part.end_of_production %></:item>
+</.list>
+
+<.back navigate={~p"/parts"}>Back to parts</.back>
+
+<.modal :if={@live_action == :edit} id="part-modal" show on_cancel={JS.patch(~p"/parts/#{@part}")}>
+  <.live_component
+    module={PrepairWeb.PartLive.FormComponent}
+    id={@part.id}
+    title={@page_title}
+    action={@live_action}
+    part={@part}
+    patch={~p"/parts/#{@part}"}
+  />
+</.modal>

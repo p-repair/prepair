@@ -2,13 +2,8 @@ defmodule PrepairWeb.ManufacturerLiveTest do
   use PrepairWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import Prepair.ProductFixtures
+  import Prepair.ProductsFixtures
 
-  @create_attrs %{
-    description: "some description",
-    image: "some image",
-    name: "some name"
-  }
   @update_attrs %{
     description: "some updated description",
     image: "some updated image",
@@ -44,7 +39,9 @@ defmodule PrepairWeb.ManufacturerLiveTest do
              |> render_change() =~ "can&#39;t be blank"
 
       assert index_live
-             |> form("#manufacturer-form", manufacturer: @create_attrs)
+             |> form("#manufacturer-form",
+               manufacturer: manufacturer_valid_attrs()
+             )
              |> render_submit()
 
       assert_patch(index_live, ~p"/manufacturers")

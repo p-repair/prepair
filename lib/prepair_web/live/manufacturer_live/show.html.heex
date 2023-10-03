@@ -1,0 +1,28 @@
+<.header>
+  Manufacturer <%= @manufacturer.id %>
+  <:subtitle>This is a manufacturer record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/manufacturers/#{@manufacturer}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit manufacturer</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @manufacturer.name %></:item>
+  <:item title="Description"><%= @manufacturer.description %></:item>
+  <:item title="Image"><%= @manufacturer.image %></:item>
+</.list>
+
+<.back navigate={~p"/manufacturers"}>Back to manufacturers</.back>
+
+<.modal :if={@live_action == :edit} id="manufacturer-modal" show on_cancel={JS.patch(~p"/manufacturers/#{@manufacturer}")}>
+  <.live_component
+    module={PrepairWeb.ManufacturerLive.FormComponent}
+    id={@manufacturer.id}
+    title={@page_title}
+    action={@live_action}
+    manufacturer={@manufacturer}
+    patch={~p"/manufacturers/#{@manufacturer}"}
+  />
+</.modal>
