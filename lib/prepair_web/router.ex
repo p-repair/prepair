@@ -2,6 +2,7 @@ defmodule PrepairWeb.Router do
   use PrepairWeb, :router
 
   import PrepairWeb.UserAuth
+  import PrepairWeb.ApiUserAuth
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -15,6 +16,7 @@ defmodule PrepairWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_api_user
   end
 
   scope "/", PrepairWeb do
@@ -85,6 +87,28 @@ defmodule PrepairWeb.Router do
     pipe_through [:browser]
 
     delete "/users/log_out", UserSessionController, :delete
+  end
+
+  scope "/api/v1", PrepairWeb do
+    pipe_through [:api]
+
+    post "/users/log_in", Api.SessionController, :create
+  end
+
+  scope "/api/v1", PrepairWeb do
+    pipe_through [:api, :require_authenticated_api_user]
+
+    resources "/products/categories", Api.Products.CategoryController,
+      except: [:new, :edit]
+
+    resources "/products/manufacturers", Api.Products.ManufacturerController,
+      except: [:new, :edit]
+
+    resources "/products/products", Api.Products.ProductController,
+      except: [:new, :edit]
+
+    resources "/products/parts", Api.Products.PartController,
+      except: [:new, :edit]
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

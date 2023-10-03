@@ -60,5 +60,9 @@ defmodule PrepairWeb.ConnCase do
     conn
     |> Phoenix.ConnTest.init_test_session(%{})
     |> Plug.Conn.put_session(:user_token, token)
+    |> Plug.Conn.put_req_header(
+      "authorization",
+      "Bearer #{Base.encode64(token)}"
+    )
   end
 end
