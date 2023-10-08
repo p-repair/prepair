@@ -92,6 +92,7 @@ defmodule PrepairWeb.Router do
   scope "/api/v1", PrepairWeb do
     pipe_through [:api]
 
+    get "/status", Api.StatusController, :status
     post "/users/log_in", Api.SessionController, :create
   end
 
