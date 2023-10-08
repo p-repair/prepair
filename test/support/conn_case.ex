@@ -17,6 +17,8 @@ defmodule PrepairWeb.ConnCase do
 
   use ExUnit.CaseTemplate
 
+  import Plug.Conn
+
   using do
     quote do
       # The default endpoint for testing
@@ -59,10 +61,7 @@ defmodule PrepairWeb.ConnCase do
 
     conn
     |> Phoenix.ConnTest.init_test_session(%{})
-    |> Plug.Conn.put_session(:user_token, token)
-    |> Plug.Conn.put_req_header(
-      "authorization",
-      "Bearer #{Base.encode64(token)}"
-    )
+    |> put_session(:user_token, token)
+    |> put_req_header("authorization", "Bearer #{Base.encode64(token)}")
   end
 end
