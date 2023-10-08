@@ -19,6 +19,9 @@ defmodule PrepairWeb.ConnCase do
 
   import Plug.Conn
 
+  alias Prepair.Auth
+  alias Prepair.Auth.ApiKey
+
   using do
     quote do
       # The default endpoint for testing
@@ -49,6 +52,16 @@ defmodule PrepairWeb.ConnCase do
       conn,
       ~w(accept accept-language x-api-key authorization)
     )
+  end
+
+  @doc """
+  Setup helper to create an API key and set the proper header.
+
+      setup :create_and_set_api_key
+  """
+  def create_and_set_api_key(%{conn: conn}) do
+    {:ok, %ApiKey{key: key}} = Auth.create_api_key("Test")
+    %{conn: put_req_header(conn, "x-api-key", key)}
   end
 
   @doc """

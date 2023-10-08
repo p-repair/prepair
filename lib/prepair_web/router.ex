@@ -1,6 +1,7 @@
 defmodule PrepairWeb.Router do
   use PrepairWeb, :router
 
+  import PrepairWeb.ApiAuth
   import PrepairWeb.UserAuth
   import PrepairWeb.ApiUserAuth
 
@@ -16,6 +17,7 @@ defmodule PrepairWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :require_valid_api_key
     plug :fetch_api_user
   end
 

@@ -21,7 +21,7 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  setup [:register_and_log_in_user]
+  setup [:create_and_set_api_key, :register_and_log_in_user]
 
   describe "index" do
     test "lists all manufacturers", %{conn: conn} do
