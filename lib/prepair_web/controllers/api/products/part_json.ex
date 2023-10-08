@@ -1,5 +1,6 @@
 defmodule PrepairWeb.Api.Products.PartJSON do
   alias Prepair.Products.Part
+  alias Prepair.Repo
 
   @doc """
   Renders a list of parts.
@@ -16,10 +17,12 @@ defmodule PrepairWeb.Api.Products.PartJSON do
   end
 
   defp data(%Part{} = part) do
+    part = Repo.preload(part, [:category, :manufacturer])
+
     %{
       id: part.id,
-      category_id: part.category.id,
-      category_name: part.category.name,
+      category_id: category_id(part.category),
+      category_name: category_name(part.category),
       manufacturer_id: part.manufacturer.id,
       manufacturer_name: part.manufacturer.name,
       name: part.name,
@@ -33,4 +36,10 @@ defmodule PrepairWeb.Api.Products.PartJSON do
       main_material: part.main_material
     }
   end
+
+  defp category_id(nil), do: nil
+  defp category_id(category), do: category.id
+
+  defp category_name(nil), do: nil
+  defp category_name(category), do: category.name
 end
