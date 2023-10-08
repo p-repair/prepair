@@ -36,10 +36,11 @@ defmodule Prepair.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:bcrypt_elixir, "~> 3.0"},
       # Project dependencies
+      {:bcrypt_elixir, "~> 3.0"},
       {:ecto_sql, "~> 3.6"},
       {:finch, "~> 0.13"},
+      {:gen_smtp, "~> 1.1"},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:mailerlite, "~> 0.3.0"},
@@ -48,14 +49,13 @@ defmodule Prepair.MixProject do
       {:phoenix_html, "~> 3.3"},
       {:phoenix_live_dashboard, "~> 0.8.0"},
       {:phoenix_live_view, "~> 0.19.4"},
-      {:postgrex, ">= 0.0.0"},
       {:plug_cowboy, "~> 2.5"},
+      {:postgrex, ">= 0.0.0"},
       {:swoosh, "~> 1.3"},
       {:tailwind, "~> 0.2.1", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
       {:typed_ecto_schema, "~> 0.4.1"},
-      {:gen_smtp, "~> 1.1"},
 
       # Build dependencies
       {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
@@ -64,12 +64,12 @@ defmodule Prepair.MixProject do
       {:observer_cli, "~> 1.3", only: :prod},
 
       # Development and test dependencies
-      {:ex_check, "~> 0.15.0", only: :dev, runtime: false},
-      {:mix_test_watch, ">= 0.0.0", only: :test, runtime: false},
       {:credo, "~> 1.0", only: :dev, runtime: false},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
+      {:ex_check, "~> 0.15.0", only: :dev, runtime: false},
       {:excoveralls, ">= 0.0.0", only: :dev, runtime: false},
       {:floki, ">= 0.30.0", only: :test},
+      {:mix_test_watch, ">= 0.0.0", only: :test, runtime: false},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
 
       # Documentation dependencies

@@ -15,7 +15,7 @@
         devShell = pkgs.mkShell {
           buildInputs = with pkgs; [
             # Build toolchain.
-            elixir
+            beam.packages.erlang_26.elixir_1_15
 
             # Project dependencies.
             postgresql_15
