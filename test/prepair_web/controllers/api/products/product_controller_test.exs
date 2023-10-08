@@ -38,9 +38,30 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
   setup [:register_and_log_in_user]
 
   describe "index" do
-    test "lists all products", %{conn: conn} do
+    setup [:create_product]
+
+    test "lists all products", %{conn: conn, product: product} do
       conn = get(conn, ~p"/api/v1/products/products")
-      assert json_response(conn, 200)["data"] == []
+
+      assert json_response(conn, 200)["data"] == [
+               %{
+                 "id" => product.id,
+                 "category_id" => product.category.id,
+                 "category_name" => product.category.name,
+                 "manufacturer_id" => product.manufacturer.id,
+                 "manufacturer_name" => product.manufacturer.name,
+                 "name" => product.name,
+                 "reference" => product.reference,
+                 "description" => product.description,
+                 "image" => product.image,
+                 "average_lifetime_m" => product.average_lifetime_m,
+                 "country_of_origin" => product.country_of_origin,
+                 "start_of_production" =>
+                   Date.to_string(product.start_of_production),
+                 "end_of_production" =>
+                   Date.to_string(product.end_of_production)
+               }
+             ]
     end
   end
 

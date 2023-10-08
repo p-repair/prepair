@@ -1,5 +1,6 @@
 defmodule PrepairWeb.Api.Products.ProductJSON do
   alias Prepair.Products.Product
+  alias Prepair.Repo
 
   @doc """
   Renders a list of products.
@@ -16,6 +17,8 @@ defmodule PrepairWeb.Api.Products.ProductJSON do
   end
 
   defp data(%Product{} = product) do
+    product = Repo.preload(product, [:category, :manufacturer])
+
     %{
       id: product.id,
       category_id: product.category.id,

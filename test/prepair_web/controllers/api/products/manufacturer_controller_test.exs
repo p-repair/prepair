@@ -24,9 +24,19 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
   setup [:register_and_log_in_user]
 
   describe "index" do
-    test "lists all manufacturers", %{conn: conn} do
+    setup [:create_manufacturer]
+
+    test "lists all manufacturers", %{conn: conn, manufacturer: manufacturer} do
       conn = get(conn, ~p"/api/v1/products/manufacturers")
-      assert json_response(conn, 200)["data"] == []
+
+      assert json_response(conn, 200)["data"] == [
+               %{
+                 "id" => manufacturer.id,
+                 "description" => manufacturer.description,
+                 "image" => manufacturer.image,
+                 "name" => manufacturer.name
+               }
+             ]
     end
   end
 
