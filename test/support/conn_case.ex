@@ -28,7 +28,7 @@ defmodule PrepairWeb.ConnCase do
 
       # Import conveniences for testing with connections
       import Plug.Conn
-      import Phoenix.ConnTest
+      import Phoenix.ConnTest, except: [recycle: 1]
       import PrepairWeb.ConnCase
     end
   end
@@ -36,6 +36,19 @@ defmodule PrepairWeb.ConnCase do
   setup tags do
     Prepair.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
+  end
+
+  @doc """
+  Recycles the connection.
+
+  This redefines `recycle/1` from `Phoenix.ConnTest` with different defaults, so
+  that the `x-api-key` header is preserved accross requests in tests.
+  """
+  def recycle(conn) do
+    Phoenix.ConnTest.recycle(
+      conn,
+      ~w(accept accept-language x-api-key authorization)
+    )
   end
 
   @doc """

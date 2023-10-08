@@ -44,6 +44,9 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
 
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
+      # Recycle the connection so we can reuse it for a request.
+      conn = recycle(conn)
+
       conn = get(conn, ~p"/api/v1/products/categories/#{id}")
 
       assert %{
@@ -77,6 +80,9 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
 
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
+      # Recycle the connection so we can reuse it for a request.
+      conn = recycle(conn)
+
       conn = get(conn, ~p"/api/v1/products/categories/#{id}")
 
       assert %{
@@ -107,6 +113,9 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
     test "delete chosen category", %{conn: conn, category: category} do
       conn = delete(conn, ~p"/api/v1/products/categories/#{category}")
       assert response(conn, 204)
+
+      # Recycle the connection so we can reuse it for a request.
+      conn = recycle(conn)
 
       assert_error_sent 404, fn ->
         get(conn, ~p"/api/v1/products/categories/#{category}")
