@@ -30,9 +30,20 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
   setup [:register_and_log_in_user]
 
   describe "index" do
-    test "lists all categories", %{conn: conn} do
+    setup [:create_category]
+
+    test "lists all categories", %{conn: conn, category: category} do
       conn = get(conn, ~p"/api/v1/products/categories")
-      assert json_response(conn, 200)["data"] == []
+
+      assert json_response(conn, 200)["data"] == [
+               %{
+                 "id" => category.id,
+                 "average_lifetime_m" => category.average_lifetime_m,
+                 "description" => category.description,
+                 "image" => category.image,
+                 "name" => category.name
+               }
+             ]
     end
   end
 

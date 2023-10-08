@@ -38,9 +38,30 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
   setup [:register_and_log_in_user]
 
   describe "index" do
-    test "lists all parts", %{conn: conn} do
+    setup [:create_part]
+
+    test "lists all parts", %{conn: conn, part: part} do
       conn = get(conn, ~p"/api/v1/products/parts")
-      assert json_response(conn, 200)["data"] == []
+
+      assert json_response(conn, 200)["data"] == [
+               %{
+                 "id" => part.id,
+                 "category_id" => part.category.id,
+                 "category_name" => part.category.name,
+                 "manufacturer_id" => part.manufacturer.id,
+                 "manufacturer_name" => part.manufacturer.name,
+                 "name" => part.name,
+                 "reference" => part.reference,
+                 "description" => part.description,
+                 "image" => part.image,
+                 "average_lifetime_m" => part.average_lifetime_m,
+                 "country_of_origin" => part.country_of_origin,
+                 "start_of_production" =>
+                   Date.to_string(part.start_of_production),
+                 "end_of_production" => Date.to_string(part.end_of_production),
+                 "main_material" => part.main_material
+               }
+             ]
     end
   end
 
