@@ -17,6 +17,11 @@ defmodule PrepairWeb.ConnCase do
 
   use ExUnit.CaseTemplate
 
+  import Plug.Conn
+
+  alias Prepair.Auth
+  alias Prepair.Auth.ApiKey
+
   using do
     quote do
       # The default endpoint for testing
@@ -26,7 +31,7 @@ defmodule PrepairWeb.ConnCase do
 
       # Import conveniences for testing with connections
       import Plug.Conn
-      import Phoenix.ConnTest
+      import Phoenix.ConnTest, except: [recycle: 1]
       import PrepairWeb.ConnCase
     end
   end
@@ -34,6 +39,29 @@ defmodule PrepairWeb.ConnCase do
   setup tags do
     Prepair.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
+  end
+
+  @doc """
+  Recycles the connection.
+
+  This redefines `recycle/1` from `Phoenix.ConnTest` with different defaults, so
+  that the `x-api-key` header is preserved accross requests in tests.
+  """
+  def recycle(conn) do
+    Phoenix.ConnTest.recycle(
+      conn,
+      ~w(accept accept-language x-api-key authorization)
+    )
+  end
+
+  @doc """
+  Setup helper to create an API key and set the proper header.
+
+      setup :create_and_set_api_key
+  """
+  def create_and_set_api_key(%{conn: conn}) do
+    {:ok, %ApiKey{key: key}} = Auth.create_api_key("Test")
+    %{conn: put_req_header(conn, "x-api-key", key)}
   end
 
   @doc """
@@ -59,10 +87,7 @@ defmodule PrepairWeb.ConnCase do
 
     conn
     |> Phoenix.ConnTest.init_test_session(%{})
-    |> Plug.Conn.put_session(:user_token, token)
-    |> Plug.Conn.put_req_header(
-      "authorization",
-      "Bearer #{Base.encode64(token)}"
-    )
+    |> put_session(:user_token, token)
+    |> put_req_header("authorization", "Bearer #{Base.encode64(token)}")
   end
 end

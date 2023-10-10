@@ -21,7 +21,7 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  setup [:register_and_log_in_user]
+  setup [:create_and_set_api_key, :register_and_log_in_user]
 
   describe "index" do
     setup [:create_manufacturer]
@@ -46,9 +46,14 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
       valid_name = valid_attrs.name
 
       conn =
-        post(conn, ~p"/api/v1/products/manufacturers", manufacturer: valid_attrs)
+        post(conn, ~p"/api/v1/products/manufacturers",
+          manufacturer: valid_attrs
+        )
 
       assert %{"id" => id} = json_response(conn, 201)["data"]
+
+      # Recycle the connection so we can reuse it for a request.
+      conn = recycle(conn)
 
       conn = get(conn, ~p"/api/v1/products/manufacturers/#{id}")
 
@@ -84,6 +89,9 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
 
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
+      # Recycle the connection so we can reuse it for a request.
+      conn = recycle(conn)
+
       conn = get(conn, ~p"/api/v1/products/manufacturers/#{id}")
 
       assert %{
@@ -113,6 +121,9 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
     test "delete chosen manufacturer", %{conn: conn, manufacturer: manufacturer} do
       conn = delete(conn, ~p"/api/v1/products/manufacturers/#{manufacturer}")
       assert response(conn, 204)
+
+      # Recycle the connection so we can reuse it for a request.
+      conn = recycle(conn)
 
       assert_error_sent 404, fn ->
         get(conn, ~p"/api/v1/products/manufacturers/#{manufacturer}")

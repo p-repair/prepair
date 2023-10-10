@@ -35,7 +35,7 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  setup [:register_and_log_in_user]
+  setup [:create_and_set_api_key, :register_and_log_in_user]
 
   describe "index" do
     setup [:create_product]
@@ -74,6 +74,9 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
       conn = post(conn, ~p"/api/v1/products/products", product: product)
 
       assert %{"id" => id} = json_response(conn, 201)["data"]
+
+      # Recycle the connection so we can reuse it for a request.
+      conn = recycle(conn)
 
       conn = get(conn, ~p"/api/v1/products/products/#{id}")
 
@@ -115,6 +118,9 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
 
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
+      # Recycle the connection so we can reuse it for a request.
+      conn = recycle(conn)
+
       conn = get(conn, ~p"/api/v1/products/products/#{id}")
 
       assert %{
@@ -151,6 +157,9 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
     test "delete chosen product", %{conn: conn, product: product} do
       conn = delete(conn, ~p"/api/v1/products/products/#{product}")
       assert response(conn, 204)
+
+      # Recycle the connection so we can reuse it for a request.
+      conn = recycle(conn)
 
       assert_error_sent 404, fn ->
         get(conn, ~p"/api/v1/products/products/#{product}")

@@ -28,7 +28,7 @@ defmodule Prepair.AdminEmail do
   end
 
   @spec admin_email :: Swoosh.Email.t()
-  defp admin_email do
+  defp admin_email() do
     config = Application.fetch_env!(:prepair, :emails)
 
     new()

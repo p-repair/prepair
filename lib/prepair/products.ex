@@ -17,7 +17,7 @@ defmodule Prepair.Products do
       [%Manufacturer{}, ...]
 
   """
-  def list_manufacturers do
+  def list_manufacturers() do
     Repo.all(Manufacturer)
   end
 
@@ -113,7 +113,7 @@ defmodule Prepair.Products do
       [%Category{}, ...]
 
   """
-  def list_categories do
+  def list_categories() do
     Repo.all(Category)
   end
 
@@ -209,7 +209,7 @@ defmodule Prepair.Products do
       [%Product{}, ...]
 
   """
-  def list_products do
+  def list_products() do
     Repo.all(Product)
   end
 
@@ -332,7 +332,7 @@ defmodule Prepair.Products do
       [%Part{}, ...]
 
   """
-  def list_parts do
+  def list_parts() do
     Repo.all(Part)
   end
 

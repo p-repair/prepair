@@ -27,7 +27,7 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  setup [:register_and_log_in_user]
+  setup [:create_and_set_api_key, :register_and_log_in_user]
 
   describe "index" do
     setup [:create_category]
@@ -54,6 +54,9 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
       conn = post(conn, ~p"/api/v1/products/categories", category: category)
 
       assert %{"id" => id} = json_response(conn, 201)["data"]
+
+      # Recycle the connection so we can reuse it for a request.
+      conn = recycle(conn)
 
       conn = get(conn, ~p"/api/v1/products/categories/#{id}")
 
@@ -88,6 +91,9 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
 
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
+      # Recycle the connection so we can reuse it for a request.
+      conn = recycle(conn)
+
       conn = get(conn, ~p"/api/v1/products/categories/#{id}")
 
       assert %{
@@ -118,6 +124,9 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
     test "delete chosen category", %{conn: conn, category: category} do
       conn = delete(conn, ~p"/api/v1/products/categories/#{category}")
       assert response(conn, 204)
+
+      # Recycle the connection so we can reuse it for a request.
+      conn = recycle(conn)
 
       assert_error_sent 404, fn ->
         get(conn, ~p"/api/v1/products/categories/#{category}")

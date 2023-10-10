@@ -7,6 +7,8 @@ defmodule PrepairWeb.Api.Accounts.SessionControllerTest do
     %{user: user_fixture()}
   end
 
+  setup [:create_and_set_api_key]
+
   describe "POST /api/v1/users/log_in" do
     test "fetch a session token when valid credentials are given",
          %{conn: conn, user: user} do

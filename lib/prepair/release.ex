@@ -5,7 +5,7 @@ defmodule Prepair.Release do
   """
   @app :prepair
 
-  def migrate do
+  def migrate() do
     load_app()
 
     for repo <- repos() do
@@ -21,11 +21,11 @@ defmodule Prepair.Release do
       Ecto.Migrator.with_repo(repo, &Ecto.Migrator.run(&1, :down, to: version))
   end
 
-  defp repos do
+  defp repos() do
     Application.fetch_env!(@app, :ecto_repos)
   end
 
-  defp load_app do
+  defp load_app() do
     Application.load(@app)
   end
 end
