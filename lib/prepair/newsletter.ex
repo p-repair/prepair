@@ -22,7 +22,7 @@ defmodule Prepair.Newsletter do
       [%Contact{}, ...]
 
   """
-  def list_contacts do
+  def list_contacts() do
     Repo.all(Contact)
   end
 
