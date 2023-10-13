@@ -105,6 +105,12 @@ defmodule Prepair.AccountTest do
       assert is_nil(user.confirmed_at)
       assert is_nil(user.password)
     end
+
+    test "sets the role as :user" do
+      email = unique_user_email()
+      {:ok, user} = Account.register_user(valid_user_attributes(email: email))
+      assert user.role == :user
+    end
   end
 
   describe "change_user_registration/2" do
