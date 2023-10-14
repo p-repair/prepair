@@ -374,6 +374,24 @@ defmodule Prepair.AccountTest do
     end
   end
 
+  describe "update_user_role/2" do
+    setup do
+      %{user: user_fixture()}
+    end
+
+    test "updates the role of the user when the role is valid", %{user: user} do
+      assert user.role == :user
+      assert {:ok, user} = Account.update_user_role(user, :admin)
+      assert user.role == :admin
+    end
+
+    test "raises when the role is invalid", %{user: user} do
+      assert_raise FunctionClauseError, fn ->
+        Account.update_user_role(user, :invalid)
+      end
+    end
+  end
+
   describe "generate_user_session_token/1" do
     setup do
       %{user: user_fixture()}

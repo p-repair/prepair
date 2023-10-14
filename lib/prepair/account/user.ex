@@ -161,4 +161,11 @@ defmodule Prepair.Account.User do
       add_error(changeset, :current_password, "is not valid")
     end
   end
+
+  @doc """
+  A User changeset for changing the role.
+  """
+  def role_changeset(user, attrs) do
+    user |> cast(attrs, [:role])
+  end
 end
