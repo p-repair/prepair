@@ -1,4 +1,4 @@
-defmodule Prepair.Account.User do
+defmodule Prepair.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -138,7 +138,7 @@ defmodule Prepair.Account.User do
   `Bcrypt.no_user_verify/0` to avoid timing attacks.
   """
   def valid_password?(
-        %Prepair.Account.User{hashed_password: hashed_password},
+        %Prepair.Accounts.User{hashed_password: hashed_password},
         password
       )
       when is_binary(hashed_password) and byte_size(password) > 0 do

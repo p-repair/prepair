@@ -1,4 +1,4 @@
-defmodule Prepair.Account.UserNotifier do
+defmodule Prepair.Accounts.UserNotifier do
   import Swoosh.Email
 
   alias Prepair.Mailer
