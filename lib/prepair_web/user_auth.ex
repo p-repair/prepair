@@ -165,6 +165,26 @@ defmodule PrepairWeb.UserAuth do
     end
   end
 
+  def on_mount(:ensure_is_admin, params, session, socket) do
+    with {:cont, socket} <-
+           on_mount(:ensure_authenticated, params, session, socket),
+         :admin <- socket.assigns.current_user.role do
+      {:cont, socket}
+    else
+      _ ->
+        socket =
+          socket
+          |> Phoenix.LiveView.put_flash(
+            :error,
+            "You must be admin to access this page."
+          )
+          # TODO: Error page instead?
+          |> Phoenix.LiveView.redirect(to: ~p"/users/log_in")
+
+        {:halt, socket}
+    end
+  end
+
   def on_mount(:redirect_if_user_is_authenticated, _params, session, socket) do
     socket = mount_current_user(socket, session)
 
@@ -211,6 +231,46 @@ defmodule PrepairWeb.UserAuth do
       |> maybe_store_return_to()
       |> redirect(to: ~p"/users/log_in")
       |> halt()
+    end
+  end
+
+  @doc """
+  Used for routes that require the user to be an admin.
+  """
+  def require_admin(conn, opts) do
+    with conn <- require_authenticated_user(conn, opts),
+         :admin <- conn.assigns.current_user.role do
+      conn
+    else
+      _ ->
+        conn
+        |> put_status(:forbidden)
+        |> put_view(PrepairWeb.ErrorHTML)
+        |> render(:"403")
+        |> halt()
+    end
+  end
+
+  @doc """
+  Ensures the `socket` belongs to an admin and performs `action`.
+
+  This function can be used in LiveView event handlers to wrap the action with
+  an authorisation check. If the socket belongs to an authenticated admin, the
+  action is performed, otherwise a flash is put with an error message and the
+  page reloaded.
+  """
+  def require_admin_and_do(socket, action) do
+    if socket.assigns.current_user.role == :admin do
+      action.()
+    else
+      socket =
+        socket
+        |> Phoenix.LiveView.put_flash(
+          :error,
+          "You must be admin to perform this action."
+        )
+
+      {:noreply, socket}
     end
   end
 
