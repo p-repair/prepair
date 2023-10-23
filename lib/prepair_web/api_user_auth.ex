@@ -1,14 +1,14 @@
 defmodule PrepairWeb.ApiUserAuth do
-  alias Prepair.Account
+  alias Prepair.Accounts
 
   import Plug.Conn
   import Phoenix.Controller
 
   def create_user_token(email, password) do
-    user = Account.get_user_by_email_and_password(email, password)
+    user = Accounts.get_user_by_email_and_password(email, password)
 
     unless is_nil(user) do
-      token = Account.generate_user_session_token(user)
+      token = Accounts.generate_user_session_token(user)
       {:ok, token}
     else
       {:error, :invalid_credentials}
@@ -17,7 +17,7 @@ defmodule PrepairWeb.ApiUserAuth do
 
   def fetch_api_user(conn, _opts) do
     with {:ok, token} <- get_user_token(conn),
-         user <- Account.get_user_by_session_token(token) do
+         user <- Accounts.get_user_by_session_token(token) do
       assign(conn, :current_user, user)
     else
       _ -> conn
