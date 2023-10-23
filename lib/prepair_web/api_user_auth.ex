@@ -43,6 +43,23 @@ defmodule PrepairWeb.ApiUserAuth do
     end
   end
 
+  @doc """
+  Used for routes that require the user to be an admin.
+  """
+  def require_api_admin(conn, opts) do
+    with conn <- require_authenticated_api_user(conn, opts),
+         :admin <- conn.assigns.current_user.role do
+      conn
+    else
+      _ ->
+        conn
+        |> put_status(:forbidden)
+        |> put_view(PrepairWeb.ErrorJSON)
+        |> render(:"403")
+        |> halt()
+    end
+  end
+
   defp get_user_token(conn) do
     with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
          {:ok, token} <- Base.decode64(token) do

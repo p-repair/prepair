@@ -6,9 +6,10 @@ defmodule Prepair.Accounts.User do
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
+    field :role, Ecto.Enum, values: [:user, :admin], default: :user
     field :confirmed_at, :naive_datetime
 
-    timestamps()
+    timestamps(type: :utc_datetime)
   end
 
   @doc """
@@ -159,5 +160,12 @@ defmodule Prepair.Accounts.User do
     else
       add_error(changeset, :current_password, "is not valid")
     end
+  end
+
+  @doc """
+  A User changeset for changing the role.
+  """
+  def role_changeset(user, attrs) do
+    user |> cast(attrs, [:role])
   end
 end

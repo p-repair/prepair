@@ -21,6 +21,7 @@ erDiagram
     User{
         string email "required"
         string password "required"
+        enum role "required"
     }
 
     Profile{

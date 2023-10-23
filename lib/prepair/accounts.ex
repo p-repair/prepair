@@ -247,6 +247,20 @@ defmodule Prepair.Accounts do
     end
   end
 
+  @doc """
+  Updates the role of the user.
+
+  ## Examples
+
+      iex> update_user_role(user, :admin)
+      {:ok, %User{}}
+  """
+  def update_user_role(%User{} = user, role) when role in [:user, :admin] do
+    user
+    |> User.role_changeset(%{role: role})
+    |> Repo.update()
+  end
+
   ## Session
 
   @doc """

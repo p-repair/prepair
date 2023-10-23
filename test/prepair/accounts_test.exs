@@ -105,6 +105,12 @@ defmodule Prepair.AccountsTest do
       assert is_nil(user.confirmed_at)
       assert is_nil(user.password)
     end
+
+    test "sets the role as :user" do
+      email = unique_user_email()
+      {:ok, user} = Accounts.register_user(valid_user_attributes(email: email))
+      assert user.role == :user
+    end
   end
 
   describe "change_user_registration/2" do
@@ -165,7 +171,9 @@ defmodule Prepair.AccountsTest do
       too_long = String.duplicate("db", 100)
 
       {:error, changeset} =
-        Accounts.apply_user_email(user, valid_user_password(), %{email: too_long})
+        Accounts.apply_user_email(user, valid_user_password(), %{
+          email: too_long
+        })
 
       assert "should be at most 160 character(s)" in errors_on(changeset).email
     end
@@ -365,6 +373,24 @@ defmodule Prepair.AccountsTest do
         })
 
       refute Repo.get_by(UserToken, user_id: user.id)
+    end
+  end
+
+  describe "update_user_role/2" do
+    setup do
+      %{user: user_fixture()}
+    end
+
+    test "updates the role of the user when the role is valid", %{user: user} do
+      assert user.role == :user
+      assert {:ok, user} = Accounts.update_user_role(user, :admin)
+      assert user.role == :admin
+    end
+
+    test "raises when the role is invalid", %{user: user} do
+      assert_raise FunctionClauseError, fn ->
+        Accounts.update_user_role(user, :invalid)
+      end
     end
   end
 
