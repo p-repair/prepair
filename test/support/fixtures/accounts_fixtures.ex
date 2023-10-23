@@ -1,7 +1,7 @@
-defmodule Prepair.AccountFixtures do
+defmodule Prepair.AccountsFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `Prepair.Account` context.
+  entities via the `Prepair.Accounts` context.
   """
 
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
@@ -18,7 +18,7 @@ defmodule Prepair.AccountFixtures do
     {:ok, user} =
       attrs
       |> valid_user_attributes()
-      |> Prepair.Account.register_user()
+      |> Prepair.Accounts.register_user()
 
     user
   end

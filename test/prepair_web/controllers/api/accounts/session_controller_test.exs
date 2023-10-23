@@ -1,7 +1,7 @@
 defmodule PrepairWeb.Api.Accounts.SessionControllerTest do
   use PrepairWeb.ConnCase, async: true
 
-  import Prepair.AccountFixtures
+  import Prepair.AccountsFixtures
 
   setup do
     %{user: user_fixture()}

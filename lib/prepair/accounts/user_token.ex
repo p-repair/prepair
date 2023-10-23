@@ -1,7 +1,7 @@
-defmodule Prepair.Account.UserToken do
+defmodule Prepair.Accounts.UserToken do
   use Ecto.Schema
   import Ecto.Query
-  alias Prepair.Account.UserToken
+  alias Prepair.Accounts.UserToken
 
   @hash_algorithm :sha256
   @rand_size 32
@@ -17,7 +17,7 @@ defmodule Prepair.Account.UserToken do
     field :token, :binary
     field :context, :string
     field :sent_to, :string
-    belongs_to :user, Prepair.Account.User
+    belongs_to :user, Prepair.Accounts.User
 
     timestamps(updated_at: false)
   end

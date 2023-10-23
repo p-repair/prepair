@@ -107,7 +107,7 @@ erDiagram
     %%    Manufacturer
     %%    Part
 
-    %% Context Account
+    %% Context Accounts
     %%    User
 
     %% Context Profile

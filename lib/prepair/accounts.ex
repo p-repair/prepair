@@ -1,12 +1,12 @@
-defmodule Prepair.Account do
+defmodule Prepair.Accounts do
   @moduledoc """
-  The Account context.
+  The Accounts context.
   """
 
   import Ecto.Query, warn: false
   alias Prepair.Repo
 
-  alias Prepair.Account.{User, UserToken, UserNotifier}
+  alias Prepair.Accounts.{User, UserToken, UserNotifier}
 
   ## Database getters
 
