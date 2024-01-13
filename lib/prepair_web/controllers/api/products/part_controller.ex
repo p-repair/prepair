@@ -5,7 +5,7 @@ defmodule PrepairWeb.Api.Products.PartController do
   alias Prepair.Products.Part
   alias Prepair.Repo
 
-  action_fallback PrepairWeb.Api.Products.FallbackController
+  action_fallback PrepairWeb.Api.FallbackController
 
   def index(conn, _params) do
     parts = Products.list_parts()

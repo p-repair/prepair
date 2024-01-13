@@ -2,9 +2,10 @@ defmodule Prepair.AccountsTest do
   use Prepair.DataCase
 
   alias Prepair.Accounts
+  alias Prepair.Accounts.{User, UserToken}
 
   import Prepair.AccountsFixtures
-  alias Prepair.Accounts.{User, UserToken}
+  import Prepair.ProfilesFixtures
 
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do
@@ -54,9 +55,9 @@ defmodule Prepair.AccountsTest do
     end
   end
 
-  describe "register_user/1" do
-    test "requires email and password to be set" do
-      {:error, changeset} = Accounts.register_user(%{})
+  describe "register_user/2" do
+    test "requires email and password to be set in user_attrs" do
+      {:error, changeset} = Accounts.register_user(%{}, profile_valid_attrs())
 
       assert %{
                password: ["can't be blank"],
@@ -66,7 +67,10 @@ defmodule Prepair.AccountsTest do
 
     test "validates email and password when given" do
       {:error, changeset} =
-        Accounts.register_user(%{email: "not valid", password: "not valid"})
+        Accounts.register_user(
+          %{email: "not valid", password: "not valid"},
+          profile_valid_attrs()
+        )
 
       assert %{
                email: ["must have the @ sign and no spaces"],
@@ -78,7 +82,10 @@ defmodule Prepair.AccountsTest do
       too_long = String.duplicate("db", 100)
 
       {:error, changeset} =
-        Accounts.register_user(%{email: too_long, password: too_long})
+        Accounts.register_user(
+          %{email: too_long, password: too_long},
+          profile_valid_attrs()
+        )
 
       assert "should be at most 160 character(s)" in errors_on(changeset).email
 
@@ -87,19 +94,55 @@ defmodule Prepair.AccountsTest do
 
     test "validates email uniqueness" do
       %{email: email} = user_fixture()
-      {:error, changeset} = Accounts.register_user(%{email: email})
+
+      {:error, changeset} =
+        Accounts.register_user(
+          %{email: email},
+          profile_valid_attrs()
+        )
+
       assert "has already been taken" in errors_on(changeset).email
 
       # Now try with the upper cased email too, to check that email case is ignored.
       {:error, changeset} =
-        Accounts.register_user(%{email: String.upcase(email)})
+        Accounts.register_user(%{email: String.upcase(email)}, %{})
 
       assert "has already been taken" in errors_on(changeset).email
     end
 
+    test "requires username, people_in_household and newsletter to be set in
+    profile_attrs" do
+      {:error, changeset} = Accounts.register_user(user_valid_attrs(), %{})
+
+      assert %{
+               username: ["can't be blank"],
+               people_in_household: ["can't be blank"],
+               newsletter: ["can't be blank"]
+             } = errors_on(changeset)
+    end
+
+    test "validates username uniqueness" do
+      %{username: username} = profile_fixture()
+
+      {:error, changeset} =
+        Accounts.register_user(user_valid_attrs(), %{
+          username: username,
+          people_in_household: 1,
+          newsletter: false
+        })
+
+      assert "has already been taken" in errors_on(changeset).username
+    end
+
     test "registers users with a hashed password" do
       email = unique_user_email()
-      {:ok, user} = Accounts.register_user(valid_user_attributes(email: email))
+
+      {:ok, user} =
+        Accounts.register_user(
+          user_valid_attrs(email: email),
+          profile_valid_attrs()
+        )
+
       assert user.email == email
       assert is_binary(user.hashed_password)
       assert is_nil(user.confirmed_at)
@@ -108,7 +151,13 @@ defmodule Prepair.AccountsTest do
 
     test "sets the role as :user" do
       email = unique_user_email()
-      {:ok, user} = Accounts.register_user(valid_user_attributes(email: email))
+
+      {:ok, user} =
+        Accounts.register_user(
+          user_valid_attrs(email: email),
+          profile_valid_attrs()
+        )
+
       assert user.role == :user
     end
   end
@@ -128,7 +177,7 @@ defmodule Prepair.AccountsTest do
       changeset =
         Accounts.change_user_registration(
           %User{},
-          valid_user_attributes(email: email, password: password)
+          user_valid_attrs(email: email, password: password)
         )
 
       assert changeset.valid?

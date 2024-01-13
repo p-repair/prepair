@@ -7,6 +7,7 @@ defmodule Prepair.Accounts do
   alias Prepair.Repo
 
   alias Prepair.Accounts.{User, UserToken, UserNotifier}
+  alias Prepair.Profiles
 
   ## Database getters
 
@@ -20,7 +21,9 @@ defmodule Prepair.Accounts do
 
   """
   def list_users() do
-    Repo.all(User)
+    User
+    |> Repo.all()
+    |> Repo.preload(:profile)
   end
 
   @doc """
@@ -36,7 +39,9 @@ defmodule Prepair.Accounts do
 
   """
   def get_user_by_email(email) when is_binary(email) do
-    Repo.get_by(User, email: email)
+    User
+    |> Repo.get_by(email: email)
+    |> Repo.preload(:profile)
   end
 
   @doc """
@@ -71,7 +76,11 @@ defmodule Prepair.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id) do
+    User
+    |> Repo.get!(id)
+    |> Repo.preload(:profile)
+  end
 
   ## User registration
 
@@ -80,14 +89,25 @@ defmodule Prepair.Accounts do
 
   ## Examples
 
-      iex> register_user(%{field: value})
+      iex> register_user(%{user_field: value}, %{profile_field: value})
       {:ok, %User{}}
 
-      iex> register_user(%{field: bad_value})
+      iex> register_user(%{user_field: bad_value}, %{profile_field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def register_user(attrs) do
+  def register_user(user_attrs, profile_attrs) do
+    Repo.transaction(fn ->
+      with {:ok, user} <- do_register_user(user_attrs),
+           {:ok, _profile} <- Profiles.create_profile(user.id, profile_attrs) do
+        user |> Repo.preload(:profile)
+      else
+        {:error, value} -> Repo.rollback(value)
+      end
+    end)
+  end
+
+  defp do_register_user(attrs) do
     %User{}
     |> User.registration_changeset(attrs)
     |> Repo.insert()
@@ -277,7 +297,10 @@ defmodule Prepair.Accounts do
   """
   def get_user_by_session_token(token) do
     {:ok, query} = UserToken.verify_session_token_query(token)
-    Repo.one(query)
+
+    query
+    |> Repo.one()
+    |> Repo.preload(:profile)
   end
 
   @doc """

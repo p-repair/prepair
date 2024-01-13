@@ -4,7 +4,7 @@ defmodule PrepairWeb.Api.Products.CategoryController do
   alias Prepair.Products
   alias Prepair.Products.Category
 
-  action_fallback PrepairWeb.Api.Products.FallbackController
+  action_fallback PrepairWeb.Api.FallbackController
 
   def index(conn, _params) do
     categories = Products.list_categories()

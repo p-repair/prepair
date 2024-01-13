@@ -1,4 +1,4 @@
-defmodule PrepairWeb.Api.Products.ChangesetJSON do
+defmodule PrepairWeb.Api.ChangesetJSON do
   @doc """
   Renders changeset errors.
   """

@@ -12,7 +12,14 @@ alias Prepair.Products.Part
 
 ## Create a user
 
-Accounts.register_user(%{email: "test@test.com", password: "testtesttest"})
+Accounts.register_user(%{
+    email: "test@test.com",
+    password: "testtesttest"},
+  %{
+    username: "Test",
+    people_in_household: 1,
+    newsletter: false
+  })
 
 ## Generate a valid API key
 

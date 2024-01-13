@@ -3,23 +3,23 @@ defmodule Prepair.AccountsFixtures do
   This module defines test helpers for creating
   entities via the `Prepair.Accounts` context.
   """
+  alias Prepair.ProfilesFixtures
 
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
   def valid_user_password, do: "hello world!"
 
-  def valid_user_attributes(attrs \\ %{}) do
+  def user_valid_attrs(attrs \\ %{}) do
     Enum.into(attrs, %{
       email: unique_user_email(),
       password: valid_user_password()
     })
   end
 
-  def user_fixture(attrs \\ %{}) do
-    {:ok, user} =
-      attrs
-      |> valid_user_attributes()
-      |> Prepair.Accounts.register_user()
+  def user_fixture(u_attrs \\ %{}, p_attrs \\ %{}) do
+    user_attrs = user_valid_attrs(u_attrs)
+    profile_attrs = ProfilesFixtures.profile_valid_attrs(p_attrs)
 
+    {:ok, user} = Prepair.Accounts.register_user(user_attrs, profile_attrs)
     user
   end
 
