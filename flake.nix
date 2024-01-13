@@ -36,7 +36,7 @@
 
             packages = with pkgs; [
               # Build toolchain.
-              beam.packages.erlang_26.elixir_1_15
+              beam.packages.erlang_26.elixir_1_16
               gcc
               gnumake
 
