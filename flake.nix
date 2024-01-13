@@ -47,6 +47,10 @@
               inotify-tools
               libnotify
 
+              # IDE toolchain.
+              nil
+              nixpkgs-fmt
+
               # Tools.
               flyctl
               git
