@@ -101,7 +101,7 @@ erDiagram
         string link
     }
 
-    %% Context Product
+    %% Context Products
     %%    Product
     %%    Category
     %%    Manufacturer
@@ -110,15 +110,15 @@ erDiagram
     %% Context Accounts
     %%    User
 
-    %% Context Profile
+    %% Context Profiles
     %%    Profile
     %%    Ownership
 
-    %% Context Failure
+    %% Context Failures
     %%    Failure
     %%    Fix
 
-    %% Context Notification
+    %% Context Notifications
     %%    Notification
     %%    NotificationTemplate
 ```
