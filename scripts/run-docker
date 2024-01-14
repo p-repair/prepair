@@ -1,0 +1,9 @@
+#!/bin/sh
+
+docker run --rm -it \
+    --net="host" \
+    -e PHX_HOST=localhost \
+    -e SECRET_KEY_BASE=C49gf4KK128kp8iUupKVrPOyMq6L3Me2th1U4A1nyddeB89sIm2Z0o7wYHGEUp4q \
+    -e DATABASE_URL=ecto://postgres:postgres@localhost:5432/prepair_dev \
+    -e SMTP_PASSWORD=dummy \
+    prepair

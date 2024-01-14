@@ -85,6 +85,18 @@
                 help = "Stops the local instance of PostgreSQL";
                 command = builtins.readFile ./scripts/stop-db;
               }
+
+              {
+                name = "build-docker";
+                help = "Builds the docker image";
+                command = builtins.readFile ./scripts/build-docker;
+              }
+
+              {
+                name = "run-docker";
+                help = "Runs the docker image using the development DB";
+                command = builtins.readFile ./scripts/run-docker;
+              }
             ];
           };
         };
