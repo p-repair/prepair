@@ -64,6 +64,12 @@ defmodule PrepairWeb.Router do
 
       live "/parts/:id", PartLive.Show, :show
       live "/parts/:id/show/edit", PartLive.Show, :edit
+
+      live "/profiles", ProfileLive.Index, :index
+      live "/profiles/:id/edit", ProfileLive.Index, :edit
+
+      live "/profiles/:id", ProfileLive.Show, :show
+      live "/profiles/:id/show/edit", ProfileLive.Show, :edit
     end
   end
 
@@ -112,6 +118,9 @@ defmodule PrepairWeb.Router do
 
     resources "/products/parts", Api.Products.PartController,
       except: [:new, :edit]
+
+    resources "/profiles/profile", Api.Profiles.ProfileController,
+      only: [:index, :show, :update]
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

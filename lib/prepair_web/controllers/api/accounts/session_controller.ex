@@ -3,7 +3,7 @@ defmodule PrepairWeb.Api.SessionController do
 
   alias PrepairWeb.ApiUserAuth
 
-  action_fallback PrepairWeb.Api.Accounts.FallbackController
+  action_fallback PrepairWeb.Api.FallbackController
 
   def create(conn, %{"email" => email, "password" => password}) do
     with {:ok, token} <- ApiUserAuth.create_user_token(email, password) do
