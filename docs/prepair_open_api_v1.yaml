@@ -1,0 +1,1274 @@
+openapi: 3.0.3
+info:
+  title: Prepair
+  description: OpenAPI of (p)repair app.
+  version: 1.0.0
+servers:
+  - url: http://neptune.ejpcmac.net:17001/api/v1
+    description: Development infrastructure
+paths:
+  #---------
+  # GENERAL
+  #---------
+  /status:
+    #-----
+    # GET
+    #-----
+    get:
+      summary: Get Status
+      description: Give API status.
+      operationId: getStatus
+      tags:
+        - General
+      responses:
+        "200":
+          description: API status.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+      deprecated: false
+
+  #-------
+  # USERS
+  #-------
+  /users:
+    #-----
+    # GET
+    #-----
+    get:
+      summary: Get Current User
+      description: Get the current user id.
+      operationId: getCurrentUserId
+      tags:
+        - Users
+      responses:
+        "200":
+          description: Current user id.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User/properties/user/properties/id"
+              example:
+                data: { "id": 1 }
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+      deprecated: false
+  /users/log_in:
+    #------
+    # POST
+    #------
+    post:
+      summary: Log In
+      description: Log the user in.
+      operationId: logInUser
+      tags:
+        - Users
+      requestBody:
+        description: User email + password attributes.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: Log the user in.
+      deprecated: false
+
+  #-----------------------
+  # PRODUCTS / CATEGORIES
+  #-----------------------
+  /products/categories:
+    #-----
+    # GET
+    #-----
+    get:
+      summary: Get Categories
+      description: List all categories.
+      operationId: getCategories
+      tags:
+        - Categories
+      responses:
+        "200":
+          description: List of categories.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Categories"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+      deprecated: false
+    #------
+    # POST
+    #------
+    post:
+      summary: Post Category
+      description: Create a new category.
+      operationId: postCategories
+      tags:
+        - Categories
+      requestBody:
+        description: A category schema.
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/Category"
+      responses:
+        "201":
+          description: Category succesfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+        "422":
+          description: Unprocessable Entity. Please verify the form.
+      deprecated: false
+
+  /products/categories/{id}:
+    #-----
+    # GET
+    #-----
+    get:
+      summary: Get Category
+      description: Get a given category.
+      operationId: getCategory
+      tags:
+        - Categories
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the category to get.
+      responses:
+        "200":
+          description: A category schema.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+      deprecated: false
+    #-------
+    # PATCH
+    #-------
+    patch:
+      summary: Patch Category
+      description: Update a given category.
+      operationId: patchCategories
+      tags:
+        - Categories
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the category to update.
+      requestBody:
+        description: A category schema.
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/Category"
+      responses:
+        "200":
+          description: Category succesfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+        "422":
+          description: Unprocessable Entity. Please verify the form.
+      deprecated: false
+    #--------
+    # DELETE
+    #--------
+    delete:
+      summary: Delete Category
+      description: Delete a given category
+      operationId: deleteCategory
+      tags:
+        - Categories
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the category to delete.
+      responses:
+        "204":
+          description: Category succesfully deleted.
+          content:
+            application/json:
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+        "422":
+          description: Unprocessable Entity. Please verify the form.
+      deprecated: false
+
+  /products/categories/by_product/{id}:
+    #-----
+    # GET
+    #-----
+    get:
+      summary: Get Category by product
+      description: Get a category from a given product.
+      operationId: getCategoryByProduct
+      tags:
+        - Categories
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the product from which we want the category.
+      responses:
+        "200":
+          description: A category schema.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Manufacturer"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+      deprecated: false
+
+  #--------------------------
+  # PRODUCTS / MANUFACTURERS
+  #--------------------------
+  /products/manufacturers:
+    #-----
+    # GET
+    #-----
+    get:
+      summary: Get Manufacturers
+      description: List all manufacturers.
+      operationId: getManufacturers
+      tags:
+        - Manufacturers
+      responses:
+        "200":
+          description: List of manufacturers.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Manufacturers"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+      deprecated: false
+    #------
+    # POST
+    #------
+    post:
+      summary: Post Manufacturer
+      description: Create a new manufacturer.
+      operationId: postManufacturer
+      tags:
+        - Manufacturers
+      requestBody:
+        description: A manufacturer schema.
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/Manufacturer"
+      responses:
+        "201":
+          description: Manufacturer succesfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Manufacturer"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+        "422":
+          description: Unprocessable Entity. Please verify the form.
+      deprecated: false
+
+  /products/manufacturers/{id}:
+    #-----
+    # GET
+    #-----
+    get:
+      summary: Get Manufacturer
+      description: Get a given manufacturer.
+      operationId: getManufacturer
+      tags:
+        - Manufacturers
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the manufacturer to get.
+      responses:
+        "200":
+          description: A manufacturer schema.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Manufacturer"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+      deprecated: false
+    #-------
+    # PATCH
+    #-------
+    patch:
+      summary: Patch Manufacturer
+      description: Update a given manufacturer.
+      operationId: patchManufacturer
+      tags:
+        - Manufacturers
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the manufacturer to update.
+      requestBody:
+        description: A manufacturer schema.
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/Manufacturer"
+      responses:
+        "200":
+          description: Manufacturer succesfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Manufacturer"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+        "422":
+          description: Unprocessable Entity. Please verify the form.
+      deprecated: false
+    #--------
+    # DELETE
+    #--------
+    delete:
+      summary: Delete Manufacturer
+      description: Delete a given manufacturer.
+      operationId: deleteManufacturer
+      tags:
+        - Manufacturers
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the category to delete.
+      responses:
+        "204":
+          description: Manufacturer succesfully deleted.
+          content:
+            application/json:
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+        "422":
+          description: Unprocessable Entity. Please verify the form.
+      deprecated: false
+
+  #---------------------
+  # PRODUCTS / PRODUCTS
+  #---------------------
+  /products/products:
+    #-----
+    # GET
+    #-----
+    get:
+      summary: Get Products
+      description: List all products.
+      operationId: getProducts
+      tags:
+        - Products
+      responses:
+        "200":
+          description: List of products.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Products"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+      deprecated: false
+    #------
+    # POST
+    #------
+    post:
+      summary: Post Product
+      description: Create a new product
+      operationId: postProducts
+      tags:
+        - Products
+      requestBody:
+        description: A product schema.
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        "201":
+          description: Product succesfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+        "422":
+          description: Unprocessable Entity. Please verify the form.
+      deprecated: false
+
+  /products/products/{id}:
+    #-----
+    # GET
+    #-----
+    get:
+      summary: Get Product
+      description: Get a given product.
+      operationId: getProduct
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the product to get.
+      responses:
+        "200":
+          description: A product schema.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+      deprecated: false
+    #-------
+    # PATCH
+    #-------
+    patch:
+      summary: Patch Product
+      description: Update a given product
+      operationId: patchProducts
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the product to update.
+      requestBody:
+        description: A product schema.
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        "200":
+          description: Product succesfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+        "422":
+          description: Unprocessable Entity. Please verify the form.
+      deprecated: false
+    #--------
+    # DELETE
+    #--------
+    delete:
+      summary: Delete Product
+      description: Delete a given product
+      operationId: deleteProducts
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the product to delete.
+      responses:
+        "204":
+          description: Product succesfully deleted.
+          content:
+            application/json:
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+        "422":
+          description: Unprocessable Entity. Please verify the form.
+      deprecated: false
+
+  #---------------------
+  # PRODUCTS / PARTS
+  #---------------------
+  /products/parts:
+    #-----
+    # GET
+    #-----
+    get:
+      summary: Get Parts
+      description: List all parts.
+      operationId: getParts
+      tags:
+        - Parts
+      responses:
+        "200":
+          description: List of parts.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Parts"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+      deprecated: false
+    #------
+    # POST
+    #------
+    post:
+      summary: Post Part
+      description: Create a new part.
+      operationId: postPart
+      tags:
+        - Parts
+      requestBody:
+        description: A part schema.
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/Part"
+      responses:
+        "201":
+          description: Part succesfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Part"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+        "422":
+          description: Unprocessable Entity. Please verify the form.
+      deprecated: false
+
+  /products/parts/{id}:
+    #-----
+    # GET
+    #-----
+    get:
+      summary: Get Part
+      description: Get a given part.
+      operationId: getPart
+      tags:
+        - Parts
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the part to get.
+      responses:
+        "200":
+          description: A part schema.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Part"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+      deprecated: false
+    #-------
+    # PATCH
+    #-------
+    patch:
+      summary: Patch Part
+      description: Update a given part.
+      operationId: patchPart
+      tags:
+        - Parts
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the part to update.
+      requestBody:
+        description: A part schema.
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/Part"
+      responses:
+        "200":
+          description: Part succesfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Part"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+        "422":
+          description: Unprocessable Entity. Please verify the form.
+      deprecated: false
+    #--------
+    # DELETE
+    #--------
+    delete:
+      summary: Delete Part
+      description: Delete a given part.
+      operationId: deletePart
+      tags:
+        - Parts
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the part to delete.
+      responses:
+        "204":
+          description: Part succesfully deleted.
+          content:
+            application/json:
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+        "422":
+          description: Unprocessable Entity. Please verify the form.
+      deprecated: false
+
+  #---------------------
+  # PROFILES / PROFILE
+  #---------------------
+  /profiles/profile:
+    #-----
+    # GET
+    #-----
+    get:
+      summary: Get Profiles
+      description: List all profiles.
+      operationId: getProfiles
+      tags:
+        - Profiles
+      responses:
+        "200":
+          description: List of profiles.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profiles"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+      deprecated: false
+
+  /profiles/profile/{id}:
+    #-----
+    # GET
+    #-----
+    get:
+      summary: Get Profile
+      description: Get a given profile.
+      operationId: getProfile
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the profile to get.
+      responses:
+        "200":
+          description: A profile schema.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+      deprecated: false
+    #-------
+    # PATCH
+    #-------
+    patch:
+      summary: Patch Profile
+      description: Update a given profile.
+      operationId: patchProfile
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the profile to update.
+      requestBody:
+        description: A profile schema.
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/Profile"
+      responses:
+        "200":
+          description: Profile succesfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+        "422":
+          description: Unprocessable Entity. Please verify the form.
+      deprecated: false
+
+  #----------------------
+  # PROFILES / OWNERSHIP
+  #----------------------
+  /profiles/ownership:
+    #-----
+    # GET
+    #-----
+    get:
+      summary: Get Ownerships
+      description: List all public ownerships.
+      operationId: getOwnerships
+      tags:
+        - Ownerships
+      responses:
+        "200":
+          description: List of public ownerships.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ownerships"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+      deprecated: false
+    #------
+    # POST
+    #------
+    post:
+      summary: Post Ownership
+      description: Create a new ownership.
+      operationId: postOwnership
+      tags:
+        - Ownerships
+      requestBody:
+        description: An ownership schema.
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/Ownership"
+      responses:
+        "201":
+          description: Ownership succesfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ownership"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+        "422":
+          description: Unprocessable Entity. Please verify the form.
+      deprecated: false
+
+  /profiles/ownership/{id}:
+    #-----
+    # GET
+    #-----
+    get:
+      summary: Get Ownership
+      description: Get a given ownership.
+      operationId: getOwnership
+      tags:
+        - Ownerships
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the ownership to get.
+      responses:
+        "200":
+          description: An ownership schema.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ownership"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+      deprecated: false
+    #-------
+    # PATCH
+    #-------
+    patch:
+      summary: Patch Ownership
+      description: Update a given ownership.
+      operationId: patchOwnership
+      tags:
+        - Ownerships
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the ownership to update.
+      requestBody:
+        description: An ownership schema.
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/Ownership"
+      responses:
+        "200":
+          description: Ownership succesfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ownership"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+        "422":
+          description: Unprocessable Entity. Please verify the form.
+      deprecated: false
+    #--------
+    # DELETE
+    #--------
+    delete:
+      summary: Delete Ownership
+      description: Delete a given ownership.
+      operationId: deleteOwnership
+      tags:
+        - Ownerships
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the ownership to delete.
+      responses:
+        "204":
+          description: Ownership succesfully deleted.
+          content:
+            application/json:
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+        "422":
+          description: Unprocessable Entity. Please verify the form.
+      deprecated: false
+
+  /profiles/ownerships/by_profile/{id}:
+    #-----
+    # GET
+    #-----
+    get:
+      summary: Get Ownerships by Profile
+      description: Get ownerships for a given profile.
+      operationId: getOwnershipsByProfile
+      tags:
+        - Ownerships
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the profile to get his ownerships.
+      responses:
+        "200":
+          description: List of profile ownerships.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ownerships"
+              example:
+                status: success
+        "401":
+          description: Unauthorized. Please verify your credentials.
+        "404":
+          description: Not found. Please verify your search.
+      deprecated: false
+
+#------------
+# COMPONENTS
+#------------
+components:
+  #------------------
+  # SECURITY SCHEMES
+  #------------------
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: x-api-key
+      in: header
+    authorization:
+      type: http
+      scheme: bearer
+
+  #------------------
+  # REUSABLE SCHEMAS
+  #------------------
+  schemas:
+    #---------
+    # GENERAL
+    #---------
+    Status:
+      type: object
+      properties:
+        data:
+          title: Data
+          type: object
+          properties:
+            status:
+              type: string
+              example: ok
+
+    #------------------
+    # ACCOUNTS CONTEXT
+    #------------------
+    User:
+      type: object
+      properties:
+        user:
+          title: User
+          type: object
+          properties:
+            id:
+              type: integer
+            email:
+              type: string
+            password:
+              type: string
+          required:
+            - email
+            - password
+
+    #------------------
+    # PRODUCTS CONTEXT
+    #------------------
+    Categories:
+      type: array
+      items:
+        $ref: "#/components/schemas/Category/properties/category"
+      example:
+        - id: 1
+          name: Washing-machine
+        - id: 2
+          name: Refrigerator
+    Category:
+      type: object
+      properties:
+        category:
+          title: Category
+          type: object
+          properties:
+            name:
+              type: string
+              example: Washing-machine
+            description:
+              type: string
+              example: A machine to wash textiles.
+            image:
+              type: string
+            average_lifetime_m:
+              type: integer
+              format: int32
+              example: 120
+          required:
+            - name
+    Manufacturers:
+      type: array
+      items:
+        $ref: "#/components/schemas/Manufacturer/properties/manufacturer"
+    Manufacturer:
+      type: object
+      properties:
+        manufacturer:
+          title: Manufacturer
+          type: object
+          properties:
+            name:
+              type: string
+            description:
+              type: string
+            image:
+              type: string
+          required:
+            - name
+    Products:
+      type: array
+      items:
+        $ref: "#/components/schemas/Product/properties/product"
+    Product:
+      type: object
+      properties:
+        product:
+          title: Product
+          type: object
+          properties:
+            category_id:
+              type: integer
+              format: int64
+            manufacturer_id:
+              type: integer
+              format: int64
+            name:
+              type: string
+            reference:
+              type: string
+            description:
+              type: string
+            image:
+              type: string
+            average_lifetime_m:
+              type: integer
+              format: int32
+            country_of_origin:
+              type: string
+            start_of_production:
+              type: string
+            end_of_production:
+              type: string
+          required:
+            - category_id
+            - manufacturer_id
+            - name
+            - reference
+    Parts:
+      type: array
+      items:
+        $ref: "#/components/schemas/Part/properties/part"
+    Part:
+      type: object
+      properties:
+        part:
+          title: Part
+          type: object
+          properties:
+            category_id:
+              type: integer
+              format: int64
+            manufacturer_id:
+              type: integer
+              format: int64
+            name:
+              type: string
+            reference:
+              type: string
+            description:
+              type: string
+            image:
+              type: string
+            average_lifetime_m:
+              type: integer
+              format: int32
+            country_of_origin:
+              type: string
+            start_of_production:
+              type: string
+            end_of_production:
+              type: string
+            main_material:
+              type: string
+          required:
+            - category_id
+            - manufacturer_id
+            - name
+            - reference
+
+    #------------------
+    # PROFILE CONTEXT
+    #------------------
+    Profiles:
+      type: array
+      items:
+        $ref: "#/components/schemas/Profile/properties/profile"
+    Profile:
+      type: object
+      properties:
+        profile:
+          title: Profile
+          type: object
+          properties:
+            user_id:
+              type: integer
+            ownerships:
+              $ref: "#/components/schemas/Ownership"
+            username:
+              type: string
+            newsletter:
+              type: boolean
+            people_in_household:
+              type: integer
+    Ownerships:
+      type: array
+      items:
+        $ref: "#/components/schemas/Ownership/properties/ownership"
+    Ownership:
+      type: object
+      properties:
+        ownership:
+          title: Ownershsip
+          type: object
+          properties:
+            product_id:
+              type: integer
+            profile_id:
+              type: integer
+            public:
+              type: boolean
+            date_of_purchase:
+              type: string
+            warranty_duration_m:
+              type: integer
+            price_of_purchase:
+              type: integer
