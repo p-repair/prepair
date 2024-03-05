@@ -32,6 +32,10 @@ defmodule PrepairWeb.Api.Products.CategoryController do
   def update(conn, %{"id" => id, "category" => category_params}) do
     category = Products.get_category!(id)
 
+    # Trick to avoid empty fields returned by FlutterFlow when value isn't changed.
+    category_params =
+      Map.filter(category_params, fn {_key, val} -> val != "" end)
+
     with {:ok, %Category{} = category} <-
            Products.update_category(category, category_params) do
       render(conn, :show, category: category)

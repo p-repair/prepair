@@ -49,6 +49,10 @@ defmodule PrepairWeb.Api.Profiles.OwnershipController do
   def update(conn, %{"id" => id, "ownership" => ownership_params}) do
     ownership = Profiles.get_ownership!(id)
 
+    # Trick to avoid empty fields returned by FlutterFlow when value isn't changed.
+    ownership_params =
+      Map.filter(ownership_params, fn {_key, val} -> val != "" end)
+
     with {:ok, %Ownership{} = ownership} <-
            Profiles.update_ownership(ownership, ownership_params) do
       render(conn, :show, ownership: ownership)
