@@ -29,6 +29,11 @@ defmodule PrepairWeb.Api.Products.CategoryController do
     render(conn, :show, category: category)
   end
 
+  def show_category_from_product(conn, %{"id" => id}) do
+    category = Products.get_category_from_product!(id)
+    render(conn, :show, category: category)
+  end
+
   def update(conn, %{"id" => id, "category" => category_params}) do
     category = Products.get_category!(id)
 
