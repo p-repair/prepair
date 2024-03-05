@@ -18,12 +18,12 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
 
   defp create_private_ownership(profile_id) do
     ownership_fixture(profile_id)
-    |> Repo.preload([:profile, :product])
+    |> Repo.preload([:profile, :product, product: :manufacturer])
   end
 
   defp create_public_ownership(profile_id) do
     ownership_fixture(profile_id, %{public: true})
-    |> Repo.preload([:profile, :product])
+    |> Repo.preload([:profile, :product, product: :manufacturer])
   end
 
   setup %{conn: conn} do
@@ -48,28 +48,39 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
 
       assert json_response(conn, 200)["data"] == [
                %{
+                 # "product" => ProductJSON.data,
                  "id" => private_ownership.id,
                  "profile_id" => private_ownership.profile_id,
                  "profile_username" => private_ownership.profile.username,
                  "product_id" => private_ownership.product_id,
+                 "product_manufacturer_name" =>
+                   private_ownership.product.manufacturer.name,
+                 "product_manufacturer_id" =>
+                   private_ownership.product.manufacturer.id,
                  "product_name" => private_ownership.product.name,
                  "product_reference" => private_ownership.product.reference,
                  "price_of_purchase" => private_ownership.price_of_purchase,
                  "date_of_purchase" =>
                    Date.to_iso8601(private_ownership.date_of_purchase),
-                 "warranty_duration_m" => private_ownership.warranty_duration_m
+                 "warranty_duration_m" => private_ownership.warranty_duration_m,
+                 "public" => private_ownership.public
                },
                %{
                  "id" => public_ownership.id,
                  "profile_id" => public_ownership.profile_id,
                  "profile_username" => public_ownership.profile.username,
                  "product_id" => public_ownership.product_id,
+                 "product_manufacturer_name" =>
+                   public_ownership.product.manufacturer.name,
+                 "product_manufacturer_id" =>
+                   public_ownership.product.manufacturer.id,
                  "product_name" => public_ownership.product.name,
                  "product_reference" => public_ownership.product.reference,
                  "price_of_purchase" => public_ownership.price_of_purchase,
                  "date_of_purchase" =>
                    Date.to_iso8601(public_ownership.date_of_purchase),
-                 "warranty_duration_m" => public_ownership.warranty_duration_m
+                 "warranty_duration_m" => public_ownership.warranty_duration_m,
+                 "public" => public_ownership.public
                }
              ]
     end
@@ -92,12 +103,17 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
                  "profile_id" => public_ownership.profile_id,
                  "profile_username" => public_ownership.profile.username,
                  "product_id" => public_ownership.product_id,
+                 "product_manufacturer_name" =>
+                   public_ownership.product.manufacturer.name,
+                 "product_manufacturer_id" =>
+                   public_ownership.product.manufacturer.id,
                  "product_name" => public_ownership.product.name,
                  "product_reference" => public_ownership.product.reference,
                  "price_of_purchase" => public_ownership.price_of_purchase,
                  "date_of_purchase" =>
                    Date.to_iso8601(public_ownership.date_of_purchase),
-                 "warranty_duration_m" => public_ownership.warranty_duration_m
+                 "warranty_duration_m" => public_ownership.warranty_duration_m,
+                 "public" => public_ownership.public
                }
              ]
     end
@@ -116,12 +132,17 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
                "profile_id" => private_ownership.profile_id,
                "profile_username" => private_ownership.profile.username,
                "product_id" => private_ownership.product_id,
+               "product_manufacturer_name" =>
+                 private_ownership.product.manufacturer.name,
+               "product_manufacturer_id" =>
+                 private_ownership.product.manufacturer.id,
                "product_name" => private_ownership.product.name,
                "product_reference" => private_ownership.product.reference,
                "price_of_purchase" => private_ownership.price_of_purchase,
                "date_of_purchase" =>
                  Date.to_iso8601(private_ownership.date_of_purchase),
-               "warranty_duration_m" => private_ownership.warranty_duration_m
+               "warranty_duration_m" => private_ownership.warranty_duration_m,
+               "public" => private_ownership.public
              }
     end
   end
@@ -149,19 +170,23 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
 
       ownership =
         Prepair.Profiles.get_ownership!(id)
-        |> Repo.preload([:profile, :product])
+        |> Repo.preload([:profile, :product, product: :manufacturer])
 
       assert json_response(conn, 200)["data"] == %{
                "id" => id,
                "profile_id" => profile_id,
                "profile_username" => ownership.profile.username,
                "product_id" => valid_attrs.product_id,
+               "product_manufacturer_name" =>
+                 ownership.product.manufacturer.name,
+               "product_manufacturer_id" => ownership.product.manufacturer.id,
                "product_name" => ownership.product.name,
                "product_reference" => ownership.product.reference,
                "price_of_purchase" => valid_attrs.price_of_purchase,
                "date_of_purchase" =>
                  Date.to_iso8601(valid_attrs.date_of_purchase),
-               "warranty_duration_m" => valid_attrs.warranty_duration_m
+               "warranty_duration_m" => valid_attrs.warranty_duration_m,
+               "public" => ownership.public
              }
     end
 
@@ -203,18 +228,22 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
 
       ownership =
         Prepair.Profiles.get_ownership!(id)
-        |> Repo.preload([:profile, :product])
+        |> Repo.preload([[:profile, :product, product: :manufacturer]])
 
       assert json_response(conn, 200)["data"] == %{
                "id" => ownership.id,
                "profile_id" => ownership.profile_id,
                "profile_username" => ownership.profile.username,
                "product_id" => ownership.product_id,
+               "product_manufacturer_name" =>
+                 ownership.product.manufacturer.name,
+               "product_manufacturer_id" => ownership.product.manufacturer.id,
                "product_name" => ownership.product.name,
                "product_reference" => ownership.product.reference,
                "price_of_purchase" => @update_attrs.price_of_purchase,
                "date_of_purchase" => @update_attrs.date_of_purchase,
-               "warranty_duration_m" => @update_attrs.warranty_duration_m
+               "warranty_duration_m" => @update_attrs.warranty_duration_m,
+               "public" => ownership.public
              }
     end
 
