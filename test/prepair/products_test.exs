@@ -245,6 +245,55 @@ defmodule Prepair.ProductsTest do
                ]
     end
 
+    test "list_products_by_category_and_manufacturer_id/2 returns all products if
+    none of category_id or manufacturer_id are integers" do
+      product_1 = product_fixture() |> unload_product_relations()
+      product_2 = product_fixture() |> unload_product_relations()
+
+      assert Products.list_products_by_category_and_manufacturer_id("a", "a") ==
+               [product_1, product_2]
+    end
+
+    test "list_products_by_category_and_manufacturer_id/2 returns an empty list if
+    category_id or manufacturer_id are integers but does not exist in the
+    database" do
+      product = product_fixture()
+
+      assert Products.list_products_by_category_and_manufacturer_id(
+               product.category_id,
+               456
+             ) == []
+
+      assert Products.list_products_by_category_and_manufacturer_id(
+               456,
+               product.manufacturer_id
+             ) == []
+
+      assert Products.list_products_by_category_and_manufacturer_id(456, 456) ==
+               []
+    end
+
+    test "list_products_by_category_and_manufacturer_id/2 returns product if one
+    or both of category_id and manufacturer_id matches products attributes, and
+    other inputs are not integers" do
+      product = product_fixture() |> unload_product_relations()
+
+      assert Products.list_products_by_category_and_manufacturer_id(
+               product.category_id,
+               "a"
+             ) == [product]
+
+      assert Products.list_products_by_category_and_manufacturer_id(
+               "a",
+               product.manufacturer_id
+             ) == [product]
+
+      assert Products.list_products_by_category_and_manufacturer_id(
+               product.category_id,
+               product.manufacturer_id
+             ) == [product]
+    end
+
     test "get_product!/1 returns the product with given id" do
       product = product_fixture()
       assert Products.get_product!(product.id) == product
