@@ -191,6 +191,31 @@ defmodule Prepair.ProductsTest do
       assert Products.list_products() == [product]
     end
 
+    test "list_products_by_id/1 returns an empty list when none of [ids] exist" do
+      assert Products.list_products_by_id([456, 457, 458]) == []
+    end
+
+    test "list_products_by_id/1 returns a list of products matching witch [ids]" do
+      product_1 = product_fixture() |> unload_product_relations()
+      product_2 = product_fixture() |> unload_product_relations()
+
+      assert Products.list_products_by_id([product_1.id, product_2.id]) == [
+               product_1,
+               product_2
+             ]
+    end
+
+    test "list_products_by_id/1 returns products only for valid [ids] when a mix
+    of valid and invalid ids are passed to the list" do
+      product_1 = product_fixture() |> unload_product_relations()
+      product_2 = product_fixture() |> unload_product_relations()
+
+      assert Products.list_products_by_id([0, product_1.id, product_2.id]) == [
+               product_1,
+               product_2
+             ]
+    end
+
     test "get_product!/1 returns the product with given id" do
       product = product_fixture()
       assert Products.get_product!(product.id) == product
