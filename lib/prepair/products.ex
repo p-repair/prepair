@@ -215,6 +215,15 @@ defmodule Prepair.Products do
 
   @doc """
   Returns the list of products based on a list of ids.
+
+  ## Examples
+
+      iex> list_products_by_ids()
+      []
+
+      iex> list_products_by_ids([123, 124, 137, 140])
+      [%Product{id: 123, name: …}, %Product{id: 124, name: …}, ...]
+
   """
   def list_products_by_id(nil), do: []
 
@@ -223,7 +232,18 @@ defmodule Prepair.Products do
   end
 
   @doc """
-  Returns the list of products from the given category.
+  Returns the list of products from the given category id.
+
+  Returns an empty list if category_id does not exist.
+
+  ## Examples
+
+      iex> list_products_by_category_id(3)
+      [%Product{id: 123, name: …}, %Product{id: 124, name: …}, ...]
+
+      iex> list_products_by_category_id(456)
+      []
+
   """
   def list_products_by_category_id(category_id) do
     products = list_products()
