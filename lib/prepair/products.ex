@@ -227,8 +227,8 @@ defmodule Prepair.Products do
   """
   def list_products_by_id(nil), do: []
 
-  def list_products_by_id(product_id) do
-    Repo.all(from p in Product, where: p.id in ^product_id)
+  def list_products_by_id(product_ids) do
+    Repo.all(from p in Product, where: p.id in ^product_ids)
   end
 
   @doc """
