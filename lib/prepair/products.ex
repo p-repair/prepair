@@ -246,10 +246,10 @@ defmodule Prepair.Products do
 
   """
   def list_products_by_category_id(category_id) do
-    products = list_products()
-
-    products
-    |> Enum.filter(&(&1.category_id == category_id))
+    Repo.all(
+      from p in Product,
+        where: p.category_id == ^category_id
+    )
   end
 
   @doc """
