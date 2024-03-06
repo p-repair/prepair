@@ -275,6 +275,68 @@ defmodule Prepair.Products do
   end
 
   @doc """
+  Returns the list of products from the given category and manufacturer id.
+
+  Returns an empty list if one of category_id or manufacturer_id does not exist
+  (but is still an integer).
+  Checks for category_id only if manufacturer_id is not an integer.
+  Checks for manufacturer_id only if category_id is not an integer.
+  Returns an empty list if none of category_id and manufacturer_id are integers.
+
+  ## Examples
+
+      iex> list_products_by_category_and_manufacturer_id(3, 3)
+      [%Product{id: 123, name: …}, %Product{id: 124, name: …}, ...]
+
+      iex> list_products_by_category_and_manufacturer_id(456, 3)
+      []
+
+      iex> list_products_by_category_and_manufacturer_id("not an integer", 3)
+      [%Product{id: 123, name: …}, %Product{id: 124, name: …}, ...]
+
+      iex> list_products_by_category_and_manufacturer_id(3, "not an integer")
+      [%Product{id: 123, name: …}, %Product{id: 124, name: …}, ...]
+
+      iex> list_products_by_category_and_manufacturer_id("not an integer",
+      "not an integer")
+      [[%Product{id: 123, name: …}, %Product{id: 124, name: …}, ...]]
+  """
+  def list_products_by_category_and_manufacturer_id(
+        category_id,
+        manufacturer_id
+      )
+      when is_integer(category_id) and is_integer(manufacturer_id) do
+    filters = [category_id: category_id, manufacturer_id: manufacturer_id]
+
+    query =
+      from p in Product,
+        where: ^filters,
+        select: p
+
+    Repo.all(query)
+  end
+
+  def list_products_by_category_and_manufacturer_id(
+        category_id,
+        _manufacturer_id
+      )
+      when is_integer(category_id),
+      do: list_products_by_category_id(category_id)
+
+  def list_products_by_category_and_manufacturer_id(
+        _category_id,
+        manufacturer_id
+      )
+      when is_integer(manufacturer_id),
+      do: list_products_by_manufacturer_id(manufacturer_id)
+
+  def list_products_by_category_and_manufacturer_id(
+        _category_id,
+        _manufacturer_id
+      ),
+      do: list_products()
+
+  @doc """
   Gets a single product.
 
   Raises `Ecto.NoResultsError` if the Product does not exist.
