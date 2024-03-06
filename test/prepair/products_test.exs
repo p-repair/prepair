@@ -175,14 +175,18 @@ defmodule Prepair.ProductsTest do
       start_of_production: nil
     }
 
+    # Unload fields [:category, :manufacturer, :parts] to be aligned with
+    # fuctions tested below, such as list_products() where they are not
+    # preloaded.
+    defp unload_product_relations(product) do
+      product
+      |> unload(:category)
+      |> unload(:manufacturer)
+      |> unload(:parts, :many)
+    end
+
     test "list_products/0 returns all products" do
-      # Unload fields [:category, :manufacturer, :parts] to be aligned with
-      # list_products() where they are not preloaded.
-      product =
-        product_fixture()
-        |> unload(:category)
-        |> unload(:manufacturer)
-        |> unload(:parts, :many)
+      product = product_fixture() |> unload_product_relations()
 
       assert Products.list_products() == [product]
     end
