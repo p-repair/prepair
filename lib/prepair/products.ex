@@ -253,6 +253,28 @@ defmodule Prepair.Products do
   end
 
   @doc """
+  Returns the list of products from the given manufacturer id.
+
+  Returns an empty list if manufacturer_id does not exist.
+
+  ## Examples
+
+      iex> list_products_by_manufacturer_id(3)
+      [%Product{id: 123, name: …}, %Product{id: 124, name: …}, ...]
+
+      iex> list_products_by_manufacturer_id(456)
+      []
+  """
+  def list_products_by_manufacturer_id(manufacturer_id) do
+    query =
+      from p in Product,
+        where: p.manufacturer_id == ^manufacturer_id,
+        select: p
+
+    Repo.all(query)
+  end
+
+  @doc """
   Gets a single product.
 
   Raises `Ecto.NoResultsError` if the Product does not exist.
