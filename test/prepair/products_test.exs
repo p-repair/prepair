@@ -230,6 +230,21 @@ defmodule Prepair.ProductsTest do
              ]
     end
 
+    test "list_products_by_manufacturer_id/1 returns an empty list when
+    manufacturer_id does not exists" do
+      assert Products.list_products_by_manufacturer_id(456) == []
+    end
+
+    test "list_products_by_manufacturer_id/1 returns a list of products matching
+    witch manufacturer_id" do
+      product = product_fixture() |> unload_product_relations()
+
+      assert Products.list_products_by_manufacturer_id(product.manufacturer_id) ==
+               [
+                 product
+               ]
+    end
+
     test "get_product!/1 returns the product with given id" do
       product = product_fixture()
       assert Products.get_product!(product.id) == product
