@@ -9,6 +9,7 @@ alias Prepair.Products.Category
 alias Prepair.Products.Manufacturer
 alias Prepair.Products.Product
 alias Prepair.Products.Part
+alias Prepair.Profiles.Ownership
 
 ##
 ## Create users
@@ -181,4 +182,35 @@ Repo.insert!(%Part{
   average_lifetime_m: 240,
   country_of_origin: "France",
   main_material: "Wood",
+})
+
+##
+## Create ownerships
+##
+
+Repo.insert!(%Ownership{
+  product_id: brio.id,
+  profile_id: user_1.profile.id,
+  date_of_purchase: ~D[2020-12-11],
+  warranty_duration_m: 24,
+  price_of_purchase: 800,
+  public: true,
+})
+
+Repo.insert!(%Ownership{
+  product_id: chorus_706.id,
+  profile_id: user_1.profile.id,
+  date_of_purchase: ~D[2015-04-30],
+  warranty_duration_m: 24,
+  price_of_purchase: 400,
+  public: false,
+})
+
+Repo.insert!(%Ownership{
+  product_id: galaxy_s9.id,
+  profile_id: user_2.profile.id,
+  date_of_purchase: ~D[2021-11-27],
+  warranty_duration_m: 12,
+  price_of_purchase: 200,
+  public: false,
 })
