@@ -10,9 +10,11 @@ alias Prepair.Products.Manufacturer
 alias Prepair.Products.Product
 alias Prepair.Products.Part
 
-## Create a user
+##
+## Create users
+##
 
-Accounts.register_user(%{
+{:ok, user_1} = Accounts.register_user(%{
     email: "test@test.com",
     password: "testtesttest"},
   %{
@@ -21,7 +23,18 @@ Accounts.register_user(%{
     newsletter: false
   })
 
+  {:ok, user_2} = Accounts.register_user(%{
+    email: "test2@test.com",
+    password: "testtesttest"},
+  %{
+    username: "Test2",
+    people_in_household: 1,
+    newsletter: false
+  })
+
+##
 ## Generate a valid API key
+##
 
 Repo.insert!(%ApiKey{name: "test", key: "dhHbRZx4sDE9QKecz+S/f8co4rIHbM4mqs3pM5kERKM="})
 
