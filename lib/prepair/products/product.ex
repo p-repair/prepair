@@ -1,22 +1,9 @@
 defmodule Prepair.Products.Product do
   use Ecto.Schema
-  import Ecto.Changeset
 
   alias Prepair.Products.{Manufacturer, Category, Part}
 
-  @fields [
-    :category_id,
-    :manufacturer_id,
-    :part_ids,
-    :name,
-    :reference,
-    :description,
-    :image,
-    :average_lifetime_m,
-    :country_of_origin,
-    :start_of_production,
-    :end_of_production
-  ]
+  import Ecto.Changeset
 
   @required_fields [
     :category_id,
@@ -24,6 +11,17 @@ defmodule Prepair.Products.Product do
     :name,
     :reference
   ]
+
+  @fields @required_fields ++
+            [
+              :part_ids,
+              :description,
+              :image,
+              :average_lifetime_m,
+              :country_of_origin,
+              :start_of_production,
+              :end_of_production
+            ]
 
   schema "products" do
     belongs_to :category, Category

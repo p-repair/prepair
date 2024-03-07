@@ -4,26 +4,24 @@ defmodule Prepair.Products.Part do
 
   alias Prepair.Products.{Category, Manufacturer, Product}
 
-  @fields [
-    :category_id,
-    :manufacturer_id,
-    :product_ids,
-    :name,
-    :reference,
-    :description,
-    :image,
-    :average_lifetime_m,
-    :country_of_origin,
-    :start_of_production,
-    :end_of_production,
-    :main_material
-  ]
-
   @required_fields [
     :manufacturer_id,
     :name,
     :reference
   ]
+
+  @fields @required_fields ++
+            [
+              :category_id,
+              :product_ids,
+              :description,
+              :image,
+              :average_lifetime_m,
+              :country_of_origin,
+              :start_of_production,
+              :end_of_production,
+              :main_material
+            ]
 
   schema "parts" do
     belongs_to :category, Category
