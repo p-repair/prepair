@@ -2,20 +2,23 @@ defmodule Prepair.Profiles.Profile do
   use Ecto.Schema
 
   alias Prepair.Accounts.User
+  alias Prepair.Profiles.Ownership
 
   import Ecto.Changeset
 
-  @fields [
+  @required_fields [
     :username,
     :newsletter,
     :people_in_household
   ]
 
-  @required_fields @fields
+  @fields @required_fields
 
   @primary_key {:id, :id, autogenerate: false}
   schema "profiles" do
     belongs_to :user, User, foreign_key: :id, define_field: false
+
+    has_many :ownerships, Ownership
 
     field :username, :string
     field :newsletter, :boolean

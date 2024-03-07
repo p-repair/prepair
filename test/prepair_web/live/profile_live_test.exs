@@ -1,6 +1,8 @@
 defmodule PrepairWeb.ProfileLiveTest do
   use PrepairWeb.ConnCase
 
+  alias Prepair.Profiles
+
   import Phoenix.LiveViewTest
   import Prepair.ProfilesFixtures
 
@@ -86,6 +88,50 @@ defmodule PrepairWeb.ProfileLiveTest do
       html = render(show_live)
       assert html =~ "Profile updated successfully"
       assert html =~ "some updated username"
+    end
+  end
+
+  describe "Ownership Index" do
+    setup [:create_profile, :register_and_log_in_user]
+
+    test "list all ownerships for a profile if {id} = current_user.id",
+         %{conn: conn, user: user} do
+      id = user.id
+      _profile_username = Profiles.get_profile!(id).username
+
+      private_ownership = ownership_fixture(id)
+      public_ownership = ownership_fixture(id, %{public: true})
+
+      third_ownership =
+        ownership_fixture(profile_fixture().id)
+
+      {:ok, _index_live, html} =
+        live(conn, ~p"/profiles/ownerships/by_profile/#{id}")
+
+      assert html =~ "Listing your Ownerships"
+      assert html =~ "#{private_ownership.id}"
+      assert html =~ "#{public_ownership.id}"
+      refute html =~ "#{third_ownership.id}"
+    end
+
+    test "list only public ownerships for a profile if {id} != current_user.id",
+         %{conn: conn, profile: profile} do
+      id = profile.id
+      profile_username = profile.username
+
+      private_ownership = ownership_fixture(id)
+      public_ownership = ownership_fixture(id, %{public: true})
+
+      third_ownership =
+        ownership_fixture(profile_fixture().id, ownership_valid_attrs())
+
+      {:ok, _index_live, html} =
+        live(conn, ~p"/profiles/ownerships/by_profile/#{id}")
+
+      assert html =~ "Listing #{profile_username} public Ownerships"
+      refute html =~ "#{private_ownership.id}"
+      assert html =~ "#{public_ownership.id}"
+      refute html =~ "#{third_ownership.id}"
     end
   end
 end
