@@ -4,8 +4,9 @@ defmodule Prepair.Products.Manufacturer do
 
   alias Prepair.Products.{Product, Part}
 
-  @fields [:name, :description, :image]
   @required_fields [:name]
+
+  @fields @required_fields ++ [:description, :image]
 
   schema "manufacturers" do
     has_many :products, Product

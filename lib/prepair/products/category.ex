@@ -4,14 +4,14 @@ defmodule Prepair.Products.Category do
 
   alias Prepair.Products.{Product, Part}
 
-  @fields [
-    :average_lifetime_m,
-    :description,
-    :image,
-    :name
-  ]
-
   @required_fields [:name]
+
+  @fields @required_fields ++
+            [
+              :average_lifetime_m,
+              :description,
+              :image
+            ]
 
   schema "categories" do
     has_many :products, Product

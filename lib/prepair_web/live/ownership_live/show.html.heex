@@ -1,0 +1,31 @@
+<.header>
+  Ownership <%= @ownership.id %>
+  <:subtitle>This is an ownership record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/ownerships/#{@ownership}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit ownership</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Product name"><%= @ownership.product.name %></:item>
+  <:item title="Username"><%= @ownership.profile.username %></:item>
+  <:item title="Date of purchase"><%= @ownership.date_of_purchase %></:item>
+  <:item title="Warranty duration m"><%= @ownership.warranty_duration_m %></:item>
+  <:item title="Price of purchase"><%= @ownership.price_of_purchase %></:item>
+  <:item title="Public"><%= @ownership.public %></:item>
+</.list>
+
+<.back navigate={~p"/ownerships"}>Back to ownerships</.back>
+
+<.modal :if={@live_action == :edit} id="ownership-modal" show on_cancel={JS.patch(~p"/ownerships/#{@ownership}")}>
+  <.live_component
+    module={PrepairWeb.OwnershipLive.FormComponent}
+    id={@ownership.id}
+    title={@page_title}
+    action={@live_action}
+    ownership={@ownership}
+    patch={~p"/ownerships/#{@ownership}"}
+  />
+</.modal>

@@ -1,4 +1,4 @@
-defmodule PrepairWeb.Api.Profiles.SessionControllerTest do
+defmodule PrepairWeb.Api.Profiles.ProfileControllerTest do
   use PrepairWeb.ConnCase
 
   alias Prepair.Repo

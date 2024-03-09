@@ -70,6 +70,17 @@ defmodule PrepairWeb.Router do
 
       live "/profiles/:id", ProfileLive.Show, :show
       live "/profiles/:id/show/edit", ProfileLive.Show, :edit
+
+      live "/profiles/ownerships/by_profile/:id",
+           ProfileLive.OwnershipIndex,
+           :index
+
+      live "/ownerships", OwnershipLive.Index, :index
+      live "/ownerships/new", OwnershipLive.Index, :new
+      live "/ownerships/:id/edit", OwnershipLive.Index, :edit
+
+      live "/ownerships/:id", OwnershipLive.Show, :show
+      live "/ownerships/:id/show/edit", OwnershipLive.Show, :edit
     end
   end
 
@@ -121,6 +132,13 @@ defmodule PrepairWeb.Router do
 
     resources "/profiles/profile", Api.Profiles.ProfileController,
       only: [:index, :show, :update]
+
+    get "/profiles/ownerships/by_profile/:id",
+        Api.Profiles.OwnershipController,
+        :index_by_profile
+
+    resources "/profiles/ownerships", Api.Profiles.OwnershipController,
+      except: [:index, :new, :edit]
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

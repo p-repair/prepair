@@ -175,16 +175,123 @@ defmodule Prepair.ProductsTest do
       start_of_production: nil
     }
 
+    # Unload fields [:category, :manufacturer, :parts] to be aligned with
+    # fuctions tested below, such as list_products() where they are not
+    # preloaded.
+    defp unload_product_relations(product) do
+      product
+      |> unload(:category)
+      |> unload(:manufacturer)
+      |> unload(:parts, :many)
+    end
+
     test "list_products/0 returns all products" do
-      # Unload fields [:category, :manufacturer, :parts] to be aligned with
-      # list_products() where they are not preloaded.
-      product =
-        product_fixture()
-        |> unload(:category)
-        |> unload(:manufacturer)
-        |> unload(:parts, :many)
+      product = product_fixture() |> unload_product_relations()
 
       assert Products.list_products() == [product]
+    end
+
+    test "list_products_by_id/1 returns an empty list when none of [ids] exist" do
+      assert Products.list_products_by_id([456, 457, 458]) == []
+    end
+
+    test "list_products_by_id/1 returns a list of products matching witch [ids]" do
+      product_1 = product_fixture() |> unload_product_relations()
+      product_2 = product_fixture() |> unload_product_relations()
+
+      assert Products.list_products_by_id([product_1.id, product_2.id]) == [
+               product_1,
+               product_2
+             ]
+    end
+
+    test "list_products_by_id/1 returns products only for valid [ids] when a mix
+    of valid and invalid ids are passed to the list" do
+      product_1 = product_fixture() |> unload_product_relations()
+      product_2 = product_fixture() |> unload_product_relations()
+
+      assert Products.list_products_by_id([0, product_1.id, product_2.id]) == [
+               product_1,
+               product_2
+             ]
+    end
+
+    test "list_products_by_category_id/1 returns an empty list when category_id
+    does not exists" do
+      assert Products.list_products_by_category_id(456) == []
+    end
+
+    test "list_products_by_category_id/1 returns a list of products matching witch
+    category_id" do
+      product = product_fixture() |> unload_product_relations()
+
+      assert Products.list_products_by_category_id(product.category_id) == [
+               product
+             ]
+    end
+
+    test "list_products_by_manufacturer_id/1 returns an empty list when
+    manufacturer_id does not exists" do
+      assert Products.list_products_by_manufacturer_id(456) == []
+    end
+
+    test "list_products_by_manufacturer_id/1 returns a list of products matching
+    witch manufacturer_id" do
+      product = product_fixture() |> unload_product_relations()
+
+      assert Products.list_products_by_manufacturer_id(product.manufacturer_id) ==
+               [
+                 product
+               ]
+    end
+
+    test "list_products_by_category_and_manufacturer_id/2 returns all products if
+    none of category_id or manufacturer_id are integers" do
+      product_1 = product_fixture() |> unload_product_relations()
+      product_2 = product_fixture() |> unload_product_relations()
+
+      assert Products.list_products_by_category_and_manufacturer_id("a", "a") ==
+               [product_1, product_2]
+    end
+
+    test "list_products_by_category_and_manufacturer_id/2 returns an empty list if
+    category_id or manufacturer_id are integers but does not exist in the
+    database" do
+      product = product_fixture()
+
+      assert Products.list_products_by_category_and_manufacturer_id(
+               product.category_id,
+               456
+             ) == []
+
+      assert Products.list_products_by_category_and_manufacturer_id(
+               456,
+               product.manufacturer_id
+             ) == []
+
+      assert Products.list_products_by_category_and_manufacturer_id(456, 456) ==
+               []
+    end
+
+    test "list_products_by_category_and_manufacturer_id/2 returns product if one
+    or both of category_id and manufacturer_id matches products attributes, and
+    other inputs are not integers" do
+      product = product_fixture() |> unload_product_relations()
+
+      assert Products.list_products_by_category_and_manufacturer_id(
+               product.category_id,
+               "a"
+             ) == [product]
+
+      assert Products.list_products_by_category_and_manufacturer_id(
+               "a",
+               product.manufacturer_id
+             ) == [product]
+
+      assert Products.list_products_by_category_and_manufacturer_id(
+               product.category_id,
+               product.manufacturer_id
+             ) == [product]
     end
 
     test "get_product!/1 returns the product with given id" do
