@@ -15,29 +15,40 @@ alias Prepair.Profiles.Ownership
 ## Create users
 ##
 
-{:ok, user_1} = Accounts.register_user(%{
-    email: "test@test.com",
-    password: "testtesttest"},
-  %{
-    username: "Test",
-    people_in_household: 1,
-    newsletter: false
-  })
+{:ok, user_1} =
+  Accounts.register_user(
+    %{
+      email: "test@test.com",
+      password: "testtesttest"
+    },
+    %{
+      username: "Test",
+      people_in_household: 1,
+      newsletter: false
+    }
+  )
 
-  {:ok, user_2} = Accounts.register_user(%{
-    email: "test2@test.com",
-    password: "testtesttest"},
-  %{
-    username: "Test2",
-    people_in_household: 1,
-    newsletter: false
-  })
+{:ok, user_2} =
+  Accounts.register_user(
+    %{
+      email: "test2@test.com",
+      password: "testtesttest"
+    },
+    %{
+      username: "Test2",
+      people_in_household: 1,
+      newsletter: false
+    }
+  )
 
 ##
 ## Generate a valid API key
 ##
 
-Repo.insert!(%ApiKey{name: "test", key: "dhHbRZx4sDE9QKecz+S/f8co4rIHbM4mqs3pM5kERKM="})
+Repo.insert!(%ApiKey{
+  name: "test",
+  key: "dhHbRZx4sDE9QKecz+S/f8co4rIHbM4mqs3pM5kERKM="
+})
 
 ##
 ## Create categories
@@ -64,7 +75,7 @@ amplifier =
 smartphone =
   Repo.insert!(%Category{
     name: "Smartphone",
-    description: "Much more than just a phone.",
+    description: "Much more than just a phone."
   })
 
 ##
@@ -77,7 +88,7 @@ samsung =
     description: """
     A Korean brand, mostly known for their electronic devices (smartphones, TVs,
     screens, etc…).
-    """,
+    """
   })
 
 rega =
@@ -85,70 +96,75 @@ rega =
     name: "Rega",
     description: """
     An English brand, specialized in HiFi (amplificators, turntables, etc…).
-    """,
+    """
   })
 
 focal =
   Repo.insert!(%Manufacturer{
     name: "Focal",
-    description: "A French brand which manufactures HiFi speakers.",
+    description: "A French brand which manufactures HiFi speakers."
   })
 
 ##
 ## Create products
 ##
 
-brio = Repo.insert!(%Product{
-  category_id: amplifier.id,
-  manufacturer_id: rega.id,
-  name: "Brio",
-  reference: "REGABRIO17NR",
-  description: "An integrated amplifier",
-  average_lifetime_m: 240,
-  country_of_origin: "England",
-  start_of_production: ~D[2017-06-12],
-})
+brio =
+  Repo.insert!(%Product{
+    category_id: amplifier.id,
+    manufacturer_id: rega.id,
+    name: "Brio",
+    reference: "REGABRIO17NR",
+    description: "An integrated amplifier",
+    average_lifetime_m: 240,
+    country_of_origin: "England",
+    start_of_production: ~D[2017-06-12]
+  })
 
-elex_r = Repo.insert!(%Product{
-  category_id: amplifier.id,
-  manufacturer_id: rega.id,
-  name: "Elex-R",
-  reference: "REGAELEXRNR",
-  description: "An integrated amplifier",
-  average_lifetime_m: 240,
-  country_of_origin: "England",
-})
+elex_r =
+  Repo.insert!(%Product{
+    category_id: amplifier.id,
+    manufacturer_id: rega.id,
+    name: "Elex-R",
+    reference: "REGAELEXRNR",
+    description: "An integrated amplifier",
+    average_lifetime_m: 240,
+    country_of_origin: "England"
+  })
 
-galaxy_s9 = Repo.insert!(%Product{
-  category_id: smartphone.id,
-  manufacturer_id: samsung.id,
-  name: "Galaxy S9",
-  reference: "SM-G960F",
-  description: "A smartphone",
-  average_lifetime_m: 36,
-  country_of_origin: "China",
-  start_of_production: ~D[2018-03-01],
-})
+galaxy_s9 =
+  Repo.insert!(%Product{
+    category_id: smartphone.id,
+    manufacturer_id: samsung.id,
+    name: "Galaxy S9",
+    reference: "SM-G960F",
+    description: "A smartphone",
+    average_lifetime_m: 36,
+    country_of_origin: "China",
+    start_of_production: ~D[2018-03-01]
+  })
 
-chorus_706 = Repo.insert!(%Product{
-  category_id: bookshelf_speaker.id,
-  manufacturer_id: focal.id,
-  name: "Chorus 706",
-  reference: "JMLABFOCAL706VBA",
-  average_lifetime_m: 240,
-  description: "HiFi speakers",
-  country_of_origin: "France",
-})
+chorus_706 =
+  Repo.insert!(%Product{
+    category_id: bookshelf_speaker.id,
+    manufacturer_id: focal.id,
+    name: "Chorus 706",
+    reference: "JMLABFOCAL706VBA",
+    average_lifetime_m: 240,
+    description: "HiFi speakers",
+    country_of_origin: "France"
+  })
 
-aria_906 = Repo.insert!(%Product{
-  category_id: floorstanding_speaker.id,
-  manufacturer_id: focal.id,
-  name: "Aria 906",
-  reference: "EAR9090601-NO001",
-  average_lifetime_m: 240,
-  description: "HiFi speakers",
-  country_of_origin: "France",
-})
+aria_906 =
+  Repo.insert!(%Product{
+    category_id: floorstanding_speaker.id,
+    manufacturer_id: focal.id,
+    name: "Aria 906",
+    reference: "EAR9090601-NO001",
+    average_lifetime_m: 240,
+    description: "HiFi speakers",
+    country_of_origin: "France"
+  })
 
 ##
 ## Create parts
@@ -161,7 +177,7 @@ Repo.insert!(%Part{
   reference: "MIC272-2017",
   average_lifetime_m: 60,
   country_of_origin: "China",
-  main_material: "Metal",
+  main_material: "Metal"
 })
 
 Repo.insert!(%Part{
@@ -171,7 +187,7 @@ Repo.insert!(%Part{
   reference: "COND-232312",
   average_lifetime_m: 240,
   country_of_origin: "England",
-  main_material: "Metal",
+  main_material: "Metal"
 })
 
 Repo.insert!(%Part{
@@ -181,7 +197,7 @@ Repo.insert!(%Part{
   reference: "231018MENB",
   average_lifetime_m: 240,
   country_of_origin: "France",
-  main_material: "Wood",
+  main_material: "Wood"
 })
 
 ##
@@ -194,7 +210,7 @@ Repo.insert!(%Ownership{
   date_of_purchase: ~D[2020-12-11],
   warranty_duration_m: 24,
   price_of_purchase: 800,
-  public: true,
+  public: true
 })
 
 Repo.insert!(%Ownership{
@@ -203,7 +219,7 @@ Repo.insert!(%Ownership{
   date_of_purchase: ~D[2015-04-30],
   warranty_duration_m: 24,
   price_of_purchase: 400,
-  public: false,
+  public: false
 })
 
 Repo.insert!(%Ownership{
@@ -212,5 +228,5 @@ Repo.insert!(%Ownership{
   date_of_purchase: ~D[2021-11-27],
   warranty_duration_m: 12,
   price_of_purchase: 200,
-  public: false,
+  public: false
 })
