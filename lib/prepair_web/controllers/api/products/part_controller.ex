@@ -35,6 +35,10 @@ defmodule PrepairWeb.Api.Products.PartController do
   def update(conn, %{"id" => id, "part" => part_params}) do
     part = Products.get_part!(id)
 
+    # Trick to avoid empty fields returned by FlutterFlow when value isn't changed.
+    part_params =
+      Map.filter(part_params, fn {_key, val} -> val != "" end)
+
     with {:ok, %Part{} = part} <-
            Products.update_part(part, part_params) do
       render(conn, :show, part: part)

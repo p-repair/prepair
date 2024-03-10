@@ -134,6 +134,30 @@ defmodule Prepair.Products do
   def get_category!(id), do: Repo.get!(Category, id)
 
   @doc """
+  Gets a single category from a product id.
+
+  Raises `Ecto.NoResultsError` if the Product does not exist.
+
+  ## Examples
+
+      iex> get_category_from_product!(123)
+      %Category{}
+
+      iex> get_category_from_product!(456)
+      ** (Ecto.NoResultsError)
+  """
+  def get_category_from_product!(id) do
+    query =
+      from c in Category,
+        join: p in Product,
+        on: p.category_id == c.id,
+        where: p.id == ^id,
+        select: c
+
+    Repo.one!(query)
+  end
+
+  @doc """
   Creates a category.
 
   ## Examples

@@ -65,6 +65,61 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
     end
   end
 
+  describe "index_by_category_and_manufacturer" do
+    setup [:create_product]
+
+    test "lists products from a given category and/or manufacturer", %{
+      conn: conn,
+      product: product
+    } do
+      cat_id = product.category_id
+      man_id = product.manufacturer_id
+
+      conn =
+        get(
+          conn,
+          ~p"/api/v1/products/products/by_category_and_manufacturer/#{cat_id}/#{man_id}"
+        )
+
+      assert json_response(conn, 200)["data"] == [
+               %{
+                 "id" => product.id,
+                 "category_id" => product.category.id,
+                 "category_name" => product.category.name,
+                 "manufacturer_id" => product.manufacturer.id,
+                 "manufacturer_name" => product.manufacturer.name,
+                 "name" => product.name,
+                 "reference" => product.reference,
+                 "description" => product.description,
+                 "image" => product.image,
+                 "average_lifetime_m" => product.average_lifetime_m,
+                 "country_of_origin" => product.country_of_origin,
+                 "start_of_production" =>
+                   Date.to_string(product.start_of_production),
+                 "end_of_production" =>
+                   Date.to_string(product.end_of_production)
+               }
+             ]
+    end
+
+    test "don’t list products for category and manufacturer that not exists", %{
+      conn: conn,
+      product: _product
+    } do
+      cat_id = 0
+      man_id = 0
+
+      conn =
+        get(
+          conn,
+          ~p"/api/v1/products/products/by_category_and_manufacturer/#{cat_id}/#{man_id}"
+        )
+
+      assert json_response(conn, 200)["data"] == []
+    end
+
+  end
+
   describe "create product" do
     test "renders a product when data is valid", %{conn: conn} do
       product = product_valid_attrs()

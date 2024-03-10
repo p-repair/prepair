@@ -32,6 +32,10 @@ defmodule PrepairWeb.Api.Products.ManufacturerController do
   def update(conn, %{"id" => id, "manufacturer" => manufacturer_params}) do
     manufacturer = Products.get_manufacturer!(id)
 
+    # Trick to avoid empty fields returned by FlutterFlow when value isn't changed.
+    manufacturer_params =
+      Map.filter(manufacturer_params, fn {_key, val} -> val != "" end)
+
     with {:ok, %Manufacturer{} = manufacturer} <-
            Products.update_manufacturer(manufacturer, manufacturer_params) do
       render(conn, :show, manufacturer: manufacturer)

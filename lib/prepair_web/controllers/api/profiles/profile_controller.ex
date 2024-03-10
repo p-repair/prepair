@@ -25,6 +25,10 @@ defmodule PrepairWeb.Api.Profiles.ProfileController do
   def update(conn, %{"id" => id, "profile" => profile_params}) do
     profile = Profiles.get_profile!(id)
 
+    # Trick to avoid empty fields returned by FlutterFlow when value isn't changed.
+    profile_params =
+      Map.filter(profile_params, fn {_key, val} -> val != "" end)
+
     with {:ok, %Profile{} = profile} <-
            Profiles.update_profile(profile, profile_params) do
       render(conn, :show, profile: profile)

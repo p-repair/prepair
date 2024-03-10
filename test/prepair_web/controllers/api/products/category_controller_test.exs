@@ -47,6 +47,30 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
     end
   end
 
+  describe "get a category by product" do
+    test "renders a category when product exists", %{conn: conn} do
+      product = product_fixture()
+
+      conn = get(conn, ~p"/api/v1/products/categories/by_product/#{product.id}")
+
+      assert json_response(conn, 200)["data"] == %{
+               "id" => product.category_id,
+               "name" => product.category.name,
+               "description" => product.category.description,
+               "average_lifetime_m" => product.category.average_lifetime_m,
+               "image" => product.category.image
+             }
+    end
+
+    test "raise an error when product doesn’t exists", %{conn: conn} do
+      id = 0
+
+      assert_raise Ecto.NoResultsError, fn ->
+        get(conn, ~p"/api/v1/products/categories/by_product/#{id}")
+      end
+    end
+  end
+
   describe "create category" do
     test "renders a category when data is valid", %{conn: conn} do
       category = category_valid_attrs()
