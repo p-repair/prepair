@@ -13,6 +13,11 @@
       url = "github:numtide/devshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    git-z = {
+      url = "github:ejpcmac/git-z";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { flake-parts, ... }@inputs:
@@ -20,9 +25,10 @@
       imports = [ inputs.devshell.flakeModule ];
       systems = [ "x86_64-linux" ];
 
-      perSystem = { self', system, ... }:
+      perSystem = { inputs', system, ... }:
         let
-          pkgs = inputs.nixpkgs.legacyPackages.${system};
+          pkgs = inputs'.nixpkgs.legacyPackages;
+          git-z = inputs'.git-z.packages.git-z;
         in
         {
           devshells.default = {
@@ -55,6 +61,7 @@
               flyctl
               git
               gitAndTools.gitflow
+              git-z
             ];
 
             env = [
