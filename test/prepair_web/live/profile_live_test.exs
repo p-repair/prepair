@@ -109,9 +109,9 @@ defmodule PrepairWeb.ProfileLiveTest do
         live(conn, ~p"/profiles/ownerships/by_profile/#{id}")
 
       assert html =~ "Listing your Ownerships"
-      assert html =~ "#{private_ownership.id}"
-      assert html =~ "#{public_ownership.id}"
-      refute html =~ "#{third_ownership.id}"
+      assert html =~ "ownerships/#{private_ownership.id}"
+      assert html =~ "ownerships/#{public_ownership.id}"
+      refute html =~ "ownerships/#{third_ownership.id}"
     end
 
     test "list only public ownerships for a profile if {id} != current_user.id",
@@ -129,9 +129,9 @@ defmodule PrepairWeb.ProfileLiveTest do
         live(conn, ~p"/profiles/ownerships/by_profile/#{id}")
 
       assert html =~ "Listing #{profile_username} public Ownerships"
-      refute html =~ "#{private_ownership.id}"
-      assert html =~ "#{public_ownership.id}"
-      refute html =~ "#{third_ownership.id}"
+      refute html =~ "ownerships/#{private_ownership.id}"
+      assert html =~ "ownerships/#{public_ownership.id}"
+      refute html =~ "ownerships/#{third_ownership.id}"
     end
   end
 end
