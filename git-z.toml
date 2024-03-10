@@ -80,6 +80,7 @@ list = [
   "git",
   "git-z",
   "mix",
+  "vscode",
 ]
 
 # The ticket / issue reference configuration.
