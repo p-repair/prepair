@@ -7,8 +7,18 @@ defmodule PrepairWeb.Api.Products.ProductController do
 
   action_fallback PrepairWeb.Api.FallbackController
 
-  def index(conn, _params) do
-    products = Products.list_products()
+  @index_filters ["product_ids", "category_id", "manufacturer_id"]
+
+  def index(conn, params) do
+    filters =
+      params
+      |> Map.filter(fn {k, _v} -> k in @index_filters end)
+      |> Enum.map(fn {k, v} ->
+        {String.to_existing_atom(k), str_to_int_list(v)}
+      end)
+
+    products = Products.list_products(filters)
+
     render(conn, :index, products: products)
   end
 
@@ -65,5 +75,15 @@ defmodule PrepairWeb.Api.Products.ProductController do
            Products.delete_product(product) do
       send_resp(conn, :no_content, "")
     end
+  end
+
+  defp str_to_int_list("null") do
+    []
+  end
+
+  defp str_to_int_list(str) do
+    str
+    |> String.split(~r/[\[\],\s]+/, trim: true)
+    |> Enum.map(&String.to_integer/1)
   end
 end
