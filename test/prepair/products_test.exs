@@ -191,6 +191,168 @@ defmodule Prepair.ProductsTest do
       assert Products.list_products() == [product]
     end
 
+    test "list_products/1 returns all products when no filters are passed" do
+      product = product_fixture() |> unload_product_relations()
+
+      assert Products.list_products() == [product]
+    end
+
+    test "list_products/1 returns a list of products matching with
+    :product_ids value" do
+      product_1 = product_fixture() |> unload_product_relations()
+      product_2 = product_fixture() |> unload_product_relations()
+
+      assert Products.list_products(product_ids: [product_1.id, product_2.id]) ==
+               [
+                 product_1,
+                 product_2
+               ]
+    end
+
+    test "list_products/1 returns an empty list when :product_ids value is a
+    list of ids that does not exists in the database
+    exists" do
+      assert Products.list_products(product_ids: [456, 457, 458]) == []
+    end
+
+    test "list_products/1 returns a list of products matching with
+    :category_id value" do
+      product = product_fixture() |> unload_product_relations()
+      _product_2 = product_fixture() |> unload_product_relations()
+
+      assert Products.list_products(category_id: [product.category_id]) == [
+               product
+             ]
+    end
+
+    test "list_products/1 returns an empty list when :category_id value is a
+    list of ids that does not exists in the database" do
+      assert Products.list_products(category_id: [456]) == []
+    end
+
+    test "list_products/1 returns a list of products matching witch
+    :manufacturer_id value" do
+      product = product_fixture() |> unload_product_relations()
+      _product_2 = product_fixture() |> unload_product_relations()
+
+      assert Products.list_products(manufacturer_id: [product.manufacturer_id]) ==
+               [
+                 product
+               ]
+    end
+
+    test "list_products/1 returns an empty list when :manufacturer_id value is a
+    list of ids that does not exists in the database" do
+      assert Products.list_products(manufacturer_id: [456]) == []
+    end
+
+    test "list_products/1 returns all products if the value of both :category_id
+    and :manufacturer_id is ['select']" do
+      product_1 = product_fixture() |> unload_product_relations()
+      product_2 = product_fixture() |> unload_product_relations()
+
+      assert Products.list_products(
+               category_id: ["select"],
+               manufacturer_id: ["select"]
+             ) ==
+               [product_1, product_2]
+    end
+
+    test "list_products/1 filters can be combined: returns an empty list if
+    :category_id value is a list of ids which don’t exist in the database" do
+      product = product_fixture()
+
+      assert Products.list_products(
+               category_id: [456],
+               manufacturer_id: [product.manufacturer_id]
+             ) == []
+    end
+
+    test "list_products/1 filters can be combined: returns an empty list if
+    :manufacturer_id value is a list of ids which don’t exist in the database" do
+      product = product_fixture()
+
+      assert Products.list_products(
+               category_id: [product.category_id],
+               manufacturer_id: [456]
+             ) == []
+    end
+
+    test "list_products/1 filters can be combined: returns an empty list if
+    :category_id and :manufacturer_id values are lists of ids which don’t
+    exist in the database" do
+      _product = product_fixture()
+
+      assert Products.list_products(
+               category_id: [456],
+               manufacturer_id: [456]
+             ) ==
+               []
+    end
+
+    test "list_products/1 returns matching product with :category_id value
+    when :manufacturer_id is set to ['select']" do
+      category_id = category_fixture().id
+      _product_1 = product_fixture() |> unload_product_relations()
+
+      product_2 =
+        product_fixture(%{category_id: category_id})
+        |> unload_product_relations()
+
+      assert Products.list_products(
+               category_id: [category_id],
+               manufacturer_id: ["select"]
+             ) == [product_2]
+    end
+
+    test "list_products/1 returns matching product with :manufacturer_id value
+    when :category_id is set to ['select']" do
+      manufacturer_id = manufacturer_fixture().id
+      _product_1 = product_fixture() |> unload_product_relations()
+
+      product_2 =
+        product_fixture(%{manufacturer_id: manufacturer_id})
+        |> unload_product_relations()
+
+      assert Products.list_products(
+               category_id: ["select"],
+               manufacturer_id: [manufacturer_id]
+             ) == [product_2]
+    end
+
+    test "list_products/1 filters can be combined: returns matching product with
+    :category_id and :manufacturer_id when both are set" do
+      category_id = category_fixture().id
+      manufacturer_id = manufacturer_fixture().id
+
+      _product_1 =
+        product_fixture(%{category_id: category_id})
+        |> unload_product_relations()
+
+      _product_2 =
+        product_fixture(%{manufacturer_id: manufacturer_id})
+        |> unload_product_relations()
+
+      product_3 =
+        product_fixture(%{
+          category_id: category_id,
+          manufacturer_id: manufacturer_id
+        })
+        |> unload_product_relations()
+
+      assert Products.list_products(
+               category_id: [category_id],
+               manufacturer_id: [manufacturer_id]
+             ) == [product_3]
+    end
+
+    test "list_products/1 raises when applying as a filter an atom which does
+    not exist in product schema fields" do
+      assert_raise Ecto.QueryError, fn ->
+        Products.list_products(random_filter: [0])
+      end
+    end
+
     test "list_products_by_id/1 returns an empty list when none of [ids] exist" do
       assert Products.list_products_by_id([456, 457, 458]) == []
     end
