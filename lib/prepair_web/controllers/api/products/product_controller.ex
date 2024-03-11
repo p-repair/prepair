@@ -22,20 +22,6 @@ defmodule PrepairWeb.Api.Products.ProductController do
     render(conn, :index, products: products)
   end
 
-  # À modifier avec des filtres en query params
-  def index_by_category_and_manufacturer(conn, %{
-        "cat_id" => cat_id,
-        "man_id" => man_id
-      }) do
-    products =
-      Products.list_products_by_category_and_manufacturer_id(
-        String.to_integer(cat_id),
-        String.to_integer(man_id)
-      )
-
-    render(conn, :index, products: products)
-  end
-
   def create(conn, %{"product" => product_params}) do
     with {:ok, %Product{} = product} <-
            Products.create_product(product_params),
