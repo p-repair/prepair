@@ -100,8 +100,8 @@ defmodule Prepair.ProfilesTest do
       assert Profiles.list_ownerships() == [ownership]
     end
 
-    test "list_ownerships_by_profile/2 returns all the profile ownerships by
-    default" do
+    test "list_ownerships_by_profile/2 returns only the profile public
+    ownerships by default" do
       profile_id = profile_fixture().id
 
       private_ownership = ownership_fixture(profile_id)
@@ -114,11 +114,11 @@ defmodule Prepair.ProfilesTest do
                [private_ownership, public_ownership, third_ownership]
 
       assert Profiles.list_ownerships_by_profile(profile_id) ==
-               [private_ownership, public_ownership]
+               [public_ownership]
     end
 
-    test "list_ownerships_by_profile/2 returns only the profile public
-    ownerships when :public is set to true" do
+    test "list_ownerships_by_profile/2 returns all the profile ownerships when
+    :include_private is set to true" do
       profile_id = profile_fixture().id
 
       private_ownership = ownership_fixture(profile_id)
@@ -130,12 +130,14 @@ defmodule Prepair.ProfilesTest do
       assert Profiles.list_ownerships() ==
                [private_ownership, public_ownership, third_ownership]
 
-      assert Profiles.list_ownerships_by_profile(profile_id, public: true) ==
-               [public_ownership]
+      assert Profiles.list_ownerships_by_profile(profile_id,
+               include_private: true
+             ) ==
+               [private_ownership, public_ownership]
     end
 
-    test "list_ownerships_by_product/2 returns all the product ownerships by
-    default" do
+    test "list_ownerships_by_product/2 returns only the product public
+    ownerships by default" do
       product_id = product_fixture().id
 
       private_ownership =
@@ -153,11 +155,11 @@ defmodule Prepair.ProfilesTest do
                [private_ownership, public_ownership, third_ownership]
 
       assert Profiles.list_ownerships_by_product(product_id) ==
-               [private_ownership, public_ownership]
+               [public_ownership]
     end
 
-    test "list_ownerships_by_product/2 returns only the product public
-    ownerships when :public is set to true" do
+    test "list_ownerships_by_product/2 returns all the product ownerships when
+    include_private: is set to true" do
       product_id = product_fixture().id
 
       private_ownership =
@@ -174,11 +176,14 @@ defmodule Prepair.ProfilesTest do
       assert Profiles.list_ownerships() ==
                [private_ownership, public_ownership, third_ownership]
 
-      assert Profiles.list_ownerships_by_product(product_id, public: true) ==
-               [public_ownership]
+      assert Profiles.list_ownerships_by_product(product_id,
+               include_private: true
+             ) ==
+               [private_ownership, public_ownership]
     end
 
-    test "count_ownerships_by_product returns the ownership count for the given product" do
+    test "count_ownerships_by_product returns the ownership count for the given
+    product" do
       product_id = product_fixture().id
 
       _private_ownership =
