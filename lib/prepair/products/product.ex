@@ -26,11 +26,12 @@ defmodule Prepair.Products.Product do
 
   @primary_key {:id, :id, autogenerate: true}
   schema "products" do
-    belongs_to :category, Category
-    belongs_to :manufacturer, Manufacturer
+    belongs_to :category, Category, foreign_key: :category_id
+    belongs_to :manufacturer, Manufacturer, foreign_key: :manufacturer_id
 
     many_to_many :parts, Part,
       join_through: "product_parts",
+      join_keys: [product_id: :id, part_id: :id],
       on_replace: :delete
 
     has_many :ownerships, Ownership

@@ -25,11 +25,12 @@ defmodule Prepair.Products.Part do
 
   @primary_key {:id, :id, autogenerate: true}
   schema "parts" do
-    belongs_to :category, Category
-    belongs_to :manufacturer, Manufacturer
+    belongs_to :category, Category, foreign_key: :category_id
+    belongs_to :manufacturer, Manufacturer, foreign_key: :manufacturer_id
 
     many_to_many :products, Product,
       join_through: "product_parts",
+      join_keys: [part_id: :id, product_id: :id],
       on_replace: :delete
 
     field :product_ids, {:array, :integer}, virtual: true, default: []
