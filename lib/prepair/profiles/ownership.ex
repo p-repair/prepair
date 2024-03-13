@@ -20,8 +20,8 @@ defmodule Prepair.Profiles.Ownership do
 
   @primary_key {:id, :id, autogenerate: true}
   schema "ownerships" do
-    belongs_to :product, Product
-    belongs_to :profile, Profile
+    belongs_to :product, Product, foreign_key: :product_id
+    belongs_to :profile, Profile, foreign_key: :profile_id
 
     field :public, :boolean, default: false
     field :date_of_purchase, :date
