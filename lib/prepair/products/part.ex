@@ -23,6 +23,7 @@ defmodule Prepair.Products.Part do
               :main_material
             ]
 
+  @primary_key {:id, :id, autogenerate: true}
   schema "parts" do
     belongs_to :category, Category
     belongs_to :manufacturer, Manufacturer

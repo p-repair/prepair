@@ -13,6 +13,7 @@ defmodule Prepair.Products.Category do
               :image
             ]
 
+  @primary_key {:id, :id, autogenerate: true}
   schema "categories" do
     has_many :products, Product
     has_many :parts, Part

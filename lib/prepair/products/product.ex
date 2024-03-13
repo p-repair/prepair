@@ -24,6 +24,7 @@ defmodule Prepair.Products.Product do
               :end_of_production
             ]
 
+  @primary_key {:id, :id, autogenerate: true}
   schema "products" do
     belongs_to :category, Category
     belongs_to :manufacturer, Manufacturer

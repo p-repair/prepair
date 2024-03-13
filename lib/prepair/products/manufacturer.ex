@@ -8,6 +8,7 @@ defmodule Prepair.Products.Manufacturer do
 
   @fields @required_fields ++ [:description, :image]
 
+  @primary_key {:id, :id, autogenerate: true}
   schema "manufacturers" do
     has_many :products, Product
     has_many :parts, Part
