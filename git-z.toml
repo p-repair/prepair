@@ -36,6 +36,7 @@ list = [
   "c:accounts",
   "c:auth",
   "c:newsletter",
+  "c:notifications",
   "c:products",
   "c:profiles",
 
