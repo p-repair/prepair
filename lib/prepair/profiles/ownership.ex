@@ -18,6 +18,7 @@ defmodule Prepair.Profiles.Ownership do
               :price_of_purchase
             ]
 
+  @primary_key {:id, :id, autogenerate: true}
   schema "ownerships" do
     belongs_to :product, Product
     belongs_to :profile, Profile
