@@ -17,7 +17,7 @@ defmodule PrepairWeb.Api.Profiles.OwnershipJSON do
     %{data: data(ownership)}
   end
 
-  defp data(%Ownership{} = ownership) do
+  def data(%Ownership{} = ownership) do
     ownership = Repo.preload(ownership, [:profile, :product])
     manufacturer = Products.get_manufacturer!(ownership.product.manufacturer_id)
 
