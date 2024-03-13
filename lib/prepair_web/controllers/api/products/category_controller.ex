@@ -12,8 +12,10 @@ defmodule PrepairWeb.Api.Products.CategoryController do
   end
 
   def create(conn, %{"category" => category_params}) do
+    params = category_params |> normalise_params()
+
     with {:ok, %Category{} = category} <-
-           Products.create_category(category_params) do
+           Products.create_category(params) do
       conn
       |> put_status(:created)
       |> put_resp_header(
@@ -30,14 +32,15 @@ defmodule PrepairWeb.Api.Products.CategoryController do
   end
 
   def update(conn, %{"id" => id, "category" => category_params}) do
+    params = category_params |> normalise_params()
     category = Products.get_category!(id)
 
     # Trick to avoid empty fields returned by FlutterFlow when value isn't changed.
-    category_params =
-      Map.filter(category_params, fn {_key, val} -> val != "" end)
+    params =
+      Map.filter(params, fn {_key, val} -> val != "" end)
 
     with {:ok, %Category{} = category} <-
-           Products.update_category(category, category_params) do
+           Products.update_category(category, params) do
       render(conn, :show, category: category)
     end
   end
@@ -49,5 +52,18 @@ defmodule PrepairWeb.Api.Products.CategoryController do
            Products.delete_category(category) do
       send_resp(conn, :no_content, "")
     end
+  end
+
+  @doc """
+  Helper function to transform string keys into atom keys before to pass
+  them to the context functions.
+
+  """
+  def normalise_params(params) do
+    params
+    |> Map.to_list()
+    |> Enum.reduce(%{}, fn {k, v}, acc ->
+      Map.put(acc, String.to_existing_atom(k), v)
+    end)
   end
 end

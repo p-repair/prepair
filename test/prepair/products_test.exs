@@ -4,10 +4,11 @@ defmodule Prepair.ProductsTest do
   alias Prepair.Products
   alias Prepair.Repo
 
+  import Prepair.NotificationsFixtures
+  import Prepair.ProductsFixtures
+
   describe "manufacturers" do
     alias Prepair.Products.Manufacturer
-
-    import Prepair.ProductsFixtures
 
     @invalid_attrs %{description: nil, image: nil, name: nil}
 
@@ -81,8 +82,6 @@ defmodule Prepair.ProductsTest do
   describe "categories" do
     alias Prepair.Products.Category
 
-    import Prepair.ProductsFixtures
-
     @invalid_attrs %{
       average_lifetime_m: nil,
       description: nil,
@@ -91,7 +90,7 @@ defmodule Prepair.ProductsTest do
     }
 
     test "list_categories/0 returns all categories" do
-      category = category_fixture()
+      category = category_fixture() |> unload_category_relations()
       assert Products.list_categories() == [category]
     end
 
@@ -101,11 +100,19 @@ defmodule Prepair.ProductsTest do
     end
 
     test "create_category/1 with valid data creates a category" do
-      valid_attrs = category_valid_attrs()
+      notification_templates = create_notification_templates()
+
+      notification_template_ids =
+        create_notification_template_ids(notification_templates)
+
+      valid_attrs =
+        category_valid_attrs()
+        |> Map.put(:notification_template_ids, notification_template_ids)
 
       assert {:ok, %Category{} = category} =
                Products.create_category(valid_attrs)
 
+      assert category.notification_templates == notification_templates
       assert category.average_lifetime_m == valid_attrs.average_lifetime_m
       assert category.description == valid_attrs.description
       assert category.image == valid_attrs.image
@@ -118,9 +125,21 @@ defmodule Prepair.ProductsTest do
     end
 
     test "update_category/2 with valid data updates the category" do
-      category = category_fixture()
+      notification_templates = create_notification_templates()
+
+      notification_template_ids =
+        create_notification_template_ids(notification_templates)
+
+      category =
+        category_fixture(%{notification_template_ids: notification_template_ids})
+
+      new_notification_templates = create_notification_templates()
+
+      new_notification_template_ids =
+        create_notification_template_ids(new_notification_templates)
 
       update_attrs = %{
+        notification_template_ids: new_notification_template_ids,
         average_lifetime_m: 43,
         description: "some updated description",
         image: "some updated image",
@@ -130,6 +149,7 @@ defmodule Prepair.ProductsTest do
       assert {:ok, %Category{} = category} =
                Products.update_category(category, update_attrs)
 
+      assert category.notification_templates == new_notification_templates
       assert category.average_lifetime_m == 43
       assert category.description == "some updated description"
       assert category.image == "some updated image"
@@ -163,8 +183,6 @@ defmodule Prepair.ProductsTest do
   describe "products" do
     alias Prepair.Products.Product
 
-    import Prepair.ProductsFixtures
-
     @invalid_attrs %{
       average_lifetime_m: nil,
       country_of_origin: nil,
@@ -177,10 +195,15 @@ defmodule Prepair.ProductsTest do
     }
 
     # Preload fields [:category, :manufacturer, :parts] to be aligned with
-    # fuctions tested below, such as get_product!/1 where they are not
-    # preloaded.
+    # fuctions tested below, such as get_product!/1 where they are preloaded.
     defp preload_product_relations(product) do
-      product |> Repo.preload([:category, :manufacturer, :parts])
+      product
+      |> Repo.preload([
+        :category,
+        :manufacturer,
+        :parts,
+        :notification_templates
+      ])
     end
 
     test "list_products/1 returns all products when no filters are passed" do
@@ -371,14 +394,21 @@ defmodule Prepair.ProductsTest do
     end
 
     test "create_product/1 with valid data creates a product" do
-      _parts = [part_fixture(), part_fixture()]
-      # This call is useful until part_fixture() preloads are not removed.
-      parts = Products.list_parts()
-      part_ids = parts |> Enum.map(fn x -> x.id end)
-      valid_attrs = product_valid_attrs() |> Map.put(:part_ids, part_ids)
+      parts = create_parts()
+      part_ids = create_part_ids(parts)
+      notification_templates = create_notification_templates()
+
+      notification_template_ids =
+        create_notification_template_ids(notification_templates)
+
+      valid_attrs =
+        product_valid_attrs()
+        |> Map.put(:part_ids, part_ids)
+        |> Map.put(:notification_template_ids, notification_template_ids)
 
       assert {:ok, %Product{} = product} = Products.create_product(valid_attrs)
 
+      assert product.notification_templates == notification_templates
       assert product.parts == parts
       assert product.category_id == valid_attrs.category_id
       assert product.manufacturer_id == valid_attrs.manufacturer_id
@@ -398,14 +428,30 @@ defmodule Prepair.ProductsTest do
     end
 
     test "update_product/2 with valid data updates the product" do
-      product = product_fixture() |> preload_product_relations()
-      _parts = [part_fixture(), part_fixture()]
-      # This call is useful until part_fixture() preloads are not removed.
-      parts = Products.list_parts()
-      part_ids = parts |> Enum.map(fn x -> x.id end)
+      parts = create_parts()
+      part_ids = create_part_ids(parts)
+      notification_templates = create_notification_templates()
+
+      notification_template_ids =
+        create_notification_template_ids(notification_templates)
+
+      product =
+        product_fixture(%{
+          notification_template_ids: notification_template_ids,
+          part_ids: part_ids
+        })
+        |> preload_product_relations()
+
+      new_parts = create_parts()
+      new_part_ids = create_part_ids(new_parts)
+      new_notification_templates = create_notification_templates()
+
+      new_notification_template_ids =
+        create_notification_template_ids(new_notification_templates)
 
       update_attrs = %{
-        part_ids: part_ids,
+        notification_template_ids: new_notification_template_ids,
+        part_ids: new_part_ids,
         average_lifetime_m: 43,
         country_of_origin: "some updated country_of_origin",
         description: "some updated description",
@@ -419,7 +465,8 @@ defmodule Prepair.ProductsTest do
       assert {:ok, %Product{} = product} =
                Products.update_product(product, update_attrs)
 
-      assert product.parts == parts
+      assert product.notification_templates == new_notification_templates
+      assert product.parts == new_parts
       assert product.average_lifetime_m == 43
       assert product.country_of_origin == "some updated country_of_origin"
       assert product.description == "some updated description"
@@ -454,13 +501,8 @@ defmodule Prepair.ProductsTest do
     end
   end
 
-  # TODO: Cancel the part preloads in the fixture and create a helper function
-  # in this module to to preloads per tests when necessary.
-  # It will allow to remove the parts unloads in create/product test for instance.
   describe "parts" do
     alias Prepair.Products.Part
-
-    import Prepair.ProductsFixtures
 
     @invalid_attrs %{
       average_lifetime_m: nil,
@@ -477,12 +519,7 @@ defmodule Prepair.ProductsTest do
     test "list_parts/0 returns all parts" do
       # Unload field :products to be aligned with list_parts() where they are
       # not preloaded.
-      part =
-        part_fixture()
-        |> unload(:category)
-        |> unload(:manufacturer)
-        |> unload(:products, :many)
-
+      part = part_fixture() |> unload_part_relations()
       assert Products.list_parts() == [part]
     end
 
@@ -492,11 +529,20 @@ defmodule Prepair.ProductsTest do
     end
 
     test "create_part/1 with valid data creates a part" do
-      products = [product_fixture(), product_fixture()]
-      product_ids = products |> Enum.map(fn x -> x.id end)
-      valid_attrs = part_valid_attrs() |> Map.put(:product_ids, product_ids)
+      products = create_products()
+      product_ids = create_product_ids(products)
+      notification_templates = create_notification_templates()
+
+      notification_template_ids =
+        create_notification_template_ids(notification_templates)
+
+      valid_attrs =
+        part_valid_attrs()
+        |> Map.put(:product_ids, product_ids)
+        |> Map.put(:notification_template_ids, notification_template_ids)
 
       assert {:ok, %Part{} = part} = Products.create_part(valid_attrs)
+      assert part.notification_templates == notification_templates
       assert part.products == products
       assert part.category_id == valid_attrs.category_id
       assert part.manufacturer_id == valid_attrs.manufacturer_id
@@ -516,13 +562,29 @@ defmodule Prepair.ProductsTest do
     end
 
     test "update_part/2 with valid data updates the part" do
-      part = part_fixture()
+      products = create_products()
+      product_ids = create_product_ids(products)
+      notification_templates = create_notification_templates()
 
-      products = [product_fixture(), product_fixture()]
-      product_ids = products |> Enum.map(fn x -> x.id end)
+      notification_template_ids =
+        create_notification_template_ids(notification_templates)
+
+      part =
+        part_fixture(%{
+          notification_template_ids: notification_template_ids,
+          product_ids: product_ids
+        })
+
+      new_products = create_products()
+      new_product_ids = create_product_ids(new_products)
+      new_notification_templates = create_notification_templates()
+
+      new_notification_template_ids =
+        create_notification_template_ids(new_notification_templates)
 
       update_attrs = %{
-        product_ids: product_ids,
+        notification_template_ids: new_notification_template_ids,
+        product_ids: new_product_ids,
         average_lifetime_m: 43,
         country_of_origin: "some updated country_of_origin",
         description: "some updated description",
@@ -536,7 +598,8 @@ defmodule Prepair.ProductsTest do
 
       assert {:ok, %Part{} = part} = Products.update_part(part, update_attrs)
 
-      assert part.products == products
+      assert part.notification_templates == new_notification_templates
+      assert part.products == new_products
       assert part.average_lifetime_m == 43
       assert part.country_of_origin == "some updated country_of_origin"
       assert part.description == "some updated description"

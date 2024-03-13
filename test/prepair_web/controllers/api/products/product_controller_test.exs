@@ -1,8 +1,8 @@
 defmodule PrepairWeb.Api.Products.ProductControllerTest do
   use PrepairWeb.ConnCase
 
+  import Prepair.NotificationsFixtures
   import Prepair.ProductsFixtures
-  alias Prepair.DataCase
   alias Prepair.Products
   alias PrepairWeb.Api.Products.ProductJSON
   alias Prepair.Products.Product
@@ -30,9 +30,19 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
   }
 
   defp create_product(_) do
-    parts = [part_fixture(), part_fixture()]
-    part_ids = parts |> Enum.map(fn x -> x.id end)
-    product = product_fixture(%{part_ids: part_ids})
+    parts = create_parts()
+    part_ids = create_part_ids(parts)
+    notification_templates = create_notification_templates()
+
+    notification_template_ids =
+      create_notification_template_ids(notification_templates)
+
+    product =
+      product_fixture(%{
+        part_ids: part_ids,
+        notification_template_ids: notification_template_ids
+      })
+
     %{product: product}
   end
 
@@ -160,20 +170,27 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
                product |> to_normalised_json()
     end
 
-    test "handle product.parts creation (which are currently not in the JSON
-    render)",
+    test "handle product many_to_many relations creation (which are currently
+    not in the JSON render)",
          %{conn: conn} do
-      _parts = [part_fixture(), part_fixture()]
-      # This call is useful until part_fixture() preloads are not removed.
-      parts = Products.list_parts()
-      part_ids = parts |> Enum.map(fn x -> x.id end)
-      product = product_valid_attrs() |> Map.put(:part_ids, part_ids)
+      parts = create_parts()
+      part_ids = create_part_ids(parts)
+      notification_templates = create_notification_templates()
+
+      notification_template_ids =
+        create_notification_template_ids(notification_templates)
+
+      product =
+        product_valid_attrs()
+        |> Map.put(:part_ids, part_ids)
+        |> Map.put(:notification_template_ids, notification_template_ids)
 
       conn = post(conn, ~p"/api/v1/products/products", product: product)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       product = Products.get_product!(id)
       assert product.parts == parts
+      assert product.notification_templates == notification_templates
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -208,20 +225,23 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
                product |> to_normalised_json()
     end
 
-    test "updates product.parts (which are currently not in the JSON render)",
+    test "updates product many_to_many relations (which are currently not in the
+    JSON render)",
          %{
            conn: conn,
            product: %Product{id: id} = product
          } do
-      new_part_list =
-        [part_fixture(), part_fixture(), part_fixture()]
-        |> Enum.map(&DataCase.unload(&1, :category))
-        |> Enum.map(&DataCase.unload(&1, :manufacturer))
-        |> Enum.map(&DataCase.unload(&1, :products, :many))
+      new_parts = create_parts()
+      new_part_ids = create_part_ids(new_parts)
+      new_notification_templates = create_notification_templates()
 
-      new_part_ids = new_part_list |> Enum.map(fn x -> x.id end)
+      new_notification_template_ids =
+        create_notification_template_ids(new_notification_templates)
 
-      update_attrs = @update_attrs |> Map.put(:part_ids, new_part_ids)
+      update_attrs =
+        @update_attrs
+        |> Map.put(:part_ids, new_part_ids)
+        |> Map.put(:notification_template_ids, new_notification_template_ids)
 
       conn =
         put(conn, ~p"/api/v1/products/products/#{product}",
@@ -231,7 +251,8 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
       product = Products.get_product!(id)
-      assert product.parts == new_part_list
+      assert product.parts == new_parts
+      assert product.notification_templates == new_notification_templates
     end
 
     test "renders errors when data is invalid", %{

@@ -2,6 +2,7 @@ defmodule Prepair.Products.Part do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Prepair.Notifications.NotificationTemplate
   alias Prepair.Products.{Category, Manufacturer, Product}
 
   @required_fields [
@@ -14,6 +15,7 @@ defmodule Prepair.Products.Part do
             [
               :category_id,
               :product_ids,
+              :notification_template_ids,
               :description,
               :image,
               :average_lifetime_m,
@@ -33,7 +35,17 @@ defmodule Prepair.Products.Part do
       join_keys: [part_id: :id, product_id: :id],
       on_replace: :delete
 
+    many_to_many :notification_templates, NotificationTemplate,
+      join_through: "part_notification_templates",
+      join_keys: [part_id: :id, notification_template_id: :id],
+      on_replace: :delete
+
     field :product_ids, {:array, :integer}, virtual: true, default: []
+
+    field :notification_template_ids, {:array, :integer},
+      virtual: true,
+      default: []
+
     field :average_lifetime_m, :integer
     field :country_of_origin, :string
     field :description, :string
