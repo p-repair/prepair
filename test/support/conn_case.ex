@@ -42,6 +42,15 @@ defmodule PrepairWeb.ConnCase do
   end
 
   @doc """
+  Format data to be normalised JSON and pass asserts in tests.
+  """
+  def normalise_json(data) do
+    data
+    |> Jason.encode!()
+    |> Jason.decode!()
+  end
+
+  @doc """
   Recycles the connection.
 
   This redefines `recycle/1` from `Phoenix.ConnTest` with different defaults, so
