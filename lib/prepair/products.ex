@@ -442,7 +442,7 @@ defmodule Prepair.Products do
 
   """
   def change_product(%Product{} = product, attrs \\ %{}) do
-    parts = list_parts_by_id(attrs["part_ids"])
+    parts = list_parts_by_id(attrs[:part_ids])
 
     product
     |> Product.changeset(attrs)
@@ -555,7 +555,7 @@ defmodule Prepair.Products do
 
   """
   def change_part(%Part{} = part, attrs \\ %{}) do
-    products = list_products_by_id(attrs["product_ids"])
+    products = list_products_by_id(attrs[:product_ids])
 
     part
     |> Part.changeset(attrs)
