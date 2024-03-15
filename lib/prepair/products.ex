@@ -262,6 +262,10 @@ defmodule Prepair.Products do
     query |> where([p], p.id in ^product_ids)
   end
 
+  defp filter({_k, []}, query) do
+    query
+  end
+
   defp filter({k, v}, query) when is_list(v) do
     query |> where([p], field(p, ^k) in ^v)
   end
