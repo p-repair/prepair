@@ -24,4 +24,9 @@ defmodule PrepairWeb.Api.Products.CategoryJSON do
       name: category.name
     }
   end
+
+  # This function clause is needed to fit the case part.category is nil.
+  def data(nil) do
+    nil
+  end
 end

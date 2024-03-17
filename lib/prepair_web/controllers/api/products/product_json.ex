@@ -1,4 +1,5 @@
 defmodule PrepairWeb.Api.Products.ProductJSON do
+  alias PrepairWeb.Api.Products.{CategoryJSON, ManufacturerJSON}
   alias Prepair.Products.Product
   alias Prepair.Repo
 
@@ -21,10 +22,8 @@ defmodule PrepairWeb.Api.Products.ProductJSON do
 
     %{
       id: product.id,
-      category_id: product.category.id,
-      category_name: product.category.name,
-      manufacturer_id: product.manufacturer.id,
-      manufacturer_name: product.manufacturer.name,
+      category: CategoryJSON.data(product.category),
+      manufacturer: ManufacturerJSON.data(product.manufacturer),
       name: product.name,
       reference: product.reference,
       description: product.description,
