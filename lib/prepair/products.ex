@@ -562,4 +562,24 @@ defmodule Prepair.Products do
     |> Part.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:products, products)
   end
+
+  ## TODO: CHOISIR L’ÉCRITURE DE LA FONCTION
+  ## Proposition 2, qui n’essaie pas une assoc inutile, mais du coup effectue
+  ## une comparaison sur la valeur de product. Je ne sais pas ce qui est le
+  ## plus efficace.
+  def change_part_bis(%Part{} = part, attrs \\ %{}) do
+    products = list_products_by_id(attrs[:product_ids])
+    dbg(products)
+
+    part = Part.changeset(part, attrs)
+
+    case products != [] do
+      true ->
+        part
+        |> Ecto.Changeset.put_assoc(:products, products)
+
+      false ->
+        part
+    end
+  end
 end
