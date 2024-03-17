@@ -2,6 +2,8 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
   use PrepairWeb.ConnCase
 
   import Prepair.ProductsFixtures
+  alias Prepair.DataCase
+  alias Prepair.Products
   alias Prepair.Products.Part
   alias PrepairWeb.Api.Products.PartJSON
 
@@ -28,7 +30,9 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
   }
 
   defp create_part(_) do
-    part = part_fixture()
+    products = [product_fixture(), product_fixture()]
+    product_ids = products |> Enum.map(fn x -> x.id end)
+    part = part_fixture(%{product_ids: product_ids})
     %{part: part}
   end
 
@@ -73,6 +77,22 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
       assert json_response(conn, 200)["data"] == part |> to_normalised_json()
     end
 
+    test "handle part.products creation (which are currently not in the JSON
+    render)",
+         %{conn: conn} do
+      _products = [product_fixture(), product_fixture()]
+      # This call is useful until product_fixture() preloads are not removed.
+      products = Products.list_products()
+      product_ids = products |> Enum.map(fn x -> x.id end)
+      part = part_valid_attrs() |> Map.put(:product_ids, product_ids)
+
+      conn = post(conn, ~p"/api/v1/products/parts", part: part)
+      assert %{"id" => id} = json_response(conn, 201)["data"]
+
+      part = Products.get_part!(id)
+      assert part.products == products
+    end
+
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, ~p"/api/v1/products/parts", part: @invalid_attrs)
 
@@ -99,6 +119,28 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
       part = Prepair.Products.get_part!(id)
 
       assert json_response(conn, 200)["data"] == part |> to_normalised_json()
+    end
+
+    test "updates part.products (which are currently not in the JSON render)",
+         %{
+           conn: conn,
+           part: %Part{id: id} = part
+         } do
+      new_product_list =
+        [product_fixture(), product_fixture(), product_fixture()]
+        |> Enum.map(&DataCase.unload(&1, :category))
+        |> Enum.map(&DataCase.unload(&1, :manufacturer))
+        |> Enum.map(&DataCase.unload(&1, :parts, :many))
+
+      new_product_ids = new_product_list |> Enum.map(fn x -> x.id end)
+
+      update_attrs = @update_attrs |> Map.put(:product_ids, new_product_ids)
+
+      conn = put(conn, ~p"/api/v1/products/parts/#{part}", part: update_attrs)
+      assert %{"id" => ^id} = json_response(conn, 200)["data"]
+
+      part = Products.get_part!(id)
+      assert part.products == new_product_list
     end
 
     test "renders errors when data is invalid", %{

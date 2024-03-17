@@ -284,7 +284,8 @@ defmodule Prepair.Products do
   """
   def list_products_by_id(nil), do: []
 
-  def list_products_by_id(product_ids) do
+  def list_products_by_id(product_ids)
+      when is_list(product_ids) and product_ids != [] do
     Repo.all(from p in Product, where: p.id in ^product_ids)
   end
 
@@ -370,7 +371,7 @@ defmodule Prepair.Products do
 
   """
   def change_product(%Product{} = product, attrs \\ %{}) do
-    parts = list_parts_by_id(attrs["part_ids"])
+    parts = list_parts_by_id(attrs[:part_ids])
 
     product
     |> Product.changeset(attrs)
@@ -393,11 +394,11 @@ defmodule Prepair.Products do
   end
 
   @doc """
-  Returns the list of products based on a list of ids.
+  Returns the list of parts based on a list of ids.
   """
   def list_parts_by_id(nil), do: []
 
-  def list_parts_by_id(part_ids) do
+  def list_parts_by_id(part_ids) when is_list(part_ids) and part_ids != [] do
     Repo.all(from p in Part, where: p.id in ^part_ids)
   end
 
@@ -483,7 +484,7 @@ defmodule Prepair.Products do
 
   """
   def change_part(%Part{} = part, attrs \\ %{}) do
-    products = list_products_by_id(attrs["product_ids"])
+    products = list_products_by_id(attrs[:product_ids])
 
     part
     |> Part.changeset(attrs)

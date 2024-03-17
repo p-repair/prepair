@@ -371,9 +371,15 @@ defmodule Prepair.ProductsTest do
     end
 
     test "create_product/1 with valid data creates a product" do
-      valid_attrs = product_valid_attrs()
+      _parts = [part_fixture(), part_fixture()]
+      # This call is useful until part_fixture() preloads are not removed.
+      parts = Products.list_parts()
+      part_ids = parts |> Enum.map(fn x -> x.id end)
+      valid_attrs = product_valid_attrs() |> Map.put(:part_ids, part_ids)
 
       assert {:ok, %Product{} = product} = Products.create_product(valid_attrs)
+
+      assert product.parts == parts
       assert product.category_id == valid_attrs.category_id
       assert product.manufacturer_id == valid_attrs.manufacturer_id
       assert product.average_lifetime_m == valid_attrs.average_lifetime_m
@@ -393,8 +399,13 @@ defmodule Prepair.ProductsTest do
 
     test "update_product/2 with valid data updates the product" do
       product = product_fixture() |> preload_product_relations()
+      _parts = [part_fixture(), part_fixture()]
+      # This call is useful until part_fixture() preloads are not removed.
+      parts = Products.list_parts()
+      part_ids = parts |> Enum.map(fn x -> x.id end)
 
       update_attrs = %{
+        part_ids: part_ids,
         average_lifetime_m: 43,
         country_of_origin: "some updated country_of_origin",
         description: "some updated description",
@@ -408,6 +419,7 @@ defmodule Prepair.ProductsTest do
       assert {:ok, %Product{} = product} =
                Products.update_product(product, update_attrs)
 
+      assert product.parts == parts
       assert product.average_lifetime_m == 43
       assert product.country_of_origin == "some updated country_of_origin"
       assert product.description == "some updated description"
@@ -442,6 +454,9 @@ defmodule Prepair.ProductsTest do
     end
   end
 
+  # TODO: Cancel the part preloads in the fixture and create a helper function
+  # in this module to to preloads per tests when necessary.
+  # It will allow to remove the parts unloads in create/product test for instance.
   describe "parts" do
     alias Prepair.Products.Part
 
@@ -477,9 +492,14 @@ defmodule Prepair.ProductsTest do
     end
 
     test "create_part/1 with valid data creates a part" do
-      valid_attrs = part_valid_attrs()
+      _products = [product_fixture(), product_fixture()]
+      # This call is useful until product_fixture() preloads are not removed.
+      products = Products.list_products()
+      product_ids = products |> Enum.map(fn x -> x.id end)
+      valid_attrs = part_valid_attrs() |> Map.put(:product_ids, product_ids)
 
       assert {:ok, %Part{} = part} = Products.create_part(valid_attrs)
+      assert part.products == products
       assert part.category_id == valid_attrs.category_id
       assert part.manufacturer_id == valid_attrs.manufacturer_id
       assert part.average_lifetime_m == valid_attrs.average_lifetime_m
@@ -500,7 +520,13 @@ defmodule Prepair.ProductsTest do
     test "update_part/2 with valid data updates the part" do
       part = part_fixture()
 
+      _products = [product_fixture(), product_fixture()]
+      # This call is useful until product_fixture() preloads are not removed.
+      products = Products.list_products()
+      product_ids = products |> Enum.map(fn x -> x.id end)
+
       update_attrs = %{
+        product_ids: product_ids,
         average_lifetime_m: 43,
         country_of_origin: "some updated country_of_origin",
         description: "some updated description",
@@ -513,6 +539,8 @@ defmodule Prepair.ProductsTest do
       }
 
       assert {:ok, %Part{} = part} = Products.update_part(part, update_attrs)
+
+      assert part.products == products
       assert part.average_lifetime_m == 43
       assert part.country_of_origin == "some updated country_of_origin"
       assert part.description == "some updated description"
