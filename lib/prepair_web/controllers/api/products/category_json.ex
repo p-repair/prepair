@@ -15,7 +15,7 @@ defmodule PrepairWeb.Api.Products.CategoryJSON do
     %{data: data(category)}
   end
 
-  defp data(%Category{} = category) do
+  def data(%Category{} = category) do
     %{
       id: category.id,
       average_lifetime_m: category.average_lifetime_m,

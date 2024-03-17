@@ -16,7 +16,7 @@ defmodule PrepairWeb.Api.Products.PartJSON do
     %{data: data(part)}
   end
 
-  defp data(%Part{} = part) do
+  def data(%Part{} = part) do
     part = Repo.preload(part, [:category, :manufacturer])
 
     %{

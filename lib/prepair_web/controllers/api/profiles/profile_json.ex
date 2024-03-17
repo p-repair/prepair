@@ -16,7 +16,7 @@ defmodule PrepairWeb.Api.Profiles.ProfileJSON do
     %{data: data(profile)}
   end
 
-  defp data(%Profile{} = profile) do
+  def data(%Profile{} = profile) do
     profile = Repo.preload(profile, [:user])
 
     %{

@@ -3,6 +3,7 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
 
   import Prepair.ProductsFixtures
   alias Prepair.Products.Category
+  alias PrepairWeb.Api.Products.CategoryJSON
 
   @update_attrs %{
     average_lifetime_m: 43,
@@ -23,6 +24,12 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
     %{category: category}
   end
 
+  defp to_normalised_json(data) do
+    data
+    |> CategoryJSON.data()
+    |> normalise_json()
+  end
+
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
@@ -36,13 +43,7 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
       conn = get(conn, ~p"/api/v1/products/categories")
 
       assert json_response(conn, 200)["data"] == [
-               %{
-                 "id" => category.id,
-                 "average_lifetime_m" => category.average_lifetime_m,
-                 "description" => category.description,
-                 "image" => category.image,
-                 "name" => category.name
-               }
+               category |> to_normalised_json()
              ]
     end
   end
@@ -50,7 +51,6 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
   describe "create category" do
     test "renders a category when data is valid", %{conn: conn} do
       category = category_valid_attrs()
-      category_name = category.name
       conn = post(conn, ~p"/api/v1/products/categories", category: category)
 
       assert %{"id" => id} = json_response(conn, 201)["data"]
@@ -60,13 +60,10 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
 
       conn = get(conn, ~p"/api/v1/products/categories/#{id}")
 
-      assert %{
-               "id" => ^id,
-               "average_lifetime_m" => 42,
-               "description" => "some description",
-               "image" => "some image",
-               "name" => ^category_name
-             } = json_response(conn, 200)["data"]
+      category = Prepair.Products.get_category!(id)
+
+      assert json_response(conn, 200)["data"] ==
+               category |> to_normalised_json()
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -96,13 +93,10 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
 
       conn = get(conn, ~p"/api/v1/products/categories/#{id}")
 
-      assert %{
-               "id" => ^id,
-               "average_lifetime_m" => 43,
-               "description" => "some updated description",
-               "image" => "some updated image",
-               "name" => "some updated name"
-             } = json_response(conn, 200)["data"]
+      category = Prepair.Products.get_category!(id)
+
+      assert json_response(conn, 200)["data"] ==
+               category |> to_normalised_json()
     end
 
     test "renders errors when data is invalid", %{

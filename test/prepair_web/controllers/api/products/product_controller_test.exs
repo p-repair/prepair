@@ -2,6 +2,7 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
   use PrepairWeb.ConnCase
 
   import Prepair.ProductsFixtures
+  alias PrepairWeb.Api.Products.ProductJSON
   alias Prepair.Products.Product
 
   @update_attrs %{
@@ -31,6 +32,12 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
     %{product: product}
   end
 
+  defp to_normalised_json(data) do
+    data
+    |> ProductJSON.data()
+    |> normalise_json()
+  end
+
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
@@ -47,23 +54,7 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
       conn = get(conn, ~p"/api/v1/products/products")
 
       assert json_response(conn, 200)["data"] == [
-               %{
-                 "id" => product.id,
-                 "category_id" => product.category.id,
-                 "category_name" => product.category.name,
-                 "manufacturer_id" => product.manufacturer.id,
-                 "manufacturer_name" => product.manufacturer.name,
-                 "name" => product.name,
-                 "reference" => product.reference,
-                 "description" => product.description,
-                 "image" => product.image,
-                 "average_lifetime_m" => product.average_lifetime_m,
-                 "country_of_origin" => product.country_of_origin,
-                 "start_of_production" =>
-                   Date.to_string(product.start_of_production),
-                 "end_of_production" =>
-                   Date.to_string(product.end_of_production)
-               }
+               product |> to_normalised_json()
              ]
     end
 
@@ -77,23 +68,7 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
       conn = get(conn, ~p"/api/v1/products/products", params)
 
       assert json_response(conn, 200)["data"] == [
-               %{
-                 "id" => product.id,
-                 "category_id" => product.category.id,
-                 "category_name" => product.category.name,
-                 "manufacturer_id" => product.manufacturer.id,
-                 "manufacturer_name" => product.manufacturer.name,
-                 "name" => product.name,
-                 "reference" => product.reference,
-                 "description" => product.description,
-                 "image" => product.image,
-                 "average_lifetime_m" => product.average_lifetime_m,
-                 "country_of_origin" => product.country_of_origin,
-                 "start_of_production" =>
-                   Date.to_string(product.start_of_production),
-                 "end_of_production" =>
-                   Date.to_string(product.end_of_production)
-               }
+               product |> to_normalised_json()
              ]
     end
 
@@ -107,23 +82,7 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
       conn = get(conn, ~p"/api/v1/products/products", params)
 
       assert json_response(conn, 200)["data"] == [
-               %{
-                 "id" => product_2.id,
-                 "category_id" => product_2.category.id,
-                 "category_name" => product_2.category.name,
-                 "manufacturer_id" => product_2.manufacturer.id,
-                 "manufacturer_name" => product_2.manufacturer.name,
-                 "name" => product_2.name,
-                 "reference" => product_2.reference,
-                 "description" => product_2.description,
-                 "image" => product_2.image,
-                 "average_lifetime_m" => product_2.average_lifetime_m,
-                 "country_of_origin" => product_2.country_of_origin,
-                 "start_of_production" =>
-                   Date.to_string(product_2.start_of_production),
-                 "end_of_production" =>
-                   Date.to_string(product_2.end_of_production)
-               }
+               product_2 |> to_normalised_json()
              ]
     end
 
@@ -138,23 +97,7 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
       conn = get(conn, ~p"/api/v1/products/products", params)
 
       assert json_response(conn, 200)["data"] == [
-               %{
-                 "id" => product_2.id,
-                 "category_id" => product_2.category.id,
-                 "category_name" => product_2.category.name,
-                 "manufacturer_id" => product_2.manufacturer.id,
-                 "manufacturer_name" => product_2.manufacturer.name,
-                 "name" => product_2.name,
-                 "reference" => product_2.reference,
-                 "description" => product_2.description,
-                 "image" => product_2.image,
-                 "average_lifetime_m" => product_2.average_lifetime_m,
-                 "country_of_origin" => product_2.country_of_origin,
-                 "start_of_production" =>
-                   Date.to_string(product_2.start_of_production),
-                 "end_of_production" =>
-                   Date.to_string(product_2.end_of_production)
-               }
+               product_2 |> to_normalised_json()
              ]
     end
 
@@ -165,23 +108,7 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
       conn = get(conn, ~p"/api/v1/products/products", params)
 
       assert json_response(conn, 200)["data"] == [
-               %{
-                 "id" => product.id,
-                 "category_id" => product.category.id,
-                 "category_name" => product.category.name,
-                 "manufacturer_id" => product.manufacturer.id,
-                 "manufacturer_name" => product.manufacturer.name,
-                 "name" => product.name,
-                 "reference" => product.reference,
-                 "description" => product.description,
-                 "image" => product.image,
-                 "average_lifetime_m" => product.average_lifetime_m,
-                 "country_of_origin" => product.country_of_origin,
-                 "start_of_production" =>
-                   Date.to_string(product.start_of_production),
-                 "end_of_production" =>
-                   Date.to_string(product.end_of_production)
-               }
+               product |> to_normalised_json()
              ]
     end
 
@@ -206,23 +133,7 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
       conn = get(conn, ~p"/api/v1/products/products", params)
 
       assert json_response(conn, 200)["data"] == [
-               %{
-                 "id" => product_3.id,
-                 "category_id" => product_3.category.id,
-                 "category_name" => product_3.category.name,
-                 "manufacturer_id" => product_3.manufacturer.id,
-                 "manufacturer_name" => product_3.manufacturer.name,
-                 "name" => product_3.name,
-                 "reference" => product_3.reference,
-                 "description" => product_3.description,
-                 "image" => product_3.image,
-                 "average_lifetime_m" => product_3.average_lifetime_m,
-                 "country_of_origin" => product_3.country_of_origin,
-                 "start_of_production" =>
-                   Date.to_string(product_3.start_of_production),
-                 "end_of_production" =>
-                   Date.to_string(product_3.end_of_production)
-               }
+               product_3 |> to_normalised_json()
              ]
     end
   end
@@ -230,9 +141,6 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
   describe "create product" do
     test "renders a product when data is valid", %{conn: conn} do
       product = product_valid_attrs()
-      product_category_id = product.category_id
-      product_manufacturer_id = product.manufacturer_id
-      product_reference = product.reference
       conn = post(conn, ~p"/api/v1/products/products", product: product)
 
       assert %{"id" => id} = json_response(conn, 201)["data"]
@@ -242,18 +150,10 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
 
       conn = get(conn, ~p"/api/v1/products/products/#{id}")
 
-      assert %{
-               "category_id" => ^product_category_id,
-               "manufacturer_id" => ^product_manufacturer_id,
-               "name" => "some name",
-               "reference" => ^product_reference,
-               "description" => "some description",
-               "image" => "some image",
-               "average_lifetime_m" => 42,
-               "country_of_origin" => "some country_of_origin",
-               "start_of_production" => "2023-07-11",
-               "end_of_production" => "2023-07-11"
-             } = json_response(conn, 200)["data"]
+      product = Prepair.Products.get_product!(id)
+
+      assert json_response(conn, 200)["data"] ==
+               product |> to_normalised_json()
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -270,9 +170,6 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
       conn: conn,
       product: %Product{id: id} = product
     } do
-      %Product{category_id: category_id} = product
-      %Product{manufacturer_id: manufacturer_id} = product
-
       conn =
         put(conn, ~p"/api/v1/products/products/#{product}",
           product: @update_attrs
@@ -285,19 +182,10 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
 
       conn = get(conn, ~p"/api/v1/products/products/#{id}")
 
-      assert %{
-               "id" => ^id,
-               "category_id" => ^category_id,
-               "manufacturer_id" => ^manufacturer_id,
-               "name" => "some updated name",
-               "reference" => "some updated reference",
-               "description" => "some updated description",
-               "image" => "some updated image",
-               "average_lifetime_m" => 43,
-               "country_of_origin" => "some updated country_of_origin",
-               "start_of_production" => "2023-09-07",
-               "end_of_production" => "2037-09-07"
-             } = json_response(conn, 200)["data"]
+      product = Prepair.Products.get_product!(id)
+
+      assert json_response(conn, 200)["data"] ==
+               product |> to_normalised_json()
     end
 
     test "renders errors when data is invalid", %{

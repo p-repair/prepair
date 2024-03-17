@@ -2,6 +2,7 @@ defmodule Prepair.ProductsTest do
   use Prepair.DataCase
 
   alias Prepair.Products
+  alias Prepair.Repo
 
   describe "manufacturers" do
     alias Prepair.Products.Manufacturer
@@ -175,26 +176,23 @@ defmodule Prepair.ProductsTest do
       start_of_production: nil
     }
 
-    # Unload fields [:category, :manufacturer, :parts] to be aligned with
-    # fuctions tested below, such as list_products() where they are not
+    # Preload fields [:category, :manufacturer, :parts] to be aligned with
+    # fuctions tested below, such as get_product!/1 where they are not
     # preloaded.
-    defp unload_product_relations(product) do
-      product
-      |> unload(:category)
-      |> unload(:manufacturer)
-      |> unload(:parts, :many)
+    defp preload_product_relations(product) do
+      product |> Repo.preload([:category, :manufacturer, :parts])
     end
 
     test "list_products/1 returns all products when no filters are passed" do
-      product = product_fixture() |> unload_product_relations()
+      product = product_fixture()
 
       assert Products.list_products() == [product]
     end
 
     test "list_products/1 returns a list of products matching with
     :product_ids value" do
-      product_1 = product_fixture() |> unload_product_relations()
-      product_2 = product_fixture() |> unload_product_relations()
+      product_1 = product_fixture()
+      product_2 = product_fixture()
 
       assert Products.list_products(product_ids: [product_1.id, product_2.id]) ==
                [
@@ -211,8 +209,8 @@ defmodule Prepair.ProductsTest do
 
     test "list_products/1 returns a list of products matching with
     :category_id value" do
-      product = product_fixture() |> unload_product_relations()
-      _product_2 = product_fixture() |> unload_product_relations()
+      product = product_fixture()
+      _product_2 = product_fixture()
 
       assert Products.list_products(category_id: [product.category_id]) == [
                product
@@ -226,8 +224,8 @@ defmodule Prepair.ProductsTest do
 
     test "list_products/1 returns a list of products matching witch
     :manufacturer_id value" do
-      product = product_fixture() |> unload_product_relations()
-      _product_2 = product_fixture() |> unload_product_relations()
+      product = product_fixture()
+      _product_2 = product_fixture()
 
       assert Products.list_products(manufacturer_id: [product.manufacturer_id]) ==
                [
@@ -242,8 +240,8 @@ defmodule Prepair.ProductsTest do
 
     test "list_products/1 returns all products if the value of both :category_id
     and :manufacturer_id is ['select']" do
-      product_1 = product_fixture() |> unload_product_relations()
-      product_2 = product_fixture() |> unload_product_relations()
+      product_1 = product_fixture()
+      product_2 = product_fixture()
 
       assert Products.list_products(
                category_id: ["select"],
@@ -287,11 +285,10 @@ defmodule Prepair.ProductsTest do
     test "list_products/1 returns matching product with :category_id value
     when :manufacturer_id is set to ['select']" do
       category_id = category_fixture().id
-      _product_1 = product_fixture() |> unload_product_relations()
+      _product_1 = product_fixture()
 
       product_2 =
         product_fixture(%{category_id: category_id})
-        |> unload_product_relations()
 
       assert Products.list_products(
                category_id: [category_id],
@@ -302,11 +299,10 @@ defmodule Prepair.ProductsTest do
     test "list_products/1 returns matching product with :manufacturer_id value
     when :category_id is set to ['select']" do
       manufacturer_id = manufacturer_fixture().id
-      _product_1 = product_fixture() |> unload_product_relations()
+      _product_1 = product_fixture()
 
       product_2 =
         product_fixture(%{manufacturer_id: manufacturer_id})
-        |> unload_product_relations()
 
       assert Products.list_products(
                category_id: ["select"],
@@ -321,18 +317,15 @@ defmodule Prepair.ProductsTest do
 
       _product_1 =
         product_fixture(%{category_id: category_id})
-        |> unload_product_relations()
 
       _product_2 =
         product_fixture(%{manufacturer_id: manufacturer_id})
-        |> unload_product_relations()
 
       product_3 =
         product_fixture(%{
           category_id: category_id,
           manufacturer_id: manufacturer_id
         })
-        |> unload_product_relations()
 
       assert Products.list_products(
                category_id: [category_id],
@@ -352,8 +345,8 @@ defmodule Prepair.ProductsTest do
     end
 
     test "list_products_by_id/1 returns a list of products matching witch [ids]" do
-      product_1 = product_fixture() |> unload_product_relations()
-      product_2 = product_fixture() |> unload_product_relations()
+      product_1 = product_fixture()
+      product_2 = product_fixture()
 
       assert Products.list_products_by_id([product_1.id, product_2.id]) == [
                product_1,
@@ -363,8 +356,8 @@ defmodule Prepair.ProductsTest do
 
     test "list_products_by_id/1 returns products only for valid [ids] when a mix
     of valid and invalid ids are passed to the list" do
-      product_1 = product_fixture() |> unload_product_relations()
-      product_2 = product_fixture() |> unload_product_relations()
+      product_1 = product_fixture()
+      product_2 = product_fixture()
 
       assert Products.list_products_by_id([0, product_1.id, product_2.id]) == [
                product_1,
@@ -373,7 +366,7 @@ defmodule Prepair.ProductsTest do
     end
 
     test "get_product!/1 returns the product with given id" do
-      product = product_fixture()
+      product = product_fixture() |> preload_product_relations()
       assert Products.get_product!(product.id) == product
     end
 
@@ -399,7 +392,7 @@ defmodule Prepair.ProductsTest do
     end
 
     test "update_product/2 with valid data updates the product" do
-      product = product_fixture()
+      product = product_fixture() |> preload_product_relations()
 
       update_attrs = %{
         average_lifetime_m: 43,
@@ -426,7 +419,7 @@ defmodule Prepair.ProductsTest do
     end
 
     test "update_product/2 with invalid data returns error changeset" do
-      product = product_fixture()
+      product = product_fixture() |> preload_product_relations()
 
       assert {:error, %Ecto.Changeset{}} =
                Products.update_product(product, @invalid_attrs)
@@ -444,7 +437,7 @@ defmodule Prepair.ProductsTest do
     end
 
     test "change_product/1 returns a product changeset" do
-      product = product_fixture()
+      product = product_fixture() |> preload_product_relations()
       assert %Ecto.Changeset{} = Products.change_product(product)
     end
   end
