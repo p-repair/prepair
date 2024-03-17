@@ -40,7 +40,10 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
   describe "index" do
     setup [:create_product]
 
-    test "lists all products", %{conn: conn, product: product} do
+    test "lists all products when no query parameters are passed", %{
+      conn: conn,
+      product: product
+    } do
       conn = get(conn, ~p"/api/v1/products/products")
 
       assert json_response(conn, 200)["data"] == [
@@ -63,23 +66,15 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
                }
              ]
     end
-  end
 
-  describe "index_by_category_and_manufacturer" do
-    setup [:create_product]
+    test "filter by product_ids when :product_ids is set in query parameters",
+         %{conn: conn, product: product} do
+      _product_2 = product_fixture()
 
-    test "lists products from a given category and/or manufacturer", %{
-      conn: conn,
-      product: product
-    } do
-      cat_id = product.category_id
-      man_id = product.manufacturer_id
+      product_id = product.id
+      params = %{"product_ids" => "#{product_id}"}
 
-      conn =
-        get(
-          conn,
-          ~p"/api/v1/products/products/by_category_and_manufacturer/#{cat_id}/#{man_id}"
-        )
+      conn = get(conn, ~p"/api/v1/products/products", params)
 
       assert json_response(conn, 200)["data"] == [
                %{
@@ -102,22 +97,134 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
              ]
     end
 
-    test "don’t list products for category and manufacturer that not exists", %{
-      conn: conn,
-      product: _product
-    } do
-      cat_id = 0
-      man_id = 0
+    test "filter by category_id when :category_id is set in query parameters",
+         %{conn: conn, product: _product} do
+      category_id = category_fixture().id
+      product_2 = product_fixture(%{category_id: category_id})
 
-      conn =
-        get(
-          conn,
-          ~p"/api/v1/products/products/by_category_and_manufacturer/#{cat_id}/#{man_id}"
-        )
+      params = %{"category_id" => "#{category_id}"}
 
-      assert json_response(conn, 200)["data"] == []
+      conn = get(conn, ~p"/api/v1/products/products", params)
+
+      assert json_response(conn, 200)["data"] == [
+               %{
+                 "id" => product_2.id,
+                 "category_id" => product_2.category.id,
+                 "category_name" => product_2.category.name,
+                 "manufacturer_id" => product_2.manufacturer.id,
+                 "manufacturer_name" => product_2.manufacturer.name,
+                 "name" => product_2.name,
+                 "reference" => product_2.reference,
+                 "description" => product_2.description,
+                 "image" => product_2.image,
+                 "average_lifetime_m" => product_2.average_lifetime_m,
+                 "country_of_origin" => product_2.country_of_origin,
+                 "start_of_production" =>
+                   Date.to_string(product_2.start_of_production),
+                 "end_of_production" =>
+                   Date.to_string(product_2.end_of_production)
+               }
+             ]
     end
 
+    test "filter by manufacturer_id when :manufacturer_id is set in query
+    parameters",
+         %{conn: conn, product: _product} do
+      manufacturer_id = manufacturer_fixture().id
+      product_2 = product_fixture(%{manufacturer_id: manufacturer_id})
+
+      params = %{"manufacturer_id" => "#{manufacturer_id}"}
+
+      conn = get(conn, ~p"/api/v1/products/products", params)
+
+      assert json_response(conn, 200)["data"] == [
+               %{
+                 "id" => product_2.id,
+                 "category_id" => product_2.category.id,
+                 "category_name" => product_2.category.name,
+                 "manufacturer_id" => product_2.manufacturer.id,
+                 "manufacturer_name" => product_2.manufacturer.name,
+                 "name" => product_2.name,
+                 "reference" => product_2.reference,
+                 "description" => product_2.description,
+                 "image" => product_2.image,
+                 "average_lifetime_m" => product_2.average_lifetime_m,
+                 "country_of_origin" => product_2.country_of_origin,
+                 "start_of_production" =>
+                   Date.to_string(product_2.start_of_production),
+                 "end_of_production" =>
+                   Date.to_string(product_2.end_of_production)
+               }
+             ]
+    end
+
+    test "filter by an invalid parameter do nothing (return all products)",
+         %{conn: conn, product: product} do
+      params = %{"random_parameter" => "random_parameter"}
+
+      conn = get(conn, ~p"/api/v1/products/products", params)
+
+      assert json_response(conn, 200)["data"] == [
+               %{
+                 "id" => product.id,
+                 "category_id" => product.category.id,
+                 "category_name" => product.category.name,
+                 "manufacturer_id" => product.manufacturer.id,
+                 "manufacturer_name" => product.manufacturer.name,
+                 "name" => product.name,
+                 "reference" => product.reference,
+                 "description" => product.description,
+                 "image" => product.image,
+                 "average_lifetime_m" => product.average_lifetime_m,
+                 "country_of_origin" => product.country_of_origin,
+                 "start_of_production" =>
+                   Date.to_string(product.start_of_production),
+                 "end_of_production" =>
+                   Date.to_string(product.end_of_production)
+               }
+             ]
+    end
+
+    test "allowed filters can be combined and return corresponding products",
+         %{conn: conn, product: _product} do
+      category_id = category_fixture().id
+      manufacturer_id = manufacturer_fixture().id
+      product_2 = product_fixture(%{category_id: category_id})
+
+      product_3 =
+        product_fixture(%{
+          category_id: category_id,
+          manufacturer_id: manufacturer_id
+        })
+
+      params = %{
+        "product_ids" => "[#{product_2.id}, #{product_3.id}]",
+        "category_id" => "#{category_id}",
+        "manufacturer_id" => "#{manufacturer_id}"
+      }
+
+      conn = get(conn, ~p"/api/v1/products/products", params)
+
+      assert json_response(conn, 200)["data"] == [
+               %{
+                 "id" => product_3.id,
+                 "category_id" => product_3.category.id,
+                 "category_name" => product_3.category.name,
+                 "manufacturer_id" => product_3.manufacturer.id,
+                 "manufacturer_name" => product_3.manufacturer.name,
+                 "name" => product_3.name,
+                 "reference" => product_3.reference,
+                 "description" => product_3.description,
+                 "image" => product_3.image,
+                 "average_lifetime_m" => product_3.average_lifetime_m,
+                 "country_of_origin" => product_3.country_of_origin,
+                 "start_of_production" =>
+                   Date.to_string(product_3.start_of_production),
+                 "end_of_production" =>
+                   Date.to_string(product_3.end_of_production)
+               }
+             ]
+    end
   end
 
   describe "create product" do

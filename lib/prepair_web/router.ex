@@ -123,19 +123,11 @@ defmodule PrepairWeb.Router do
     resources "/products/categories", Api.Products.CategoryController,
       except: [:new, :edit]
 
-    get "/products/categories/by_product/:id",
-        Api.Products.CategoryController,
-        :show_category_from_product
-
     resources "/products/manufacturers", Api.Products.ManufacturerController,
       except: [:new, :edit]
 
     resources "/products/products", Api.Products.ProductController,
       except: [:new, :edit]
-
-    get "/products/products/by_category_and_manufacturer/:cat_id/:man_id",
-        Api.Products.ProductController,
-        :index_by_category_and_manufacturer
 
     resources "/products/parts", Api.Products.PartController,
       except: [:new, :edit]
