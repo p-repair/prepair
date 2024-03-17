@@ -119,7 +119,7 @@ defmodule Prepair.Profiles do
   def list_ownerships_by_profile(profile_id, opts \\ []) do
     filters =
       [profile_id: profile_id] ++
-        if opts[:public] == true, do: [public: true], else: []
+        if opts[:include_private] == true, do: [], else: [public: true]
 
     query =
       from o in Ownership,
@@ -149,7 +149,7 @@ defmodule Prepair.Profiles do
   def list_ownerships_by_product(product_id, opts \\ []) do
     filters =
       [product_id: product_id] ++
-        if opts[:public] == true, do: [public: true], else: []
+        if opts[:include_private] == true, do: [], else: [public: true]
 
     query =
       from o in Ownership,

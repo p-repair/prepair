@@ -17,7 +17,9 @@ defmodule PrepairWeb.ProfileLive.OwnershipIndex do
           |> assign(:profile, "your")
           |> stream(
             :ownerships,
-            Profiles.list_ownerships_by_profile(profile_id)
+            Profiles.list_ownerships_by_profile(profile_id,
+              include_private: true
+            )
             |> Repo.preload([:product, :profile])
           )
 
@@ -29,7 +31,7 @@ defmodule PrepairWeb.ProfileLive.OwnershipIndex do
           |> assign(:profile, "#{profile_username} public")
           |> stream(
             :ownerships,
-            Profiles.list_ownerships_by_profile(profile_id, public: true)
+            Profiles.list_ownerships_by_profile(profile_id)
             |> Repo.preload([:product, :profile])
           )
 

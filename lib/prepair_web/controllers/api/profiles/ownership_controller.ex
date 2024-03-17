@@ -13,12 +13,12 @@ defmodule PrepairWeb.Api.Profiles.OwnershipController do
 
     if current_user_id == profile_id do
       ownerships =
-        Profiles.list_ownerships_by_profile(profile_id)
+        Profiles.list_ownerships_by_profile(profile_id, include_private: true)
 
       render(conn, :index, ownerships: ownerships)
     else
       ownerships =
-        Profiles.list_ownerships_by_profile(profile_id, public: true)
+        Profiles.list_ownerships_by_profile(profile_id)
 
       render(conn, :index, ownerships: ownerships)
     end
