@@ -2,10 +2,17 @@ defmodule PrepairWeb.Api.Profiles.ProfileControllerTest do
   use PrepairWeb.ConnCase
 
   alias Prepair.Repo
+  alias PrepairWeb.Api.Profiles.ProfileJSON
 
   @update_attrs %{username: "some updated username"}
 
   @invalid_attrs %{username: nil}
+
+  defp to_normalised_json(data) do
+    data
+    |> ProfileJSON.data()
+    |> normalise_json()
+  end
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
@@ -19,14 +26,7 @@ defmodule PrepairWeb.Api.Profiles.ProfileControllerTest do
       conn = get(conn, ~p"/api/v1/profiles/profile")
 
       assert json_response(conn, 200)["data"] == [
-               %{
-                 "id" => profile.id,
-                 "username" => profile.username,
-                 "user_email" => profile.user.email,
-                 "user_role" => to_string(profile.user.role),
-                 "newsletter" => profile.newsletter,
-                 "created_at" => DateTime.to_iso8601(profile.inserted_at)
-               }
+               profile |> to_normalised_json()
              ]
     end
   end
@@ -47,14 +47,8 @@ defmodule PrepairWeb.Api.Profiles.ProfileControllerTest do
       id = profile.id
       conn = get(conn, ~p"/api/v1/profiles/profile/#{id}")
 
-      assert json_response(conn, 200)["data"] == %{
-               "id" => profile.id,
-               "username" => profile.username,
-               "user_email" => profile.user.email,
-               "user_role" => to_string(profile.user.role),
-               "newsletter" => profile.newsletter,
-               "created_at" => DateTime.to_iso8601(profile.inserted_at)
-             }
+      assert json_response(conn, 200)["data"] ==
+               profile |> to_normalised_json()
     end
   end
 
@@ -77,14 +71,10 @@ defmodule PrepairWeb.Api.Profiles.ProfileControllerTest do
 
       conn = get(conn, ~p"/api/v1/profiles/profile/#{id}")
 
-      assert json_response(conn, 200)["data"] == %{
-               "id" => profile.id,
-               "username" => "some updated username",
-               "user_email" => profile.user.email,
-               "user_role" => to_string(profile.user.role),
-               "newsletter" => profile.newsletter,
-               "created_at" => DateTime.to_iso8601(profile.inserted_at)
-             }
+      profile = Prepair.Profiles.get_profile!(id)
+
+      assert json_response(conn, 200)["data"] ==
+               profile |> to_normalised_json()
     end
 
     test "renders error when attrs are invalid", %{

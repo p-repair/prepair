@@ -1,4 +1,5 @@
 defmodule PrepairWeb.Api.Products.ProductJSON do
+  alias PrepairWeb.Api.Products.{CategoryJSON, ManufacturerJSON}
   alias Prepair.Products.Product
   alias Prepair.Repo
 
@@ -16,15 +17,13 @@ defmodule PrepairWeb.Api.Products.ProductJSON do
     %{data: data(product)}
   end
 
-  defp data(%Product{} = product) do
+  def data(%Product{} = product) do
     product = Repo.preload(product, [:category, :manufacturer])
 
     %{
       id: product.id,
-      category_id: product.category.id,
-      category_name: product.category.name,
-      manufacturer_id: product.manufacturer.id,
-      manufacturer_name: product.manufacturer.name,
+      category: CategoryJSON.data(product.category),
+      manufacturer: ManufacturerJSON.data(product.manufacturer),
       name: product.name,
       reference: product.reference,
       description: product.description,

@@ -134,30 +134,6 @@ defmodule Prepair.Products do
   def get_category!(id), do: Repo.get!(Category, id)
 
   @doc """
-  Gets a single category from a product id.
-
-  Raises `Ecto.NoResultsError` if the Product does not exist.
-
-  ## Examples
-
-      iex> get_category_from_product!(123)
-      %Category{}
-
-      iex> get_category_from_product!(456)
-      ** (Ecto.NoResultsError)
-  """
-  def get_category_from_product!(id) do
-    query =
-      from c in Category,
-        join: p in Product,
-        on: p.category_id == c.id,
-        where: p.id == ^id,
-        select: c
-
-    Repo.one!(query)
-  end
-
-  @doc """
   Creates a category.
 
   ## Examples
@@ -227,14 +203,71 @@ defmodule Prepair.Products do
   @doc """
   Returns the list of products.
 
+  ## Options
+
+  *`:product_ids` - Takes a list of product ids, and returns products matching
+  on these ids.
+
+  *`:category_id` - Takes a list of category ids, and returns products matching
+  on these ids.
+
+  *`:manufacturer_id` - Takes a list of manufacturer ids, and returns products
+  matching on these ids.
+
+  **Note:** Several options can be combined to filter results.
+
+  **Note:** Invalid filters should be ignored on web and controllers,
+  otherwise it will raise an Ecto.QueryError.
+
+  **Note:** Authorized filters should be validated on web and controllers,
+  otherwise it would be possible for anyone to filter from all other product
+  fields.
+
   ## Examples
 
       iex> list_products()
-      [%Product{}, ...]
+      [%Product{id: 123, name: …}, %Product{id: 124, name: …}, ...]
 
+      iex> list_products(product_ids: [123, 124])
+      [%Product{id: 123, name: …}, %Product{id: 124, name: …}, ...]
+
+      iex> list_products(category_id: [1])
+      [%Product{id: 222, name: …, category_id: 1, …}, %Product{id: …}, ...]
+
+      iex> list_products(manufacturer_id: [1])
+      [%Product{id: 223, name: …, manufacturer_id: 1, …}, %Product{id: …}, ...]
+
+      iex> list_products(category_id: [1], manufacturer_id: [1])
+      [%Product{id: 300, name: …, category_id: 1, manufacturer_id: …}]
+
+      iex> list_products(product_ids: [123], category_id: [1],
+        manufacturer_id: [1])
+      []
+
+      iex> list_products(random_filter: [1])
+      ** (Ecto.QueryError) lib/prepair/products.ex:304: field `random_filter` in
+      `where` does not exist in schema Prepair.Products.Product in query:
+      ...
   """
-  def list_products() do
-    Repo.all(Product)
+  def list_products(filters \\ []) do
+    Enum.reduce(filters, Product, &filter/2)
+    |> Repo.all()
+  end
+
+  defp filter({_k, ["select"]}, query) do
+    query
+  end
+
+  defp filter({:product_ids, product_ids}, query) when is_list(product_ids) do
+    query |> where([p], p.id in ^product_ids)
+  end
+
+  defp filter({_k, []}, query) do
+    query
+  end
+
+  defp filter({k, v}, query) when is_list(v) do
+    query |> where([p], field(p, ^k) in ^v)
   end
 
   @doc """
@@ -255,111 +288,6 @@ defmodule Prepair.Products do
       when is_list(product_ids) and product_ids != [] do
     Repo.all(from p in Product, where: p.id in ^product_ids)
   end
-
-  @doc """
-  Returns the list of products from the given category id.
-
-  Returns an empty list if category_id does not exist.
-
-  ## Examples
-
-      iex> list_products_by_category_id(3)
-      [%Product{id: 123, name: …}, %Product{id: 124, name: …}, ...]
-
-      iex> list_products_by_category_id(456)
-      []
-
-  """
-  def list_products_by_category_id(category_id) do
-    Repo.all(
-      from p in Product,
-        where: p.category_id == ^category_id
-    )
-  end
-
-  @doc """
-  Returns the list of products from the given manufacturer id.
-
-  Returns an empty list if manufacturer_id does not exist.
-
-  ## Examples
-
-      iex> list_products_by_manufacturer_id(3)
-      [%Product{id: 123, name: …}, %Product{id: 124, name: …}, ...]
-
-      iex> list_products_by_manufacturer_id(456)
-      []
-  """
-  def list_products_by_manufacturer_id(manufacturer_id) do
-    query =
-      from p in Product,
-        where: p.manufacturer_id == ^manufacturer_id,
-        select: p
-
-    Repo.all(query)
-  end
-
-  @doc """
-  Returns the list of products from the given category and manufacturer id.
-
-  Returns an empty list if one of category_id or manufacturer_id does not exist
-  (but is still an integer).
-  Checks for category_id only if manufacturer_id is not an integer.
-  Checks for manufacturer_id only if category_id is not an integer.
-  Returns an empty list if none of category_id and manufacturer_id are integers.
-
-  ## Examples
-
-      iex> list_products_by_category_and_manufacturer_id(3, 3)
-      [%Product{id: 123, name: …}, %Product{id: 124, name: …}, ...]
-
-      iex> list_products_by_category_and_manufacturer_id(456, 3)
-      []
-
-      iex> list_products_by_category_and_manufacturer_id("not an integer", 3)
-      [%Product{id: 123, name: …}, %Product{id: 124, name: …}, ...]
-
-      iex> list_products_by_category_and_manufacturer_id(3, "not an integer")
-      [%Product{id: 123, name: …}, %Product{id: 124, name: …}, ...]
-
-      iex> list_products_by_category_and_manufacturer_id("not an integer",
-      "not an integer")
-      [[%Product{id: 123, name: …}, %Product{id: 124, name: …}, ...]]
-  """
-  def list_products_by_category_and_manufacturer_id(
-        category_id,
-        manufacturer_id
-      )
-      when is_integer(category_id) and is_integer(manufacturer_id) do
-    filters = [category_id: category_id, manufacturer_id: manufacturer_id]
-
-    query =
-      from p in Product,
-        where: ^filters,
-        select: p
-
-    Repo.all(query)
-  end
-
-  def list_products_by_category_and_manufacturer_id(
-        category_id,
-        _manufacturer_id
-      )
-      when is_integer(category_id),
-      do: list_products_by_category_id(category_id)
-
-  def list_products_by_category_and_manufacturer_id(
-        _category_id,
-        manufacturer_id
-      )
-      when is_integer(manufacturer_id),
-      do: list_products_by_manufacturer_id(manufacturer_id)
-
-  def list_products_by_category_and_manufacturer_id(
-        _category_id,
-        _manufacturer_id
-      ),
-      do: list_products()
 
   @doc """
   Gets a single product.

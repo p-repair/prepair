@@ -5,6 +5,7 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
   alias Prepair.DataCase
   alias Prepair.Products
   alias Prepair.Products.Part
+  alias PrepairWeb.Api.Products.PartJSON
 
   @update_attrs %{
     name: "some updated name",
@@ -35,6 +36,12 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
     %{part: part}
   end
 
+  defp to_normalised_json(data) do
+    data
+    |> PartJSON.data()
+    |> normalise_json()
+  end
+
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
@@ -48,23 +55,7 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
       conn = get(conn, ~p"/api/v1/products/parts")
 
       assert json_response(conn, 200)["data"] == [
-               %{
-                 "id" => part.id,
-                 "category_id" => part.category.id,
-                 "category_name" => part.category.name,
-                 "manufacturer_id" => part.manufacturer.id,
-                 "manufacturer_name" => part.manufacturer.name,
-                 "name" => part.name,
-                 "reference" => part.reference,
-                 "description" => part.description,
-                 "image" => part.image,
-                 "average_lifetime_m" => part.average_lifetime_m,
-                 "country_of_origin" => part.country_of_origin,
-                 "start_of_production" =>
-                   Date.to_string(part.start_of_production),
-                 "end_of_production" => Date.to_string(part.end_of_production),
-                 "main_material" => part.main_material
-               }
+               part |> to_normalised_json()
              ]
     end
   end
@@ -72,9 +63,6 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
   describe "create part" do
     test "renders a part when data is valid", %{conn: conn} do
       part = part_valid_attrs()
-      part_category_id = part.category_id
-      part_manufacturer_id = part.manufacturer_id
-      part_reference = part.reference
       conn = post(conn, ~p"/api/v1/products/parts", part: part)
 
       assert %{"id" => id} = json_response(conn, 201)["data"]
@@ -84,18 +72,9 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
 
       conn = get(conn, ~p"/api/v1/products/parts/#{id}")
 
-      assert %{
-               "category_id" => ^part_category_id,
-               "manufacturer_id" => ^part_manufacturer_id,
-               "name" => "some name",
-               "reference" => ^part_reference,
-               "description" => "some description",
-               "image" => "some image",
-               "average_lifetime_m" => 42,
-               "country_of_origin" => "some country_of_origin",
-               "start_of_production" => "2023-07-11",
-               "end_of_production" => "2023-07-11"
-             } = json_response(conn, 200)["data"]
+      part = Prepair.Products.get_part!(id)
+
+      assert json_response(conn, 200)["data"] == part |> to_normalised_json()
     end
 
     test "handle part.products creation (which are currently not in the JSON
@@ -128,9 +107,6 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
       conn: conn,
       part: %Part{id: id} = part
     } do
-      %Part{category_id: category_id} = part
-      %Part{manufacturer_id: manufacturer_id} = part
-
       conn = put(conn, ~p"/api/v1/products/parts/#{part}", part: @update_attrs)
 
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
@@ -140,19 +116,9 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
 
       conn = get(conn, ~p"/api/v1/products/parts/#{id}")
 
-      assert %{
-               "id" => ^id,
-               "category_id" => ^category_id,
-               "manufacturer_id" => ^manufacturer_id,
-               "name" => "some updated name",
-               "reference" => "some updated reference",
-               "description" => "some updated description",
-               "image" => "some updated image",
-               "average_lifetime_m" => 43,
-               "country_of_origin" => "some updated country_of_origin",
-               "start_of_production" => "2023-09-07",
-               "end_of_production" => "2037-09-07"
-             } = json_response(conn, 200)["data"]
+      part = Prepair.Products.get_part!(id)
+
+      assert json_response(conn, 200)["data"] == part |> to_normalised_json()
     end
 
     test "updates part.products (which are currently not in the JSON render)",

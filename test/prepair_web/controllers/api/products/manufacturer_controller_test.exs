@@ -3,6 +3,7 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
 
   import Prepair.ProductsFixtures
   alias Prepair.Products.Manufacturer
+  alias PrepairWeb.Api.Products.ManufacturerJSON
 
   @update_attrs %{
     description: "some updated description",
@@ -15,6 +16,12 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
   defp create_manufacturer(_) do
     manufacturer = manufacturer_fixture()
     %{manufacturer: manufacturer}
+  end
+
+  defp to_normalised_json(data) do
+    data
+    |> ManufacturerJSON.data()
+    |> normalise_json()
   end
 
   setup %{conn: conn} do
@@ -30,12 +37,7 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
       conn = get(conn, ~p"/api/v1/products/manufacturers")
 
       assert json_response(conn, 200)["data"] == [
-               %{
-                 "id" => manufacturer.id,
-                 "description" => manufacturer.description,
-                 "image" => manufacturer.image,
-                 "name" => manufacturer.name
-               }
+               manufacturer |> to_normalised_json()
              ]
     end
   end
@@ -43,7 +45,6 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
   describe "create manufacturer" do
     test "renders manufacturer when data is valid", %{conn: conn} do
       valid_attrs = manufacturer_valid_attrs()
-      valid_name = valid_attrs.name
 
       conn =
         post(conn, ~p"/api/v1/products/manufacturers",
@@ -57,12 +58,10 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
 
       conn = get(conn, ~p"/api/v1/products/manufacturers/#{id}")
 
-      assert %{
-               "id" => ^id,
-               "description" => "some description",
-               "image" => "some image",
-               "name" => ^valid_name
-             } = json_response(conn, 200)["data"]
+      manufacturer = Prepair.Products.get_manufacturer!(id)
+
+      assert json_response(conn, 200)["data"] ==
+               manufacturer |> to_normalised_json()
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -94,12 +93,10 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
 
       conn = get(conn, ~p"/api/v1/products/manufacturers/#{id}")
 
-      assert %{
-               "id" => ^id,
-               "description" => "some updated description",
-               "image" => "some updated image",
-               "name" => "some updated name"
-             } = json_response(conn, 200)["data"]
+      manufacturer = Prepair.Products.get_manufacturer!(id)
+
+      assert json_response(conn, 200)["data"] ==
+               manufacturer |> to_normalised_json()
     end
 
     test "renders errors when data is invalid", %{

@@ -120,9 +120,9 @@ defmodule PrepairWeb.OwnershipLive.FormComponent do
 
       opts =
         for p <-
-              Products.list_products_by_category_and_manufacturer_id(
-                category_id,
-                manufacturer_id
+              Products.list_products(
+                category_id: [category_id],
+                manufacturer_id: [manufacturer_id]
               ),
             do: [key: p.name, value: p.id, selected: p.id in existing_ids]
 

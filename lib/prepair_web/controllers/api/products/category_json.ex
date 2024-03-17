@@ -15,7 +15,7 @@ defmodule PrepairWeb.Api.Products.CategoryJSON do
     %{data: data(category)}
   end
 
-  defp data(%Category{} = category) do
+  def data(%Category{} = category) do
     %{
       id: category.id,
       average_lifetime_m: category.average_lifetime_m,
@@ -23,5 +23,10 @@ defmodule PrepairWeb.Api.Products.CategoryJSON do
       image: category.image,
       name: category.name
     }
+  end
+
+  # This function clause is needed to fit the case part.category is nil.
+  def data(nil) do
+    nil
   end
 end

@@ -74,7 +74,7 @@ defmodule Prepair.ProductsFixtures do
       |> Prepair.Products.create_product()
 
     product
-    |> Repo.preload([:category, :manufacturer, :parts])
+    |> Prepair.DataCase.unload(:parts, :many)
   end
 
   def product_valid_attrs() do
