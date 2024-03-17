@@ -27,8 +27,10 @@ defmodule PrepairWeb.Api.Products.ProductController do
   end
 
   def create(conn, %{"product" => product_params}) do
+    params = product_params |> normalise_params()
+
     with {:ok, %Product{} = product} <-
-           Products.create_product(product_params),
+           Products.create_product(params),
          product <- Repo.preload(product, [:category, :manufacturer]) do
       conn
       |> put_status(:created)
@@ -46,14 +48,15 @@ defmodule PrepairWeb.Api.Products.ProductController do
   end
 
   def update(conn, %{"id" => id, "product" => product_params}) do
+    params = product_params |> normalise_params()
     product = Products.get_product!(id)
 
     # Trick to avoid empty fields returned by FlutterFlow when value isn't changed.
-    product_params =
-      Map.filter(product_params, fn {_key, val} -> val != "" end)
+    params =
+      Map.filter(params, fn {_key, val} -> val != "" end)
 
     with {:ok, %Product{} = product} <-
-           Products.update_product(product, product_params) do
+           Products.update_product(product, params) do
       render(conn, :show, product: product)
     end
   end
@@ -65,5 +68,18 @@ defmodule PrepairWeb.Api.Products.ProductController do
            Products.delete_product(product) do
       send_resp(conn, :no_content, "")
     end
+  end
+
+  @doc """
+  Helper function to transform string keys into atom keys before to pass
+  them to the context functions.
+
+  """
+  def normalise_params(params) do
+    params
+    |> Map.to_list()
+    |> Enum.reduce(%{}, fn {k, v}, acc ->
+      Map.put(acc, String.to_existing_atom(k), v)
+    end)
   end
 end
