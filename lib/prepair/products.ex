@@ -466,7 +466,7 @@ defmodule Prepair.Products do
   end
 
   @doc """
-  Returns the list of products based on a list of ids.
+  Returns the list of parts based on a list of ids.
   """
   def list_parts_by_id(nil), do: []
 
