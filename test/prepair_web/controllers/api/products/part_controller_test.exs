@@ -80,9 +80,7 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
     test "handle part.products creation (which are currently not in the JSON
     render)",
          %{conn: conn} do
-      _products = [product_fixture(), product_fixture()]
-      # This call is useful until product_fixture() preloads are not removed.
-      products = Products.list_products()
+      products = [product_fixture(), product_fixture()]
       product_ids = products |> Enum.map(fn x -> x.id end)
       part = part_valid_attrs() |> Map.put(:product_ids, product_ids)
 
@@ -128,9 +126,6 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
          } do
       new_product_list =
         [product_fixture(), product_fixture(), product_fixture()]
-        |> Enum.map(&DataCase.unload(&1, :category))
-        |> Enum.map(&DataCase.unload(&1, :manufacturer))
-        |> Enum.map(&DataCase.unload(&1, :parts, :many))
 
       new_product_ids = new_product_list |> Enum.map(fn x -> x.id end)
 

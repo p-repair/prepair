@@ -492,9 +492,7 @@ defmodule Prepair.ProductsTest do
     end
 
     test "create_part/1 with valid data creates a part" do
-      _products = [product_fixture(), product_fixture()]
-      # This call is useful until product_fixture() preloads are not removed.
-      products = Products.list_products()
+      products = [product_fixture(), product_fixture()]
       product_ids = products |> Enum.map(fn x -> x.id end)
       valid_attrs = part_valid_attrs() |> Map.put(:product_ids, product_ids)
 
@@ -520,9 +518,7 @@ defmodule Prepair.ProductsTest do
     test "update_part/2 with valid data updates the part" do
       part = part_fixture()
 
-      _products = [product_fixture(), product_fixture()]
-      # This call is useful until product_fixture() preloads are not removed.
-      products = Products.list_products()
+      products = [product_fixture(), product_fixture()]
       product_ids = products |> Enum.map(fn x -> x.id end)
 
       update_attrs = %{
