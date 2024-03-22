@@ -5,6 +5,7 @@
 alias Prepair.Repo
 alias Prepair.Accounts
 alias Prepair.Auth.ApiKey
+alias Prepair.Notifications.NotificationTemplate
 alias Prepair.Products.Category
 alias Prepair.Products.Manufacturer
 alias Prepair.Products.Product
@@ -95,7 +96,7 @@ four_encastrable =
     average_lifetime_m: 11
   })
 
-_four_non_encastrable =
+four_non_encastrable =
   Repo.insert!(%Category{
     name: "Four (non-encastrable)",
     average_lifetime_m: 11
@@ -120,7 +121,7 @@ lave_linge_hublot =
     average_lifetime_m: 10
   })
 
-_lave_linge_top =
+lave_linge_top =
   Repo.insert!(%Category{
     name: "Lave-linge top",
     description: "Lave-linges qui s’ouvrent par le dessus.",
@@ -133,7 +134,7 @@ _lave_vaisselle =
     average_lifetime_m: 11
   })
 
-_machine_à_café =
+machine_à_café =
   Repo.insert!(%Category{
     name: "Machine à café",
     average_lifetime_m: 7
@@ -167,14 +168,14 @@ réfrigérateur =
     average_lifetime_m: 12
   })
 
-_sèche_linge_hublot =
+sèche_linge_hublot =
   Repo.insert!(%Category{
     name: "Sèche-linge hublot",
     description: "Sèche-linges qui ont un hublot.",
     average_lifetime_m: 10
   })
 
-_sèche_linge_top =
+sèche_linge_top =
   Repo.insert!(%Category{
     name: "Sèche-linge top",
     description: "Sèche-linges qui s’ouvrent par le dessus",
@@ -453,4 +454,59 @@ Repo.insert!(%Ownership{
   warranty_duration_m: 60,
   price_of_purchase: 550,
   public: false
+})
+
+##
+## Create notification_templates
+##
+
+Repo.insert!(%NotificationTemplate{
+  name: "Détartrage lave-linge",
+  title: "Détartrage de votre lave-linge",
+  content: "Versez 1 verre de vinaigre blanc (aussi appelé vanaigre ménager)
+  directement dans le tambour de votre lave-linge, et lancez une machine à vide
+  à 60°C.",
+  condition: "Posséder un lave-linge.",
+  need_action: false,
+  categories: [lave_linge_hublot, lave_linge_top]
+})
+
+Repo.insert!(%NotificationTemplate{
+  name: "Nettoyage filtre lave-linge",
+  title: "Nettoyage du filtre de votre lave-linge",
+  content: "Dévissez l’entrée du filtre de votre lave-linge. Procédez au
+  nettoyage du filtre.",
+  condition: "Posséder un lave-linge.",
+  need_action: false,
+  categories: [lave_linge_hublot, lave_linge_top]
+})
+
+Repo.insert!(%NotificationTemplate{
+  name: "Nettoyage filtre sèche-linge",
+  title: "Nettoyage du filtre de votre sèche-linge",
+  content: "Dépoussiérez le filtre de votre sèche-linge après chaque
+  utilisation.",
+  condition: "Posséder un sèche-linge.",
+  need_action: false,
+  categories: [sèche_linge_hublot, sèche_linge_top]
+})
+
+Repo.insert!(%NotificationTemplate{
+  name: "Nettoyage joint machine à café",
+  title: "Nettoyage du joint de votre machine à café",
+  content: "Ouvrez votre machine à café. Retirez le joint de l’unité de
+  brassage. Passez ce joint au lave-vaisselle. Réinstallez le joint.",
+  condition: "Posséder une machine à café.",
+  need_action: false,
+  categories: [machine_à_café]
+})
+
+Repo.insert!(%NotificationTemplate{
+  name: "Nettoyage four",
+  title: "Nettoyage de votre four",
+  content: "Regardez dans le manuel de votre four s’il dispose d’une fonction
+  de nettoyage par pyrolyse. Si c’est le cas, effectuez un nettoyage.",
+  condition: "Posséder un four.",
+  need_action: false,
+  categories: [four_encastrable, four_non_encastrable]
 })
