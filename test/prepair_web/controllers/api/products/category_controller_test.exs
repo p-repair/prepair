@@ -1,7 +1,9 @@
 defmodule PrepairWeb.Api.Products.CategoryControllerTest do
   use PrepairWeb.ConnCase
 
+  import Prepair.NotificationsFixtures
   import Prepair.ProductsFixtures
+  alias Prepair.Products
   alias Prepair.Products.Category
   alias PrepairWeb.Api.Products.CategoryJSON
 
@@ -20,7 +22,14 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
   }
 
   defp create_category(_) do
-    category = category_fixture()
+    notification_templates = create_notification_templates()
+
+    notification_template_ids =
+      create_notification_template_ids(notification_templates)
+
+    category =
+      category_fixture(%{notification_template_ids: notification_template_ids})
+
     %{category: category}
   end
 
@@ -66,6 +75,25 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
                category |> to_normalised_json()
     end
 
+    test "handle category many_to_many relations creation (which are currently
+    not in the JSON render)",
+         %{conn: conn} do
+      notification_templates = create_notification_templates()
+
+      notification_template_ids =
+        create_notification_template_ids(notification_templates)
+
+      category =
+        category_valid_attrs()
+        |> Map.put(:notification_template_ids, notification_template_ids)
+
+      conn = post(conn, ~p"/api/v1/products/categories", category: category)
+      assert %{"id" => id} = json_response(conn, 201)["data"]
+
+      category = Products.get_category!(id)
+      assert category.notification_templates == notification_templates
+    end
+
     test "renders errors when data is invalid", %{conn: conn} do
       conn =
         post(conn, ~p"/api/v1/products/categories", category: @invalid_attrs)
@@ -97,6 +125,32 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
 
       assert json_response(conn, 200)["data"] ==
                category |> to_normalised_json()
+    end
+
+    test "updates category many_to_many relations (which are currently not in
+    the JSON render)",
+         %{
+           conn: conn,
+           category: %Category{id: id} = category
+         } do
+      new_notification_templates = create_notification_templates()
+
+      new_notification_template_ids =
+        create_notification_template_ids(new_notification_templates)
+
+      update_attrs =
+        @update_attrs
+        |> Map.put(:notification_template_ids, new_notification_template_ids)
+
+      conn =
+        put(conn, ~p"/api/v1/products/categories/#{category}",
+          category: update_attrs
+        )
+
+      assert %{"id" => ^id} = json_response(conn, 200)["data"]
+
+      category = Products.get_category!(id)
+      assert category.notification_templates == new_notification_templates
     end
 
     test "renders errors when data is invalid", %{

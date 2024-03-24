@@ -58,6 +58,22 @@ defmodule Prepair.ProductsFixtures do
     }
   end
 
+  def create_categories() do
+    [category_fixture(), category_fixture()]
+    |> Enum.map(&unload_category_relations/1)
+  end
+
+  def create_category_ids(categories),
+    do: categories |> Enum.map(fn x -> x.id end)
+
+  @doc """
+  A helper function to unload category relations.
+  """
+  def unload_category_relations(category) do
+    category
+    |> Prepair.DataCase.unload(:notification_templates, :many)
+  end
+
   @doc """
   Generate a unique product reference.
   """
@@ -74,7 +90,7 @@ defmodule Prepair.ProductsFixtures do
       |> Prepair.Products.create_product()
 
     product
-    |> Prepair.DataCase.unload(:parts, :many)
+    |> unload_product_relations()
   end
 
   def product_valid_attrs() do
@@ -95,6 +111,24 @@ defmodule Prepair.ProductsFixtures do
     }
   end
 
+  def create_products() do
+    [product_fixture(), product_fixture()]
+    |> Enum.map(&unload_product_relations/1)
+  end
+
+  def create_product_ids(products), do: products |> Enum.map(fn x -> x.id end)
+
+  @doc """
+  A helper function to unload product relations.
+  """
+  def unload_product_relations(product) do
+    product
+    |> Prepair.DataCase.unload(:category)
+    |> Prepair.DataCase.unload(:manufacturer)
+    |> Prepair.DataCase.unload(:parts, :many)
+    |> Prepair.DataCase.unload(:notification_templates, :many)
+  end
+
   @doc """
   Generate a unique part reference.
   """
@@ -111,7 +145,12 @@ defmodule Prepair.ProductsFixtures do
       |> Prepair.Products.create_part()
 
     part
-    |> Repo.preload([:category, :manufacturer, :products])
+    |> Repo.preload([
+      :category,
+      :manufacturer,
+      :products,
+      :notification_templates
+    ])
   end
 
   def part_valid_attrs() do
@@ -131,5 +170,23 @@ defmodule Prepair.ProductsFixtures do
       reference: unique_part_reference(),
       start_of_production: ~D[2023-07-11]
     }
+  end
+
+  def create_parts() do
+    [part_fixture(), part_fixture()]
+    |> Enum.map(&unload_part_relations/1)
+  end
+
+  def create_part_ids(parts), do: parts |> Enum.map(fn x -> x.id end)
+
+  @doc """
+  A helper function to unload part relations.
+  """
+  def unload_part_relations(part) do
+    part
+    |> Prepair.DataCase.unload(:category)
+    |> Prepair.DataCase.unload(:manufacturer)
+    |> Prepair.DataCase.unload(:products, :many)
+    |> Prepair.DataCase.unload(:notification_templates, :many)
   end
 end

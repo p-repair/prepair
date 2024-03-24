@@ -1,6 +1,7 @@
 defmodule Prepair.Products.Product do
   use Ecto.Schema
 
+  alias Prepair.Notifications.NotificationTemplate
   alias Prepair.Products.{Manufacturer, Category, Part}
   alias Prepair.Profiles.Ownership
 
@@ -16,6 +17,7 @@ defmodule Prepair.Products.Product do
   @fields @required_fields ++
             [
               :part_ids,
+              :notification_template_ids,
               :description,
               :image,
               :average_lifetime_m,
@@ -34,9 +36,19 @@ defmodule Prepair.Products.Product do
       join_keys: [product_id: :id, part_id: :id],
       on_replace: :delete
 
+    many_to_many :notification_templates, NotificationTemplate,
+      join_through: "product_notification_templates",
+      join_keys: [product_id: :id, notification_template_id: :id],
+      on_replace: :delete
+
     has_many :ownerships, Ownership
 
     field :part_ids, {:array, :integer}, virtual: true, default: []
+
+    field :notification_template_ids, {:array, :integer},
+      virtual: true,
+      default: []
+
     field :average_lifetime_m, :integer
     field :country_of_origin, :string
     field :description, :string

@@ -4,9 +4,9 @@ defmodule Prepair.Products do
   """
 
   import Ecto.Query, warn: false
-  alias Prepair.Repo
-
+  alias Prepair.Notifications
   alias Prepair.Products.{Manufacturer, Category, Part, Product}
+  alias Prepair.Repo
 
   @doc """
   Returns the list of manufacturers.
@@ -118,6 +118,25 @@ defmodule Prepair.Products do
   end
 
   @doc """
+  Returns a list of categories based on the provided list of ids.
+
+  ## Examples
+
+      iex> list_catgories_by_id()
+      []
+
+      iex> list_categories_by_id([123, 124, 137, 140])
+      [%Category{id: 123, name: …}, %Category{id: 124, name: …}, ...]
+
+  """
+  def list_categories_by_id(nil), do: []
+
+  def list_categories_by_id(category_ids)
+      when is_list(category_ids) and category_ids != [] do
+    Repo.all(from c in Category, where: c.id in ^category_ids)
+  end
+
+  @doc """
   Gets a single category.
 
   Raises `Ecto.NoResultsError` if the Category does not exist.
@@ -131,7 +150,11 @@ defmodule Prepair.Products do
       ** (Ecto.NoResultsError)
 
   """
-  def get_category!(id), do: Repo.get!(Category, id)
+  def get_category!(id) do
+    Category
+    |> Repo.get!(id)
+    |> Repo.preload(:notification_templates)
+  end
 
   @doc """
   Creates a category.
@@ -147,7 +170,7 @@ defmodule Prepair.Products do
   """
   def create_category(attrs \\ %{}) do
     %Category{}
-    |> Category.changeset(attrs)
+    |> change_category(attrs)
     |> Repo.insert()
   end
 
@@ -165,7 +188,7 @@ defmodule Prepair.Products do
   """
   def update_category(%Category{} = category, attrs) do
     category
-    |> Category.changeset(attrs)
+    |> change_category(attrs)
     |> Repo.update()
   end
 
@@ -195,7 +218,14 @@ defmodule Prepair.Products do
 
   """
   def change_category(%Category{} = category, attrs \\ %{}) do
-    Category.changeset(category, attrs)
+    notification_templates =
+      Notifications.list_notification_templates_by_id(
+        attrs[:notification_template_ids]
+      )
+
+    category
+    |> Category.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:notification_templates, notification_templates)
   end
 
   alias Prepair.Products.Product
@@ -271,7 +301,7 @@ defmodule Prepair.Products do
   end
 
   @doc """
-  Returns the list of products based on a list of ids.
+  Returns a list of products based on the provided list of ids.
 
   ## Examples
 
@@ -306,7 +336,7 @@ defmodule Prepair.Products do
   def get_product!(id) do
     Product
     |> Repo.get!(id)
-    |> Repo.preload([:category, :manufacturer, :parts])
+    |> Repo.preload([:category, :manufacturer, :parts, :notification_templates])
   end
 
   @doc """
@@ -373,9 +403,15 @@ defmodule Prepair.Products do
   def change_product(%Product{} = product, attrs \\ %{}) do
     parts = list_parts_by_id(attrs[:part_ids])
 
+    notification_templates =
+      Notifications.list_notification_templates_by_id(
+        attrs[:notification_template_ids]
+      )
+
     product
     |> Product.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:parts, parts)
+    |> Ecto.Changeset.put_assoc(:notification_templates, notification_templates)
   end
 
   alias Prepair.Products.Part
@@ -394,7 +430,16 @@ defmodule Prepair.Products do
   end
 
   @doc """
-  Returns the list of parts based on a list of ids.
+  Returns a list of parts based on the provided list of ids.
+
+  ## Examples
+
+      iex> list_parts_by_id()
+      []
+
+      iex> list_parts_by_id([123, 124, 137, 140])
+      [%Part{id: 123, name: …}, %Part{id: 124, name: …}, ...]
+
   """
   def list_parts_by_id(nil), do: []
 
@@ -419,7 +464,12 @@ defmodule Prepair.Products do
   def get_part!(id) do
     Part
     |> Repo.get!(id)
-    |> Repo.preload([:category, :manufacturer, :products])
+    |> Repo.preload([
+      :category,
+      :manufacturer,
+      :products,
+      :notification_templates
+    ])
   end
 
   @doc """
@@ -486,8 +536,14 @@ defmodule Prepair.Products do
   def change_part(%Part{} = part, attrs \\ %{}) do
     products = list_products_by_id(attrs[:product_ids])
 
+    notification_templates =
+      Notifications.list_notification_templates_by_id(
+        attrs[:notification_template_ids]
+      )
+
     part
     |> Part.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:products, products)
+    |> Ecto.Changeset.put_assoc(:notification_templates, notification_templates)
   end
 end

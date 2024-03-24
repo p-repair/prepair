@@ -18,7 +18,7 @@ env = "updates the development environment"
 ide = "updates the IDE configuration"
 ci = "updates the CI configuration"
 revert = "reverts a previous commit"
-chore = "updates something that is not covered by any other type"
+chore = "updates something that is not covered by any other type, or remove something"
 wip = "work in progress / to be rebased and squashed later"
 debug = "commit used for debugging purposes, not to be integrated"
 
@@ -36,6 +36,7 @@ list = [
   "c:accounts",
   "c:auth",
   "c:newsletter",
+  "c:notifications",
   "c:products",
   "c:profiles",
 

@@ -81,6 +81,19 @@ defmodule PrepairWeb.Router do
 
       live "/ownerships/:id", OwnershipLive.Show, :show
       live "/ownerships/:id/show/edit", OwnershipLive.Show, :edit
+
+      live "/notification_templates", NotificationTemplateLive.Index, :index
+      live "/notification_templates/new", NotificationTemplateLive.Index, :new
+
+      live "/notification_templates/:id/edit",
+           NotificationTemplateLive.Index,
+           :edit
+
+      live "/notification_templates/:id", NotificationTemplateLive.Show, :show
+
+      live "/notification_templates/:id/show/edit",
+           NotificationTemplateLive.Show,
+           :edit
     end
   end
 

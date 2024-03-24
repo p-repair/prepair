@@ -1,0 +1,47 @@
+<.header>
+  Listing Notification templates
+  <:actions>
+    <.link patch={~p"/notification_templates/new"}>
+      <.button>New Notification template</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="notification_templates"
+  rows={@streams.notification_templates}
+  row_click={fn {_id, notification_template} -> JS.navigate(~p"/notification_templates/#{notification_template}") end}
+>
+  <:col :let={{_id, notification_template}} label="Name"><%= notification_template.name %></:col>
+  <:col :let={{_id, notification_template}} label="Title"><%= notification_template.title %></:col>
+  <:col :let={{_id, notification_template}} label="Content"><%= notification_template.content %></:col>
+  <:col :let={{_id, notification_template}} label="Description"><%= notification_template.description %></:col>
+  <:col :let={{_id, notification_template}} label="Condition"><%= notification_template.condition %></:col>
+  <:col :let={{_id, notification_template}} label="User action needed"><%= notification_template.need_action %></:col>
+  <:col :let={{_id, notification_template}} label="Draft"><%= notification_template.draft %></:col>
+  <:action :let={{_id, notification_template}}>
+    <div class="sr-only">
+      <.link navigate={~p"/notification_templates/#{notification_template}"}>Show</.link>
+    </div>
+    <.link patch={~p"/notification_templates/#{notification_template}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, notification_template}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: notification_template.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="notification_template-modal" show on_cancel={JS.patch(~p"/notification_templates")}>
+  <.live_component
+    module={PrepairWeb.NotificationTemplateLive.FormComponent}
+    id={@notification_template.id || :new}
+    title={@page_title}
+    action={@live_action}
+    notification_template={@notification_template}
+    patch={~p"/notification_templates"}
+  />
+</.modal>
