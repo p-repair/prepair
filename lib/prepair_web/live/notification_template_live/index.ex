@@ -3,10 +3,15 @@ defmodule PrepairWeb.NotificationTemplateLive.Index do
 
   alias Prepair.Notifications
   alias Prepair.Notifications.NotificationTemplate
+  alias Prepair.Repo
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :notification_templates, Notifications.list_notification_templates())}
+    notification_templates =
+      Notifications.list_notification_templates()
+      |> Repo.preload([:categories, :products, :parts])
+
+    {:ok, stream(socket, :notification_templates, notification_templates)}
   end
 
   @impl true
@@ -17,7 +22,10 @@ defmodule PrepairWeb.NotificationTemplateLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Notification template")
-    |> assign(:notification_template, Notifications.get_notification_template!(id))
+    |> assign(
+      :notification_template,
+      Notifications.get_notification_template!(id)
+    )
   end
 
   defp apply_action(socket, :new, _params) do
@@ -33,8 +41,13 @@ defmodule PrepairWeb.NotificationTemplateLive.Index do
   end
 
   @impl true
-  def handle_info({PrepairWeb.NotificationTemplateLive.FormComponent, {:saved, notification_template}}, socket) do
-    {:noreply, stream_insert(socket, :notification_templates, notification_template)}
+  def handle_info(
+        {PrepairWeb.NotificationTemplateLive.FormComponent,
+         {:saved, notification_template}},
+        socket
+      ) do
+    {:noreply,
+     stream_insert(socket, :notification_templates, notification_template)}
   end
 
   @impl true
@@ -42,6 +55,7 @@ defmodule PrepairWeb.NotificationTemplateLive.Index do
     notification_template = Notifications.get_notification_template!(id)
     {:ok, _} = Notifications.delete_notification_template(notification_template)
 
-    {:noreply, stream_delete(socket, :notification_templates, notification_template)}
+    {:noreply,
+     stream_delete(socket, :notification_templates, notification_template)}
   end
 end

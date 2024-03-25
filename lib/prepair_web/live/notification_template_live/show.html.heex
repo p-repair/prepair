@@ -13,6 +13,9 @@
   <:item title="Title"><%= @notification_template.title %></:item>
   <:item title="Content"><%= @notification_template.content %></:item>
   <:item title="Description"><%= @notification_template.description %></:item>
+  <:item title="Categories"><%= names(@notification_template.categories) %></:item>
+  <:item title="Products"><%= names(@notification_template.products) %></:item>
+  <:item title="Parts"><%= names(@notification_template.parts) %></:item>
   <:item title="Condition"><%= @notification_template.condition %></:item>
   <:item title="User action needed"><%= @notification_template.need_action %></:item>
   <:item title="Draft"><%= @notification_template.draft %></:item>
