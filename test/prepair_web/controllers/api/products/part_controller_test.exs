@@ -31,16 +31,16 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
 
   defp create_part(_) do
     products = create_products()
-    product_ids = create_product_ids(products)
+    product_uuids = create_product_uuids(products)
     notification_templates = create_notification_templates()
 
-    notification_template_ids =
-      create_notification_template_ids(notification_templates)
+    notification_template_uuids =
+      create_notification_template_uuids(notification_templates)
 
     part =
       part_fixture(%{
-        product_ids: product_ids,
-        notification_template_ids: notification_template_ids
+        product_uuids: product_uuids,
+        notification_template_uuids: notification_template_uuids
       })
 
     %{part: part}
@@ -75,14 +75,14 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
       part = part_valid_attrs()
       conn = post(conn, ~p"/api/v1/products/parts", part: part)
 
-      assert %{"id" => id} = json_response(conn, 201)["data"]
+      assert %{"uuid" => uuid} = json_response(conn, 201)["data"]
 
       # Recycle the connection so we can reuse it for a request.
       conn = recycle(conn)
 
-      conn = get(conn, ~p"/api/v1/products/parts/#{id}")
+      conn = get(conn, ~p"/api/v1/products/parts/#{uuid}")
 
-      part = Prepair.Products.get_part!(id)
+      part = Prepair.Products.get_part!(uuid)
 
       assert json_response(conn, 200)["data"] == part |> to_normalised_json()
     end
@@ -91,21 +91,21 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
     JSON render)",
          %{conn: conn} do
       products = create_products()
-      product_ids = create_product_ids(products)
+      product_uuids = create_product_uuids(products)
       notification_templates = create_notification_templates()
 
-      notification_template_ids =
-        create_notification_template_ids(notification_templates)
+      notification_template_uuids =
+        create_notification_template_uuids(notification_templates)
 
       part =
         part_valid_attrs()
-        |> Map.put(:product_ids, product_ids)
-        |> Map.put(:notification_template_ids, notification_template_ids)
+        |> Map.put(:product_uuids, product_uuids)
+        |> Map.put(:notification_template_uuids, notification_template_uuids)
 
       conn = post(conn, ~p"/api/v1/products/parts", part: part)
-      assert %{"id" => id} = json_response(conn, 201)["data"]
+      assert %{"uuid" => uuid} = json_response(conn, 201)["data"]
 
-      part = Products.get_part!(id)
+      part = Products.get_part!(uuid)
       assert part.products == products
       assert part.notification_templates == notification_templates
     end
@@ -122,18 +122,18 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
 
     test "renders part when data is valid", %{
       conn: conn,
-      part: %Part{id: id} = part
+      part: %Part{uuid: uuid} = part
     } do
       conn = put(conn, ~p"/api/v1/products/parts/#{part}", part: @update_attrs)
 
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
+      assert %{"uuid" => ^uuid} = json_response(conn, 200)["data"]
 
       # Recycle the connection so we can reuse it for a request.
       conn = recycle(conn)
 
-      conn = get(conn, ~p"/api/v1/products/parts/#{id}")
+      conn = get(conn, ~p"/api/v1/products/parts/#{uuid}")
 
-      part = Prepair.Products.get_part!(id)
+      part = Prepair.Products.get_part!(uuid)
 
       assert json_response(conn, 200)["data"] == part |> to_normalised_json()
     end
@@ -142,24 +142,27 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
     JSON render)",
          %{
            conn: conn,
-           part: %Part{id: id} = part
+           part: %Part{uuid: uuid} = part
          } do
       new_products = create_products()
-      new_product_ids = create_product_ids(new_products)
+      new_product_uuids = create_product_uuids(new_products)
       new_notification_templates = create_notification_templates()
 
-      new_notification_template_ids =
-        create_notification_template_ids(new_notification_templates)
+      new_notification_template_uuids =
+        create_notification_template_uuids(new_notification_templates)
 
       update_attrs =
         @update_attrs
-        |> Map.put(:product_ids, new_product_ids)
-        |> Map.put(:notification_template_ids, new_notification_template_ids)
+        |> Map.put(:product_uuids, new_product_uuids)
+        |> Map.put(
+          :notification_template_uuids,
+          new_notification_template_uuids
+        )
 
       conn = put(conn, ~p"/api/v1/products/parts/#{part}", part: update_attrs)
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
+      assert %{"uuid" => ^uuid} = json_response(conn, 200)["data"]
 
-      part = Products.get_part!(id)
+      part = Products.get_part!(uuid)
       assert part.products == new_products
       assert part.notification_templates == new_notification_templates
     end

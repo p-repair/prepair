@@ -6,7 +6,14 @@ defmodule PrepairWeb.PartLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :parts, Products.list_parts())}
+    socket =
+      socket
+      |> stream_configure(:parts,
+        dom_id: &"parts-#{&1.uuid}"
+      )
+      |> stream(:parts, Products.list_parts())
+
+    {:ok, socket}
   end
 
   @impl true
@@ -14,10 +21,10 @@ defmodule PrepairWeb.PartLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
+  defp apply_action(socket, :edit, %{"uuid" => uuid}) do
     socket
     |> assign(:page_title, "Edit Part")
-    |> assign(:part, Products.get_part!(id))
+    |> assign(:part, Products.get_part!(uuid))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -38,8 +45,8 @@ defmodule PrepairWeb.PartLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    part = Products.get_part!(id)
+  def handle_event("delete", %{"uuid" => uuid}, socket) do
+    part = Products.get_part!(uuid)
     {:ok, _} = Products.delete_part(part)
 
     {:noreply, stream_delete(socket, :parts, part)}

@@ -59,7 +59,7 @@ defmodule PrepairWeb.CategoryLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/categories")
 
       assert index_live
-             |> element("#categories-#{category.id} a", "Edit")
+             |> element("#categories-#{category.uuid} a", "Edit")
              |> render_click() =~
                "Edit Category"
 
@@ -84,10 +84,10 @@ defmodule PrepairWeb.CategoryLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/categories")
 
       assert index_live
-             |> element("#categories-#{category.id} a", "Delete")
+             |> element("#categories-#{category.uuid} a", "Delete")
              |> render_click()
 
-      refute has_element?(index_live, "#categories-#{category.id}")
+      refute has_element?(index_live, "#categories-#{category.uuid}")
     end
   end
 

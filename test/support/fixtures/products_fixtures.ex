@@ -63,8 +63,8 @@ defmodule Prepair.ProductsFixtures do
     |> Enum.map(&unload_category_relations/1)
   end
 
-  def create_category_ids(categories),
-    do: categories |> Enum.map(fn x -> x.id end)
+  def create_category_uuids(categories),
+    do: categories |> Enum.map(fn x -> x.uuid end)
 
   @doc """
   A helper function to unload category relations.
@@ -98,8 +98,8 @@ defmodule Prepair.ProductsFixtures do
     manufacturer = manufacturer_fixture()
 
     %{
-      category_id: category.id,
-      manufacturer_id: manufacturer.id,
+      category_uuid: category.uuid,
+      manufacturer_uuid: manufacturer.uuid,
       average_lifetime_m: 42,
       country_of_origin: "some country_of_origin",
       description: "some description",
@@ -116,7 +116,8 @@ defmodule Prepair.ProductsFixtures do
     |> Enum.map(&unload_product_relations/1)
   end
 
-  def create_product_ids(products), do: products |> Enum.map(fn x -> x.id end)
+  def create_product_uuids(products),
+    do: products |> Enum.map(fn x -> x.uuid end)
 
   @doc """
   A helper function to unload product relations.
@@ -158,8 +159,8 @@ defmodule Prepair.ProductsFixtures do
     manufacturer = manufacturer_fixture()
 
     %{
-      category_id: category.id,
-      manufacturer_id: manufacturer.id,
+      category_uuid: category.uuid,
+      manufacturer_uuid: manufacturer.uuid,
       average_lifetime_m: 42,
       country_of_origin: "some country_of_origin",
       description: "some description",
@@ -177,7 +178,7 @@ defmodule Prepair.ProductsFixtures do
     |> Enum.map(&unload_part_relations/1)
   end
 
-  def create_part_ids(parts), do: parts |> Enum.map(fn x -> x.id end)
+  def create_part_uuids(parts), do: parts |> Enum.map(fn x -> x.uuid end)
 
   @doc """
   A helper function to unload part relations.

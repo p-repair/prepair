@@ -33,14 +33,14 @@ defmodule Prepair.Newsletter do
 
   ## Examples
 
-      iex> get_contact!(123)
+      iex> get_contact!("d080e457-b29f-4b55-8cdf-8c0cf462e739")
       %Contact{}
 
-      iex> get_contact!(456)
+      iex> get_contact!("0f3b9817-6433-409c-823d-7d1f1083430c")
       ** (Ecto.NoResultsError)
 
   """
-  def get_contact!(id), do: Repo.get!(Contact, id)
+  def get_contact!(uuid), do: Repo.get!(Contact, uuid)
 
   @doc """
   Creates a contact.
@@ -57,7 +57,7 @@ defmodule Prepair.Newsletter do
   def create_contact(attrs \\ %{}) do
     %Contact{}
     |> Contact.changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert(returning: [:uuid])
     |> case do
       {:ok, %Contact{} = contact} ->
         _ = notify_subscription(contact)

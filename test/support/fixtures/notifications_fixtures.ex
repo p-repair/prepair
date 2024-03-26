@@ -40,8 +40,8 @@ defmodule Prepair.NotificationsFixtures do
     |> Enum.map(&unload_notification_template_relations/1)
   end
 
-  def create_notification_template_ids(notification_templates),
-    do: notification_templates |> Enum.map(fn x -> x.id end)
+  def create_notification_template_uuids(notification_templates),
+    do: notification_templates |> Enum.map(fn x -> x.uuid end)
 
   @doc """
   A helper function to unload notification template relations.

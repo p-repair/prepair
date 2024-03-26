@@ -14,33 +14,40 @@ defmodule Prepair.Notifications.NotificationTemplate do
 
   @fields @required_fields ++
             [
-              :category_ids,
-              :product_ids,
-              :part_ids,
+              :category_uuids,
+              :product_uuids,
+              :part_uuids,
               :description,
               :draft
             ]
 
-  @primary_key {:id, :id, autogenerate: true}
+  @derive {Phoenix.Param, key: :uuid}
+  @primary_key {:uuid, Ecto.UUID, autogenerate: false}
   schema "notification_templates" do
     many_to_many :categories, Category,
       join_through: "category_notification_templates",
-      join_keys: [notification_template_id: :id, category_id: :id],
+      join_keys: [
+        notification_template_uuid: :uuid,
+        category_uuid: :uuid
+      ],
       on_replace: :delete
 
     many_to_many :products, Product,
       join_through: "product_notification_templates",
-      join_keys: [notification_template_id: :id, product_id: :id],
+      join_keys: [
+        notification_template_uuid: :uuid,
+        product_uuid: :uuid
+      ],
       on_replace: :delete
 
     many_to_many :parts, Part,
       join_through: "part_notification_templates",
-      join_keys: [notification_template_id: :id, part_id: :id],
+      join_keys: [notification_template_uuid: :uuid, part_uuid: :uuid],
       on_replace: :delete
 
-    field :category_ids, {:array, :integer}, virtual: true, default: []
-    field :product_ids, {:array, :integer}, virtual: true, default: []
-    field :part_ids, {:array, :integer}, virtual: true, default: []
+    field :category_uuids, {:array, Ecto.UUID}, virtual: true, default: []
+    field :product_uuids, {:array, Ecto.UUID}, virtual: true, default: []
+    field :part_uuids, {:array, Ecto.UUID}, virtual: true, default: []
     field :name, :string
     field :description, :string
     field :title, :string

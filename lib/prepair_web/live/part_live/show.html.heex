@@ -1,5 +1,5 @@
 <.header>
-  Part <%= @part.id %>
+  Part <%= @part.uuid %>
   <:subtitle>This is a part record from your database.</:subtitle>
   <:actions>
     <.link patch={~p"/parts/#{@part}/show/edit"} phx-click={JS.push_focus()}>
@@ -25,7 +25,7 @@
 <.modal :if={@live_action == :edit} id="part-modal" show on_cancel={JS.patch(~p"/parts/#{@part}")}>
   <.live_component
     module={PrepairWeb.PartLive.FormComponent}
-    id={@part.id}
+    id={@part.uuid}
     title={@page_title}
     action={@live_action}
     part={@part}

@@ -1,5 +1,5 @@
 <.header>
-  Category <%= @category.id %>
+  Category <%= @category.uuid %>
   <:subtitle>This is a category record from your database.</:subtitle>
   <:actions>
     <.link patch={~p"/categories/#{@category}/show/edit"} phx-click={JS.push_focus()}>
@@ -20,7 +20,7 @@
 <.modal :if={@live_action == :edit} id="category-modal" show on_cancel={JS.patch(~p"/categories/#{@category}")}>
   <.live_component
     module={PrepairWeb.CategoryLive.FormComponent}
-    id={@category.id}
+    id={@category.uuid}
     title={@page_title}
     action={@live_action}
     category={@category}

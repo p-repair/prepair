@@ -6,7 +6,14 @@ defmodule PrepairWeb.CategoryLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :categories, Products.list_categories())}
+    socket =
+      socket
+      |> stream_configure(:categories,
+        dom_id: &"categories-#{&1.uuid}"
+      )
+      |> stream(:categories, Products.list_categories())
+
+    {:ok, socket}
   end
 
   @impl true
@@ -14,10 +21,10 @@ defmodule PrepairWeb.CategoryLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
+  defp apply_action(socket, :edit, %{"uuid" => uuid}) do
     socket
     |> assign(:page_title, "Edit Category")
-    |> assign(:category, Products.get_category!(id))
+    |> assign(:category, Products.get_category!(uuid))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -41,8 +48,8 @@ defmodule PrepairWeb.CategoryLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    category = Products.get_category!(id)
+  def handle_event("delete", %{"uuid" => uuid}, socket) do
+    category = Products.get_category!(uuid)
     {:ok, _} = Products.delete_category(category)
 
     {:noreply, stream_delete(socket, :categories, category)}

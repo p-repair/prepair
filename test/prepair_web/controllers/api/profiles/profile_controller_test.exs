@@ -41,37 +41,37 @@ defmodule PrepairWeb.Api.Profiles.ProfileControllerTest do
     end
   end
 
-  describe "GET /api/v1/profiles/profile/{id}" do
-    test "get a profile from its id", %{conn: conn, user: user} do
+  describe "GET /api/v1/profiles/profile/{uuid}" do
+    test "get a profile from its uuid", %{conn: conn, user: user} do
       profile = user.profile |> Repo.preload(:user)
-      id = profile.id
-      conn = get(conn, ~p"/api/v1/profiles/profile/#{id}")
+      uuid = profile.uuid
+      conn = get(conn, ~p"/api/v1/profiles/profile/#{uuid}")
 
       assert json_response(conn, 200)["data"] ==
                profile |> to_normalised_json()
     end
   end
 
-  describe "PUT /api/v1/profiles/profile/{id}" do
-    test "update a profile from its id when attrs are valid", %{
+  describe "PUT /api/v1/profiles/profile/{uuid}" do
+    test "update a profile from its uuid when attrs are valid", %{
       conn: conn,
       user: user
     } do
       profile = user.profile |> Repo.preload(:user)
-      id = profile.id
+      uuid = profile.uuid
 
       conn =
-        put(conn, ~p"/api/v1/profiles/profile/#{id}", profile: @update_attrs)
+        put(conn, ~p"/api/v1/profiles/profile/#{uuid}", profile: @update_attrs)
 
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
+      assert %{"uuid" => ^uuid} = json_response(conn, 200)["data"]
 
       # Recycle the connection so we can reuse it for a request.
 
       conn = recycle(conn)
 
-      conn = get(conn, ~p"/api/v1/profiles/profile/#{id}")
+      conn = get(conn, ~p"/api/v1/profiles/profile/#{uuid}")
 
-      profile = Prepair.Profiles.get_profile!(id)
+      profile = Prepair.Profiles.get_profile!(uuid)
 
       assert json_response(conn, 200)["data"] ==
                profile |> to_normalised_json()
@@ -82,10 +82,10 @@ defmodule PrepairWeb.Api.Profiles.ProfileControllerTest do
       user: user
     } do
       profile = user.profile |> Repo.preload(:user)
-      id = profile.id
+      uuid = profile.uuid
 
       conn =
-        put(conn, ~p"/api/v1/profiles/profile/#{id}", profile: @invalid_attrs)
+        put(conn, ~p"/api/v1/profiles/profile/#{uuid}", profile: @invalid_attrs)
 
       assert json_response(conn, 422)["errors"] != %{}
     end

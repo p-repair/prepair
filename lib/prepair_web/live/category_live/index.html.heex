@@ -22,9 +22,9 @@
     </div>
     <.link patch={~p"/categories/#{category}/edit"}>Edit</.link>
   </:action>
-  <:action :let={{id, category}}>
+  <:action :let={{uuid, category}}>
     <.link
-      phx-click={JS.push("delete", value: %{id: category.id}) |> hide("##{id}")}
+      phx-click={JS.push("delete", value: %{uuid: category.uuid}) |> hide("##{uuid}")}
       data-confirm="Are you sure?"
     >
       Delete
@@ -35,7 +35,7 @@
 <.modal :if={@live_action in [:new, :edit]} id="category-modal" show on_cancel={JS.patch(~p"/categories")}>
   <.live_component
     module={PrepairWeb.CategoryLive.FormComponent}
-    id={@category.id || :new}
+    id={@category.uuid || :new}
     title={@page_title}
     action={@live_action}
     category={@category}

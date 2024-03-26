@@ -11,7 +11,17 @@ defmodule PrepairWeb.NotificationTemplateLive.Index do
       Notifications.list_notification_templates()
       |> Repo.preload([:categories, :products, :parts])
 
-    {:ok, stream(socket, :notification_templates, notification_templates)}
+    socket =
+      socket
+      |> stream_configure(:notification_templates,
+        dom_id: &"notification_templates-#{&1.uuid}"
+      )
+      |> stream(
+        :notification_templates,
+        notification_templates
+      )
+
+    {:ok, socket}
   end
 
   @impl true
@@ -19,12 +29,12 @@ defmodule PrepairWeb.NotificationTemplateLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
+  defp apply_action(socket, :edit, %{"uuid" => uuid}) do
     socket
     |> assign(:page_title, "Edit Notification template")
     |> assign(
       :notification_template,
-      Notifications.get_notification_template!(id)
+      Notifications.get_notification_template!(uuid)
     )
   end
 
@@ -51,8 +61,8 @@ defmodule PrepairWeb.NotificationTemplateLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    notification_template = Notifications.get_notification_template!(id)
+  def handle_event("delete", %{"uuid" => uuid}, socket) do
+    notification_template = Notifications.get_notification_template!(uuid)
     {:ok, _} = Notifications.delete_notification_template(notification_template)
 
     {:noreply,

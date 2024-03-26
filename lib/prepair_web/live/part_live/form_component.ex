@@ -19,9 +19,9 @@ defmodule PrepairWeb.PartLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:category_id]} type="select" options={category_opts(@changeset)} label="Category" />
-        <.input field={@form[:manufacturer_id]} type="select" options={manufacturer_opts(@changeset)} label="Manufacturer" />
-        <.input field={@form[:product_ids]} type="select" options={products_opts((@changeset))} multiple={true} label="Compatible products" />
+        <.input field={@form[:category_uuid]} type="select" options={category_opts(@changeset)} label="Category" />
+        <.input field={@form[:manufacturer_uuid]} type="select" options={manufacturer_opts(@changeset)} label="Manufacturer" />
+        <.input field={@form[:product_uuids]} type="select" options={products_opts((@changeset))} multiple={true} label="Compatible products" />
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:reference]} type="text" label="Reference" />
         <.input field={@form[:description]} type="text" label="Description" />
@@ -65,33 +65,45 @@ defmodule PrepairWeb.PartLive.FormComponent do
   end
 
   defp category_opts(changeset) do
-    existing_ids =
+    existing_uuids =
       changeset
       |> Ecto.Changeset.get_change(:categories, [])
-      |> Enum.map(& &1.data.id)
+      |> Enum.map(& &1.data.uuid)
 
     for cat <- Prepair.Products.list_categories(),
-        do: [key: cat.name, value: cat.id, selected: cat.id in existing_ids]
+        do: [
+          key: cat.name,
+          value: cat.uuid,
+          selected: cat.uuid in existing_uuids
+        ]
   end
 
   defp manufacturer_opts(changeset) do
-    existing_ids =
+    existing_uuids =
       changeset
       |> Ecto.Changeset.get_change(:manufacturers, [])
-      |> Enum.map(& &1.data.id)
+      |> Enum.map(& &1.data.uuid)
 
     for man <- Prepair.Products.list_manufacturers(),
-        do: [key: man.name, value: man.id, selected: man.id in existing_ids]
+        do: [
+          key: man.name,
+          value: man.uuid,
+          selected: man.uuid in existing_uuids
+        ]
   end
 
   defp products_opts(changeset) do
-    existing_ids =
+    existing_uuids =
       changeset
       |> Ecto.Changeset.get_change(:products, [])
-      |> Enum.map(& &1.data.id)
+      |> Enum.map(& &1.data.uuid)
 
     for prod <- Prepair.Products.list_products(),
-        do: [key: prod.name, value: prod.id, selected: prod.id in existing_ids]
+        do: [
+          key: prod.name,
+          value: prod.uuid,
+          selected: prod.uuid in existing_uuids
+        ]
   end
 
   defp save_part(socket, :edit, part_params) do

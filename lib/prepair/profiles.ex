@@ -28,29 +28,29 @@ defmodule Prepair.Profiles do
 
   ## Examples
 
-      iex> get_profile!(123)
+      iex> get_profile!("d080e457-b29f-4b55-8cdf-8c0cf462e739")
       %Profile{}
 
-      iex> get_profile!(456)
+      iex> get_profile!("0f3b9817-6433-409c-823d-7d1f1083430c")
       ** (Ecto.NoResultsError)
 
   """
-  def get_profile!(id), do: Repo.get!(Profile, id)
+  def get_profile!(uuid), do: Repo.get!(Profile, uuid)
 
   @doc """
   Creates a profile.
 
   ## Examples
 
-      iex> create_profile(id, %{field: value})
+      iex> create_profile(uuid, %{field: value})
       {:ok, %Profile{}}
 
-      iex> create_profile(id, %{field: bad_value})
+      iex> create_profile(uuid, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_profile(id, attrs \\ %{}) do
-    %Profile{id: id}
+  def create_profile(uuid, attrs \\ %{}) do
+    %Profile{uuid: uuid}
     |> Profile.changeset(attrs)
     |> Repo.insert()
   end
@@ -100,7 +100,7 @@ defmodule Prepair.Profiles do
   end
 
   @doc """
-  Returns the list of ownerships for a given profile / user id.
+  Returns the list of ownerships for a given profile / user uuid.
 
   ## Options:
 
@@ -109,16 +109,18 @@ defmodule Prepair.Profiles do
 
   ## Examples
 
-      iex> list_ownerships_by_profile(1)
+      iex> list_ownerships_by_profile("2a6a8ead-29fe-4606-9eaa-c5a1acd5fe28")
       [%Ownership{public: false, …}, %Ownership{public: true…}, ...]
 
-      iex> list_ownerships_by_profile(1, public: true)
+      iex> list_ownerships_by_profile("2a6a8ead-29fe-4606-9eaa-c5a1acd5fe28",
+          public: true
+              )
       [%Ownership{public: true, …}, ...]
 
   """
-  def list_ownerships_by_profile(profile_id, opts \\ []) do
+  def list_ownerships_by_profile(profile_uuid, opts \\ []) do
     filters =
-      [profile_id: profile_id] ++
+      [profile_uuid: profile_uuid] ++
         if opts[:include_private] == true, do: [], else: [public: true]
 
     query =
@@ -130,7 +132,7 @@ defmodule Prepair.Profiles do
   end
 
   @doc """
-  Returns the list of ownerships for a given product id.
+  Returns the list of ownerships for a given product uuid.
 
   ## Options:
 
@@ -139,16 +141,18 @@ defmodule Prepair.Profiles do
 
   ## Examples
 
-      iex> list_ownerships_by_product(1)
+      iex> list_ownerships_by_product("6a8de432-856b-4776-a002-27390c91a486")
       [%Ownership{public: false, …}, %Ownership{public: true, …}, ...]
 
-      iex> list_ownerships_by_product(1, public: true)
+      iex> list_ownerships_by_product("6a8de432-856b-4776-a002-27390c91a486",
+          public: true
+              )
       [%Ownership{public: true, …}, ...]
 
   """
-  def list_ownerships_by_product(product_id, opts \\ []) do
+  def list_ownerships_by_product(product_uuid, opts \\ []) do
     filters =
-      [product_id: product_id] ++
+      [product_uuid: product_uuid] ++
         if opts[:include_private] == true, do: [], else: [public: true]
 
     query =
@@ -160,18 +164,18 @@ defmodule Prepair.Profiles do
   end
 
   @doc """
-  Returns the ownership count for the given product id.
+  Returns the ownership count for the given product uuid.
 
   ## Examples
 
-      iex> count_ownerships_by_product(123)
+      iex> count_ownerships_by_product("6a8de432-856b-4776-a002-27390c91a486")
       2
 
   """
-  def count_ownerships_by_product(product_id) do
+  def count_ownerships_by_product(product_uuid) do
     query =
       from o in Ownership,
-        where: o.product_id == ^product_id,
+        where: o.product_uuid == ^product_uuid,
         select: count()
 
     Repo.all(query)
@@ -185,14 +189,14 @@ defmodule Prepair.Profiles do
 
   ## Examples
 
-      iex> get_ownership!(123)
+      iex> get_ownership!("d080e457-b29f-4b55-8cdf-8c0cf462e739")
       %Ownership{}
 
-      iex> get_ownership!(456)
+      iex> get_ownership!("0f3b9817-6433-409c-823d-7d1f1083430c")
       ** (Ecto.NoResultsError)
 
   """
-  def get_ownership!(id), do: Repo.get!(Ownership, id)
+  def get_ownership!(uuid), do: Repo.get!(Ownership, uuid)
 
   @doc """
   Creates an ownership.
@@ -206,10 +210,10 @@ defmodule Prepair.Profiles do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_ownership(profile_id, attrs \\ %{}) do
-    %Ownership{profile_id: profile_id}
+  def create_ownership(profile_uuid, attrs \\ %{}) do
+    %Ownership{profile_uuid: profile_uuid}
     |> Ownership.changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert(returning: [:uuid])
   end
 
   @doc """

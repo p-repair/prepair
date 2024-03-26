@@ -26,14 +26,14 @@ defmodule PrepairWeb.Api.Products.CategoryController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    category = Products.get_category!(id)
+  def show(conn, %{"uuid" => uuid}) do
+    category = Products.get_category!(uuid)
     render(conn, :show, category: category)
   end
 
-  def update(conn, %{"id" => id, "category" => category_params}) do
+  def update(conn, %{"uuid" => uuid, "category" => category_params}) do
     params = category_params |> normalise_params()
-    category = Products.get_category!(id)
+    category = Products.get_category!(uuid)
 
     # Trick to avoid empty fields returned by FlutterFlow when value isn't changed.
     params =
@@ -45,8 +45,8 @@ defmodule PrepairWeb.Api.Products.CategoryController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    category = Products.get_category!(id)
+  def delete(conn, %{"uuid" => uuid}) do
+    category = Products.get_category!(uuid)
 
     with {:ok, %Category{}} <-
            Products.delete_category(category) do

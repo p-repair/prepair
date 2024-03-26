@@ -20,6 +20,10 @@ defmodule Prepair.NotificationsTest do
       draft: nil
     }
 
+    @random_uuid_1 Ecto.UUID.generate()
+    @random_uuid_2 Ecto.UUID.generate()
+    @random_uuid_3 Ecto.UUID.generate()
+
     # A function helper to preload fields [:categories, :products, :parts].
     defp preload_notification_template_relations(notification_template) do
       notification_template |> Repo.preload([:categories, :products, :parts])
@@ -28,7 +32,7 @@ defmodule Prepair.NotificationsTest do
     # It is needed to remove virtual fields to match on asserts of
     # list_notification_template/1 tests when we populate these fields.
     defp remove_virtual_fields(notification_template) do
-      Notifications.get_notification_template!(notification_template.id)
+      Notifications.get_notification_template!(notification_template.uuid)
       |> unload_notification_template_relations()
     end
 
@@ -44,26 +48,26 @@ defmodule Prepair.NotificationsTest do
     end
 
     test "list_notification_templates/1 returns a list of notification_templates
-     matching with :category_ids value" do
-      category_1_id = category_fixture().id
-      category_2_id = category_fixture().id
+     matching with :category_uuids value" do
+      category_1_uuid = category_fixture().uuid
+      category_2_uuid = category_fixture().uuid
 
       notification_template_1 =
         notification_template_fixture(%{
-          category_ids: [category_1_id, category_2_id]
+          category_uuids: [category_1_uuid, category_2_uuid]
         })
         |> remove_virtual_fields()
 
       notification_template_2 =
-        notification_template_fixture(%{category_ids: [category_1_id]})
+        notification_template_fixture(%{category_uuids: [category_1_uuid]})
         |> remove_virtual_fields()
 
       _notification_template_3 =
-        notification_template_fixture(%{category_ids: [category_2_id]})
+        notification_template_fixture(%{category_uuids: [category_2_uuid]})
         |> remove_virtual_fields()
 
       assert Notifications.list_notification_templates(
-               category_ids: [category_1_id]
+               category_uuids: [category_1_uuid]
              ) ==
                [
                  notification_template_1,
@@ -72,169 +76,177 @@ defmodule Prepair.NotificationsTest do
     end
 
     test "list_notification_templates/1 returns an empty list when
-    :category_ids value is a list of ids that does not exists in the database" do
+    :category_uuids value is a list of uuids that does not exists in the database" do
       assert Notifications.list_notification_templates(
-               category_ids: [456, 457, 458]
+               category_uuids: [@random_uuid_1, @random_uuid_2, @random_uuid_3]
              ) == []
     end
 
     test "list_notification_templates/1 returns a list of notification_templates
-    matching with :product_ids value" do
-      product_1_id = product_fixture().id
-      product_2_id = product_fixture().id
+    matching with :product_uuids value" do
+      product_1_uuid = product_fixture().uuid
+      product_2_uuid = product_fixture().uuid
 
       notification_template_1 =
         notification_template_fixture(%{
-          product_ids: [product_1_id, product_2_id]
+          product_uuids: [product_1_uuid, product_2_uuid]
         })
         |> remove_virtual_fields()
 
       notification_template_2 =
-        notification_template_fixture(%{product_ids: [product_1_id]})
+        notification_template_fixture(%{product_uuids: [product_1_uuid]})
         |> remove_virtual_fields()
 
       _notification_template_3 =
-        notification_template_fixture(%{product_ids: [product_2_id]})
+        notification_template_fixture(%{product_uuids: [product_2_uuid]})
         |> remove_virtual_fields()
 
       assert Notifications.list_notification_templates(
-               product_ids: [product_1_id]
+               product_uuids: [product_1_uuid]
              ) == [
                notification_template_1,
                notification_template_2
              ]
     end
 
-    test "list_notification_templates/1 returns an empty list when :product_ids
-    value is a list of ids that does not exists in the database" do
-      assert Notifications.list_notification_templates(product_ids: [456]) == []
+    test "list_notification_templates/1 returns an empty list when :product_uuids
+    value is a list of uuids that does not exists in the database" do
+      assert Notifications.list_notification_templates(
+               product_uuids: [@random_uuid_1]
+             ) ==
+               []
     end
 
     test "list_notification_templates/1 returns a list of notification_templates
-     matching witch :part_ids value" do
-      part_1_id = part_fixture().id
-      part_2_id = part_fixture().id
+     matching witch :part_uuids value" do
+      part_1_uuid = part_fixture().uuid
+      part_2_uuid = part_fixture().uuid
 
       notification_template_1 =
         notification_template_fixture(%{
-          part_ids: [part_1_id, part_2_id]
+          part_uuids: [part_1_uuid, part_2_uuid]
         })
         |> remove_virtual_fields()
 
       notification_template_2 =
-        notification_template_fixture(%{part_ids: [part_1_id]})
+        notification_template_fixture(%{part_uuids: [part_1_uuid]})
         |> remove_virtual_fields()
 
       _notification_template_3 =
-        notification_template_fixture(%{part_ids: [part_2_id]})
+        notification_template_fixture(%{part_uuids: [part_2_uuid]})
         |> remove_virtual_fields()
 
-      assert Notifications.list_notification_templates(part_ids: [part_1_id]) ==
+      assert Notifications.list_notification_templates(
+               part_uuids: [part_1_uuid]
+             ) ==
                [
                  notification_template_1,
                  notification_template_2
                ]
     end
 
-    test "list_notification_templates/1 returns an empty list when :part_ids
-    value is a list of ids that does not exists in the database" do
-      assert Notifications.list_notification_templates(part_ids: [456]) == []
+    test "list_notification_templates/1 returns an empty list when :part_uuids
+    value is a list of uuids that does not exists in the database" do
+      assert Notifications.list_notification_templates(
+               part_uuids: [@random_uuid_1]
+             ) ==
+               []
     end
 
     test "list_notification_templates/1 filters can be combined: returns an
-    empty list if :category_ids value is a list of ids which don’t exist in the
+    empty list if :category_uuids value is a list of uuids which don’t exist in the
     database" do
-      product_1_id = product_fixture().id
+      product_1_uuid = product_fixture().uuid
 
       _notification_template_1 =
-        notification_template_fixture(%{product_ids: [product_1_id]})
+        notification_template_fixture(%{product_uuids: [product_1_uuid]})
 
       assert Notifications.list_notification_templates(
-               category_ids: [456],
-               product_ids: [product_1_id]
+               category_uuids: [@random_uuid_1],
+               product_uuids: [product_1_uuid]
              ) == []
     end
 
     test "list_notification_templates/1 filters can be combined: returns an
-    empty list if :product_ids value is a list of ids which don’t exist in the
+    empty list if :product_uuids value is a list of uuids which don’t exist in the
     database" do
-      category_id_1 = category_fixture().id
+      category_uuid_1 = category_fixture().uuid
 
       _notification_template_1 =
-        notification_template_fixture(%{category_ids: [category_id_1]})
+        notification_template_fixture(%{category_uuids: [category_uuid_1]})
 
       assert Notifications.list_notification_templates(
-               category_ids: [category_id_1],
-               product_ids: [456]
+               category_uuids: [category_uuid_1],
+               product_uuids: [@random_uuid_1]
              ) == []
     end
 
     test "list_notification_templates/1 filters can be combined: returns an
-    empty list if :part_ids value is a list of ids which don’t exist in the
+    empty list if :part_uuids value is a list of uuids which don’t exist in the
     database" do
-      category_id_1 = category_fixture().id
+      category_uuid_1 = category_fixture().uuid
 
       _notification_template_1 =
-        notification_template_fixture(%{category_ids: [category_id_1]})
+        notification_template_fixture(%{category_uuids: [category_uuid_1]})
 
       assert Notifications.list_notification_templates(
-               category_ids: [category_id_1],
-               part_ids: [456]
+               category_uuids: [category_uuid_1],
+               part_uuids: [@random_uuid_1]
              ) == []
     end
 
     test "list_notification_templates/1 filters can be combined: returns an
-    empty list if :category_ids, :product_ids and :part_ids values are lists of
-    ids which don’t match on the same notification_templates" do
-      category_id_1 = category_fixture().id
-      product_id_1 = product_fixture().id
-      part_id_1 = part_fixture().id
+    empty list if :category_uuids, :product_uuids and :part_uuids values are lists of
+    uuids which don’t match on the same notification_templates" do
+      category_uuid_1 = category_fixture().uuid
+      product_uuid_1 = product_fixture().uuid
+      part_uuid_1 = part_fixture().uuid
 
       _notification_template_1 =
-        notification_template_fixture(%{category_ids: [category_id_1]})
+        notification_template_fixture(%{category_uuids: [category_uuid_1]})
 
       _notification_template_2 =
-        notification_template_fixture(%{product_ids: [product_id_1]})
+        notification_template_fixture(%{product_uuids: [product_uuid_1]})
 
       _notification_template_3 =
-        notification_template_fixture(%{part_ids: [part_id_1]})
+        notification_template_fixture(%{part_uuids: [part_uuid_1]})
 
       assert Notifications.list_notification_templates(
-               category_ids: [category_id_1],
-               product_ids: [product_id_1],
-               part_ids: [part_id_1]
+               category_uuids: [category_uuid_1],
+               product_uuids: [product_uuid_1],
+               part_uuids: [part_uuid_1]
              ) ==
                []
     end
 
     test "list_notification_templates/1 filters can be combined: returns
-    matching notification_templates with :category_ids, :product_ids and
-    :part_ids when all are set" do
-      category_id_1 = category_fixture().id
-      product_id_1 = product_fixture().id
-      part_id_1 = part_fixture().id
+    matching notification_templates with :category_uuids, :product_uuids and
+    :part_uuids when all are set" do
+      category_uuid_1 = category_fixture().uuid
+      product_uuid_1 = product_fixture().uuid
+      part_uuid_1 = part_fixture().uuid
 
       _notification_template_1 =
-        notification_template_fixture(%{category_ids: [category_id_1]})
+        notification_template_fixture(%{category_uuids: [category_uuid_1]})
 
       _notification_template_2 =
         notification_template_fixture(%{
-          category_ids: [category_id_1],
-          product_ids: [product_id_1]
+          category_uuids: [category_uuid_1],
+          product_uuids: [product_uuid_1]
         })
 
       notification_template_3 =
         notification_template_fixture(%{
-          category_ids: [category_id_1],
-          product_ids: [product_id_1],
-          part_ids: [part_id_1]
+          category_uuids: [category_uuid_1],
+          product_uuids: [product_uuid_1],
+          part_uuids: [part_uuid_1]
         })
         |> remove_virtual_fields()
 
       assert Notifications.list_notification_templates(
-               category_ids: [category_id_1],
-               product_ids: [product_id_1],
-               part_ids: [part_id_1]
+               category_uuids: [category_uuid_1],
+               product_uuids: [product_uuid_1],
+               part_uuids: [part_uuid_1]
              ) == [notification_template_3]
     end
 
@@ -245,30 +257,32 @@ defmodule Prepair.NotificationsTest do
       end
     end
 
-    test "get_notification_template!/1 returns the notification_template with given id" do
+    test "get_notification_template!/1 returns the notification_template with given uuid" do
       notification_template =
         notification_template_fixture()
         |> preload_notification_template_relations()
 
-      assert Notifications.get_notification_template!(notification_template.id) ==
+      assert Notifications.get_notification_template!(
+               notification_template.uuid
+             ) ==
                notification_template
     end
 
     test "create_notification_template/1 with valid data creates a notification_template" do
       categories = create_categories()
-      category_ids = create_category_ids(categories)
+      category_uuids = create_category_uuids(categories)
 
       products = create_products()
-      product_ids = create_product_ids(products)
+      product_uuids = create_product_uuids(products)
 
       parts = create_parts()
-      part_ids = create_part_ids(parts)
+      part_uuids = create_part_uuids(parts)
 
       valid_attrs =
         notification_template_valid_attrs()
-        |> Map.put(:category_ids, category_ids)
-        |> Map.put(:product_ids, product_ids)
-        |> Map.put(:part_ids, part_ids)
+        |> Map.put(:category_uuids, category_uuids)
+        |> Map.put(:product_uuids, product_uuids)
+        |> Map.put(:part_uuids, part_uuids)
 
       assert {:ok, %NotificationTemplate{} = notification_template} =
                Notifications.create_notification_template(valid_attrs)
@@ -292,31 +306,31 @@ defmodule Prepair.NotificationsTest do
 
     test "update_notification_template/2 with valid data updates the notification_template" do
       categories = create_categories()
-      category_ids = create_category_ids(categories)
+      category_uuids = create_category_uuids(categories)
       products = create_products()
-      product_ids = create_product_ids(products)
+      product_uuids = create_product_uuids(products)
       parts = create_parts()
-      part_ids = create_part_ids(parts)
+      part_uuids = create_part_uuids(parts)
 
       notification_template =
         notification_template_fixture(%{
-          category_ids: category_ids,
-          product_ids: product_ids,
-          part_ids: part_ids
+          category_uuids: category_uuids,
+          product_uuids: product_uuids,
+          part_uuids: part_uuids
         })
         |> preload_notification_template_relations()
 
       new_categories = create_categories()
-      new_category_ids = create_category_ids(new_categories)
+      new_category_uuids = create_category_uuids(new_categories)
       new_products = create_products()
-      new_product_ids = create_product_ids(new_products)
+      new_product_uuids = create_product_uuids(new_products)
       new_parts = create_parts()
-      new_part_ids = create_part_ids(new_parts)
+      new_part_uuids = create_part_uuids(new_parts)
 
       update_attrs = %{
-        category_ids: new_category_ids,
-        product_ids: new_product_ids,
-        part_ids: new_part_ids,
+        category_uuids: new_category_uuids,
+        product_uuids: new_product_uuids,
+        part_uuids: new_part_uuids,
         name: "some updated name",
         description: "some updated description",
         title: "some updated title",
@@ -357,7 +371,7 @@ defmodule Prepair.NotificationsTest do
 
       assert notification_template ==
                Notifications.get_notification_template!(
-                 notification_template.id
+                 notification_template.uuid
                )
                |> preload_notification_template_relations()
     end
@@ -369,7 +383,7 @@ defmodule Prepair.NotificationsTest do
                Notifications.delete_notification_template(notification_template)
 
       assert_raise Ecto.NoResultsError, fn ->
-        Notifications.get_notification_template!(notification_template.id)
+        Notifications.get_notification_template!(notification_template.uuid)
       end
     end
 

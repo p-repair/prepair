@@ -6,6 +6,8 @@ defmodule Prepair.Newsletter.Contact do
 
   import Ecto.Changeset
 
+  @derive {Phoenix.Param, key: :uuid}
+  @primary_key {:uuid, Ecto.UUID, autogenerate: false}
   typed_schema "contacts" do
     field :email, :string
     field :lang, :string

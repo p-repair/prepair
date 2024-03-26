@@ -21,10 +21,10 @@ defmodule PrepairWeb.OwnershipLiveTest do
   }
 
   defp create_public_ownership(_) do
-    profile_id = profile_fixture().id
+    profile_uuid = profile_fixture().uuid
 
     public_ownership =
-      ownership_fixture(profile_id, ownership_valid_attrs())
+      ownership_fixture(profile_uuid, ownership_valid_attrs())
       |> Repo.preload([:product, :profile])
 
     %{public_ownership: public_ownership}
@@ -56,8 +56,8 @@ defmodule PrepairWeb.OwnershipLiveTest do
       index_live
       |> form("#ownership-form",
         ownership: %{
-          category_id: product.category_id,
-          manufacturer_id: product.manufacturer_id
+          category_uuid: product.category_uuid,
+          manufacturer_uuid: product.manufacturer_uuid
         }
       )
       |> render_change()
@@ -65,7 +65,7 @@ defmodule PrepairWeb.OwnershipLiveTest do
       assert index_live
              |> form("#ownership-form",
                ownership: %{
-                 product_id: product.id,
+                 product_uuid: product.uuid,
                  date_of_purchase: ~D[2023-10-02],
                  warranty_duration_m: 36,
                  price_of_purchase: 500,
@@ -87,7 +87,7 @@ defmodule PrepairWeb.OwnershipLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/ownerships")
 
       assert index_live
-             |> element("#ownerships-#{public_ownership.id} a", "Edit")
+             |> element("#ownerships-#{public_ownership.uuid} a", "Edit")
              |> render_click() =~
                "Edit Ownership"
 
@@ -114,10 +114,10 @@ defmodule PrepairWeb.OwnershipLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/ownerships")
 
       assert index_live
-             |> element("#ownerships-#{public_ownership.id} a", "Delete")
+             |> element("#ownerships-#{public_ownership.uuid} a", "Delete")
              |> render_click()
 
-      refute has_element?(index_live, "#ownerships-#{public_ownership.id}")
+      refute has_element?(index_live, "#ownerships-#{public_ownership.uuid}")
     end
   end
 
