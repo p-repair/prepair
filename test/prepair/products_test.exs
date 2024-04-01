@@ -262,13 +262,13 @@ defmodule Prepair.ProductsTest do
     end
 
     test "list_products/1 returns all products if the value of both :category_id
-    and :manufacturer_id is ['select']" do
+    and :manufacturer_id is ['']" do
       product_1 = product_fixture()
       product_2 = product_fixture()
 
       assert Products.list_products(
-               category_id: ["select"],
-               manufacturer_id: ["select"]
+               category_id: [""],
+               manufacturer_id: [""]
              ) ==
                [product_1, product_2]
     end
@@ -306,7 +306,7 @@ defmodule Prepair.ProductsTest do
     end
 
     test "list_products/1 returns matching product with :category_id value
-    when :manufacturer_id is set to ['select']" do
+    when :manufacturer_id is set to ['']" do
       category_id = category_fixture().id
       _product_1 = product_fixture()
 
@@ -315,12 +315,12 @@ defmodule Prepair.ProductsTest do
 
       assert Products.list_products(
                category_id: [category_id],
-               manufacturer_id: ["select"]
+               manufacturer_id: [""]
              ) == [product_2]
     end
 
     test "list_products/1 returns matching product with :manufacturer_id value
-    when :category_id is set to ['select']" do
+    when :category_id is set to ['']" do
       manufacturer_id = manufacturer_fixture().id
       _product_1 = product_fixture()
 
@@ -328,7 +328,7 @@ defmodule Prepair.ProductsTest do
         product_fixture(%{manufacturer_id: manufacturer_id})
 
       assert Products.list_products(
-               category_id: ["select"],
+               category_id: [""],
                manufacturer_id: [manufacturer_id]
              ) == [product_2]
     end
