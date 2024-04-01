@@ -13,9 +13,18 @@ defmodule PrepairWeb.NotificationTemplateLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:notification_template, Notifications.get_notification_template!(id))}
+     |> assign(
+       :notification_template,
+       Notifications.get_notification_template!(id)
+     )}
   end
 
   defp page_title(:show), do: "Show Notification template"
   defp page_title(:edit), do: "Edit Notification template"
+
+  defp names(item) do
+    item
+    |> Enum.map(& &1.name)
+    |> Enum.join(", ")
+  end
 end
