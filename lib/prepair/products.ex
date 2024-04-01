@@ -284,7 +284,7 @@ defmodule Prepair.Products do
     |> Repo.all()
   end
 
-  defp filter({_k, ["select"]}, query) do
+  defp filter({_k, [""]}, query) do
     query
   end
 

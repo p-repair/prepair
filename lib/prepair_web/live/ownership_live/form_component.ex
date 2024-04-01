@@ -21,9 +21,27 @@ defmodule PrepairWeb.OwnershipLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:category_id]} type="select" options={category_opts(@changeset)} label="Category" />
-        <.input field={@form[:manufacturer_id]} type="select" options={manufacturer_opts(@changeset)} label="Manufacturer" />
-        <.input field={@form[:product_id]} type="select" options={product_opts(@form.params, @changeset)} label="Product name" />
+        <.input
+          field={@form[:category_id]}
+          label="Category"
+          type="select"
+          prompt="Please select a category"
+          options={category_opts(@changeset)}
+        />
+        <.input
+          field={@form[:manufacturer_id]}
+          label="Manufacturer"
+          type="select"
+          prompt="Please select a manufacturer"
+          options={manufacturer_opts(@changeset)}
+        />
+        <.input
+          field={@form[:product_id]}
+          label="Product name"
+          type="select"
+          prompt="Please select a product (filter by category and manufacturer)"
+          options={product_opts(@form.params, @changeset)}
+        />
         <.input field={@form[:date_of_purchase]} type="date" label="Date of purchase" />
         <.input field={@form[:warranty_duration_m]} type="number" label="Warranty duration (in months)" />
         <.input field={@form[:price_of_purchase]} type="number" label="Price of purchase" />
@@ -63,10 +81,6 @@ defmodule PrepairWeb.OwnershipLive.FormComponent do
   end
 
   defp category_opts(changeset) do
-    select = [
-      "Please select a category": "select"
-    ]
-
     existing_ids =
       changeset
       |> Ecto.Changeset.get_change(:categories, [])
@@ -76,14 +90,10 @@ defmodule PrepairWeb.OwnershipLive.FormComponent do
       for cat <- Products.list_categories(),
           do: [key: cat.name, value: cat.id, selected: cat.id in existing_ids]
 
-    List.flatten(select, opts)
+    opts
   end
 
   defp manufacturer_opts(changeset) do
-    select = [
-      "Please select a manufacturer": "select"
-    ]
-
     existing_ids =
       changeset
       |> Ecto.Changeset.get_change(:manufacturers, [])
@@ -93,14 +103,10 @@ defmodule PrepairWeb.OwnershipLive.FormComponent do
       for man <- Products.list_manufacturers(),
           do: [key: man.name, value: man.id, selected: man.id in existing_ids]
 
-    List.flatten(select, opts)
+    opts
   end
 
   defp product_opts(params, changeset) do
-    select = [
-      "Please select a product (filter by category and manufacturer)": "select"
-    ]
-
     existing_ids =
       changeset
       |> Ecto.Changeset.get_change(:products, [])
@@ -109,13 +115,13 @@ defmodule PrepairWeb.OwnershipLive.FormComponent do
     with {:ok, category_id_string} <- Map.fetch(params, "category_id"),
          {:ok, manufacturer_id_string} <- Map.fetch(params, "manufacturer_id") do
       category_id =
-        if category_id_string == "select",
-          do: "select",
+        if category_id_string == "",
+          do: "",
           else: String.to_integer(category_id_string)
 
       manufacturer_id =
-        if manufacturer_id_string == "select",
-          do: "select",
+        if manufacturer_id_string == "",
+          do: "",
           else: String.to_integer(manufacturer_id_string)
 
       opts =
@@ -126,14 +132,14 @@ defmodule PrepairWeb.OwnershipLive.FormComponent do
               ),
             do: [key: p.name, value: p.id, selected: p.id in existing_ids]
 
-      List.flatten(select, opts)
+      opts
     else
       :error ->
         opts =
           for p <- Products.list_products(),
               do: [key: p.name, value: p.id, selected: p.id in existing_ids]
 
-        List.flatten(select, opts)
+        opts
 
       _ ->
         raise("Unexpected behaviour.")
