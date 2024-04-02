@@ -10,6 +10,11 @@ import Config
 config :prepair,
   ecto_repos: [Prepair.Repo]
 
+config :prepair,
+       PrepairWeb.Gettext,
+       default_locale: "en",
+       locales: ~w(en fr)
+
 # Configures the endpoint
 config :prepair, PrepairWeb.Endpoint,
   url: [host: "localhost"],
