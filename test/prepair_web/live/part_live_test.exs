@@ -71,7 +71,7 @@ defmodule PrepairWeb.PartLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/parts")
 
       assert index_live
-             |> element("#parts-#{part.id} a", "Edit")
+             |> element("#parts-#{part.uuid} a", "Edit")
              |> render_click() =~
                "Edit Part"
 
@@ -96,10 +96,10 @@ defmodule PrepairWeb.PartLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/parts")
 
       assert index_live
-             |> element("#parts-#{part.id} a", "Delete")
+             |> element("#parts-#{part.uuid} a", "Delete")
              |> render_click()
 
-      refute has_element?(index_live, "#parts-#{part.id}")
+      refute has_element?(index_live, "#parts-#{part.uuid}")
     end
   end
 

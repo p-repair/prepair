@@ -17,7 +17,7 @@ defmodule PrepairWeb.Api.Products.ManufacturerJSON do
 
   def data(%Manufacturer{} = manufacturer) do
     %{
-      id: manufacturer.id,
+      uuid: manufacturer.uuid,
       description: manufacturer.description,
       image: manufacturer.image,
       name: manufacturer.name

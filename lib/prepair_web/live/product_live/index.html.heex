@@ -26,9 +26,9 @@
     </div>
     <.link patch={~p"/products/#{product}/edit"}>Edit</.link>
   </:action>
-  <:action :let={{id, product}}>
+  <:action :let={{uuid, product}}>
     <.link
-      phx-click={JS.push("delete", value: %{id: product.id}) |> hide("##{id}")}
+      phx-click={JS.push("delete", value: %{uuid: product.uuid}) |> hide("##{uuid}")}
       data-confirm="Are you sure?"
     >
       Delete
@@ -39,7 +39,7 @@
 <.modal :if={@live_action in [:new, :edit]} id="product-modal" show on_cancel={JS.patch(~p"/products")}>
   <.live_component
     module={PrepairWeb.ProductLive.FormComponent}
-    id={@product.id || :new}
+    id={@product.uuid || :new}
     title={@page_title}
     action={@live_action}
     product={@product}

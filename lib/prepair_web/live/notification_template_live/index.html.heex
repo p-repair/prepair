@@ -25,9 +25,9 @@
     </div>
     <.link patch={~p"/notification_templates/#{notification_template}/edit"}>Edit</.link>
   </:action>
-  <:action :let={{id, notification_template}}>
+  <:action :let={{uuid, notification_template}}>
     <.link
-      phx-click={JS.push("delete", value: %{id: notification_template.id}) |> hide("##{id}")}
+      phx-click={JS.push("delete", value: %{uuid: notification_template.uuid}) |> hide("##{uuid}")}
       data-confirm="Are you sure?"
     >
       Delete
@@ -38,7 +38,7 @@
 <.modal :if={@live_action in [:new, :edit]} id="notification_template-modal" show on_cancel={JS.patch(~p"/notification_templates")}>
   <.live_component
     module={PrepairWeb.NotificationTemplateLive.FormComponent}
-    id={@notification_template.id || :new}
+    id={@notification_template.uuid || :new}
     title={@page_title}
     action={@live_action}
     notification_template={@notification_template}

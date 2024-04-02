@@ -22,7 +22,7 @@ defmodule PrepairWeb.Api.Profiles.OwnershipJSON do
     ownership = Repo.preload(ownership, [:profile, :product])
 
     %{
-      id: ownership.id,
+      uuid: ownership.uuid,
       profile: ProfileJSON.data(ownership.profile),
       product: ProductJSON.data(ownership.product),
       price_of_purchase: ownership.price_of_purchase,

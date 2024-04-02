@@ -9,23 +9,29 @@ defmodule Prepair.Products.Category do
 
   @fields @required_fields ++
             [
-              :notification_template_ids,
+              :notification_template_uuids,
               :average_lifetime_m,
               :description,
               :image
             ]
 
-  @primary_key {:id, :id, autogenerate: true}
+  @derive {Phoenix.Param, key: :uuid}
+  @primary_key {:uuid, Ecto.UUID, autogenerate: false}
   schema "categories" do
-    has_many :products, Product
-    has_many :parts, Part
+    has_many :products, Product,
+      foreign_key: :category_uuid,
+      references: :uuid
+
+    has_many :parts, Part,
+      foreign_key: :category_uuid,
+      references: :uuid
 
     many_to_many :notification_templates, NotificationTemplate,
       join_through: "category_notification_templates",
-      join_keys: [category_id: :id, notification_template_id: :id],
+      join_keys: [category_uuid: :uuid, notification_template_uuid: :uuid],
       on_replace: :delete
 
-    field :notification_template_ids, {:array, :integer},
+    field :notification_template_uuids, {:array, Ecto.UUID},
       virtual: true,
       default: []
 

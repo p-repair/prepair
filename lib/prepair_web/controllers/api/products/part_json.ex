@@ -21,7 +21,7 @@ defmodule PrepairWeb.Api.Products.PartJSON do
     part = Repo.preload(part, [:category, :manufacturer])
 
     %{
-      id: part.id,
+      uuid: part.uuid,
       category: CategoryJSON.data(part.category),
       manufacturer: ManufacturerJSON.data(part.manufacturer),
       name: part.name,

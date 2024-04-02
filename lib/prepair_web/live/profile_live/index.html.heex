@@ -23,9 +23,9 @@
     </div>
     <.link patch={~p"/profiles/#{profile}/edit"}>Edit</.link>
   </:action>
-  <:action :let={{id, profile}}>
+  <:action :let={{uuid, profile}}>
     <.link
-      phx-click={JS.push("delete", value: %{id: profile.id}) |> hide("##{id}")}
+      phx-click={JS.push("delete", value: %{uuid: profile.uuid}) |> hide("##{uuid}")}
       data-confirm="Are you sure?"
     >
       Delete
@@ -36,7 +36,7 @@
 <.modal :if={@live_action in [:edit]} id="profile-modal" show on_cancel={JS.patch(~p"/profiles")}>
   <.live_component
     module={PrepairWeb.ProfileLive.FormComponent}
-    id={@profile.id || :new}
+    id={@profile.uuid || :new}
     title={@page_title}
     action={@live_action}
     profile={@profile}

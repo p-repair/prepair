@@ -87,7 +87,7 @@ defmodule PrepairWeb.NotificationTemplateLiveTest do
 
       assert index_live
              |> element(
-               "#notification_templates-#{notification_template.id} a",
+               "#notification_templates-#{notification_template.uuid} a",
                "Edit"
              )
              |> render_click() =~
@@ -125,14 +125,14 @@ defmodule PrepairWeb.NotificationTemplateLiveTest do
 
       assert index_live
              |> element(
-               "#notification_templates-#{notification_template.id} a",
+               "#notification_templates-#{notification_template.uuid} a",
                "Delete"
              )
              |> render_click()
 
       refute has_element?(
                index_live,
-               "#notification_templates-#{notification_template.id}"
+               "#notification_templates-#{notification_template.uuid}"
              )
     end
   end

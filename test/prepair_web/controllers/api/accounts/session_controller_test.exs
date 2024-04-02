@@ -19,7 +19,9 @@ defmodule PrepairWeb.Api.Accounts.SessionControllerTest do
         })
 
       response = json_response(conn, :ok)
-      assert %{"data" => %{"token" => _token, "user_id" => _user_id}} = response
+
+      assert %{"data" => %{"token" => _token, "user_uuid" => _user_uuid}} =
+               response
     end
 
     test "raises an error when invalid email is given",

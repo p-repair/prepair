@@ -23,9 +23,9 @@
     </div>
     <.link patch={~p"/ownerships/#{ownership}/edit"}>Edit</.link>
   </:action>
-  <:action :let={{id, ownership}}>
+  <:action :let={{uuid, ownership}}>
     <.link
-      phx-click={JS.push("delete", value: %{id: ownership.id}) |> hide("##{id}")}
+      phx-click={JS.push("delete", value: %{uuid: ownership.uuid}) |> hide("##{uuid}")}
       data-confirm="Are you sure?"
     >
       Delete
@@ -36,7 +36,7 @@
 <.modal :if={@live_action in [:new, :edit]} id="ownership-modal" show on_cancel={JS.patch(~p"/ownerships")}>
   <.live_component
     module={PrepairWeb.OwnershipLive.FormComponent}
-    id={@ownership.id || :new}
+    id={@ownership.uuid || :new}
     title={@page_title}
     action={@live_action}
     ownership={@ownership}

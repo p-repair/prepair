@@ -13,17 +13,17 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
   }
 
   @invalid_attrs %{
-    product_id: nil,
+    product_uuid: nil,
     date_of_purchase: nil
   }
 
-  defp create_private_ownership(profile_id) do
-    ownership_fixture(profile_id)
+  defp create_private_ownership(profile_uuid) do
+    ownership_fixture(profile_uuid)
     |> Repo.preload([:profile, :product, product: :manufacturer])
   end
 
-  defp create_public_ownership(profile_id) do
-    ownership_fixture(profile_id, %{public: true})
+  defp create_public_ownership(profile_uuid) do
+    ownership_fixture(profile_uuid, %{public: true})
     |> Repo.preload([:profile, :product, product: :manufacturer])
   end
 
@@ -39,19 +39,19 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
 
   setup [:create_and_set_api_key, :register_and_log_in_user]
 
-  describe "GET /api/v1/profiles/ownerships/by_profile/:id" do
-    test "get the full list of ownerships for the given profile :id,
-    when :id is the currently authenticated user",
+  describe "GET /api/v1/profiles/ownerships/by_profile/:uuid" do
+    test "get the full list of ownerships for the given profile :uuid,
+    when :uuid is the currently authenticated user",
          %{conn: conn, user: user} do
-      id = user.id
+      uuid = user.uuid
 
-      other_profile_id = profile_fixture().id
+      other_profile_uuid = profile_fixture().uuid
 
-      private_ownership = create_private_ownership(id)
-      public_ownership = create_public_ownership(id)
-      _third_ownership = create_public_ownership(other_profile_id)
+      private_ownership = create_private_ownership(uuid)
+      public_ownership = create_public_ownership(uuid)
+      _third_ownership = create_public_ownership(other_profile_uuid)
 
-      conn = get(conn, ~p"/api/v1/profiles/ownerships/by_profile/#{id}")
+      conn = get(conn, ~p"/api/v1/profiles/ownerships/by_profile/#{uuid}")
 
       assert json_response(conn, 200)["data"] == [
                private_ownership |> to_normalised_json(),
@@ -59,17 +59,17 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
              ]
     end
 
-    test "get only the public ownerships for the given profile :id,
-    when :id is not the currently authenticated user",
+    test "get only the public ownerships for the given profile :uuid,
+    when :uuid is not the currently authenticated user",
          %{conn: conn, user: _user} do
-      id = profile_fixture().id
-      other_profile_id = profile_fixture().id
+      uuid = profile_fixture().uuid
+      other_profile_uuid = profile_fixture().uuid
 
-      _private_ownership = create_private_ownership(id)
-      public_ownership = create_public_ownership(id)
-      _third_ownership = create_public_ownership(other_profile_id)
+      _private_ownership = create_private_ownership(uuid)
+      public_ownership = create_public_ownership(uuid)
+      _third_ownership = create_public_ownership(other_profile_uuid)
 
-      conn = get(conn, ~p"/api/v1/profiles/ownerships/by_profile/#{id}")
+      conn = get(conn, ~p"/api/v1/profiles/ownerships/by_profile/#{uuid}")
 
       assert json_response(conn, 200)["data"] == [
                public_ownership |> to_normalised_json()
@@ -77,13 +77,13 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
     end
   end
 
-  describe "GET /api/v1/profiles/ownerships/{id}" do
-    test "get an ownership from its id", %{conn: conn, user: _user} do
-      profile_id = profile_fixture().id
-      private_ownership = create_private_ownership(profile_id)
-      id = private_ownership.id
+  describe "GET /api/v1/profiles/ownerships/{uuid}" do
+    test "get an ownership from its uuid", %{conn: conn, user: _user} do
+      profile_uuid = profile_fixture().uuid
+      private_ownership = create_private_ownership(profile_uuid)
+      uuid = private_ownership.uuid
 
-      conn = get(conn, ~p"/api/v1/profiles/ownerships/#{id}")
+      conn = get(conn, ~p"/api/v1/profiles/ownerships/#{uuid}")
 
       assert json_response(conn, 200)["data"] ==
                private_ownership |> to_normalised_json()
@@ -95,24 +95,24 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
       conn: conn,
       user: _user
     } do
-      profile_id = profile_fixture().id
+      profile_uuid = profile_fixture().uuid
       valid_attrs = ownership_valid_attrs()
 
       conn =
         post(conn, ~p"/api/v1/profiles/ownerships", %{
-          profile_id: profile_id,
+          profile_uuid: profile_uuid,
           ownership: valid_attrs
         })
 
-      assert %{"id" => id} = json_response(conn, 201)["data"]
+      assert %{"uuid" => uuid} = json_response(conn, 201)["data"]
 
       # Recycle the connection so we can reuse it for a request.
       conn = recycle(conn)
 
-      conn = get(conn, ~p"/api/v1/profiles/ownerships/#{id}")
+      conn = get(conn, ~p"/api/v1/profiles/ownerships/#{uuid}")
 
       ownership =
-        Prepair.Profiles.get_ownership!(id)
+        Prepair.Profiles.get_ownership!(uuid)
         |> Repo.preload([:profile, :product, product: :manufacturer])
 
       assert json_response(conn, 200)["data"] ==
@@ -123,11 +123,11 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
       conn: conn,
       user: _user
     } do
-      id = profile_fixture().id
+      uuid = profile_fixture().uuid
 
       conn =
         post(conn, ~p"/api/v1/profiles/ownerships", %{
-          profile_id: id,
+          profile_uuid: uuid,
           ownership: @invalid_attrs
         })
 
@@ -135,28 +135,28 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
     end
   end
 
-  describe "PUT /api/v1/profiles/ownerships/{:id}" do
-    test "updates an ownership from its id when attrs are valid", %{
+  describe "PUT /api/v1/profiles/ownerships/{:uuid}" do
+    test "updates an ownership from its uuid when attrs are valid", %{
       conn: conn,
       user: _user
     } do
-      id = ownership_fixture().id
+      uuid = ownership_fixture().uuid
 
       conn =
-        put(conn, ~p"/api/v1/profiles/ownerships/#{id}", %{
-          id: id,
+        put(conn, ~p"/api/v1/profiles/ownerships/#{uuid}", %{
+          uuid: uuid,
           ownership: @update_attrs
         })
 
-      assert %{"id" => id} = json_response(conn, 200)["data"]
+      assert %{"uuid" => uuid} = json_response(conn, 200)["data"]
 
       # Recycle the connection so we can reuse it for a request.
       conn = recycle(conn)
 
-      conn = get(conn, ~p"/api/v1/profiles/ownerships/#{id}")
+      conn = get(conn, ~p"/api/v1/profiles/ownerships/#{uuid}")
 
       ownership =
-        Prepair.Profiles.get_ownership!(id)
+        Prepair.Profiles.get_ownership!(uuid)
         |> Repo.preload([[:profile, :product, product: :manufacturer]])
 
       assert json_response(conn, 200)["data"] ==
@@ -167,11 +167,11 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
       conn: conn,
       user: _user
     } do
-      id = ownership_fixture().id
+      uuid = ownership_fixture().uuid
 
       conn =
-        put(conn, ~p"/api/v1/profiles/ownerships/#{id}", %{
-          id: id,
+        put(conn, ~p"/api/v1/profiles/ownerships/#{uuid}", %{
+          uuid: uuid,
           ownership: @invalid_attrs
         })
 
@@ -181,16 +181,16 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
 
   describe "delete ownership" do
     test "delete chosen ownership", %{conn: conn, user: _user} do
-      id = ownership_fixture().id
+      uuid = ownership_fixture().uuid
 
-      conn = delete(conn, ~p"/api/v1/profiles/ownerships/#{id}")
+      conn = delete(conn, ~p"/api/v1/profiles/ownerships/#{uuid}")
       assert response(conn, 204)
 
       # Recycle the connection so we can reuse it for a request.
       conn = recycle(conn)
 
       assert_error_sent 404, fn ->
-        get(conn, ~p"/api/v1/profiles/ownerships/#{id}")
+        get(conn, ~p"/api/v1/profiles/ownerships/#{uuid}")
       end
     end
   end

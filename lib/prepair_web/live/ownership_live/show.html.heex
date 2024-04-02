@@ -1,5 +1,5 @@
 <.header>
-  Ownership <%= @ownership.id %>
+  Ownership <%= @ownership.uuid %>
   <:subtitle>This is an ownership record from your database.</:subtitle>
   <:actions>
     <.link patch={~p"/ownerships/#{@ownership}/show/edit"} phx-click={JS.push_focus()}>
@@ -22,7 +22,7 @@
 <.modal :if={@live_action == :edit} id="ownership-modal" show on_cancel={JS.patch(~p"/ownerships/#{@ownership}")}>
   <.live_component
     module={PrepairWeb.OwnershipLive.FormComponent}
-    id={@ownership.id}
+    id={@ownership.uuid}
     title={@page_title}
     action={@live_action}
     ownership={@ownership}

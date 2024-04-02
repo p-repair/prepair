@@ -5,8 +5,10 @@ defmodule Prepair.Accounts.User do
 
   import Ecto.Changeset
 
+  @derive {Phoenix.Param, key: :uuid}
+  @primary_key {:uuid, Ecto.UUID, autogenerate: false}
   schema "users" do
-    has_one :profile, Profile, foreign_key: :id
+    has_one :profile, Profile, foreign_key: :uuid, references: :uuid
 
     field :email, :string
     field :password, :string, virtual: true, redact: true

@@ -8,12 +8,12 @@ defmodule PrepairWeb.Api.Accounts.AccountsControllerTest do
   setup [:create_and_set_api_key, :register_and_log_in_user]
 
   describe "GET /api/v1/users" do
-    test "fetch the current user id",
+    test "fetch the current user uuid",
          %{conn: conn, user: user} do
       conn =
         get(conn, ~p"/api/v1/users")
 
-      assert json_response(conn, 200) == %{"data" => %{"id" => user.id}}
+      assert json_response(conn, 200) == %{"data" => %{"uuid" => user.uuid}}
     end
   end
 end

@@ -20,7 +20,7 @@ defmodule PrepairWeb.Api.Profiles.ProfileJSON do
     profile = Repo.preload(profile, [:user])
 
     %{
-      id: profile.id,
+      uuid: profile.uuid,
       username: profile.username,
       user_email: profile.user.email,
       user_role: profile.user.role,

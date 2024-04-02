@@ -35,7 +35,7 @@ defmodule PrepairWeb.ProfileLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/profiles")
 
       assert index_live
-             |> element("#profiles-#{profile.id} a", "Edit")
+             |> element("#profiles-#{profile.uuid} a", "Edit")
              |> render_click() =~
                "Edit Profile"
 
@@ -94,44 +94,44 @@ defmodule PrepairWeb.ProfileLiveTest do
   describe "Ownership Index" do
     setup [:create_profile, :register_and_log_in_user]
 
-    test "list all ownerships for a profile if {id} = current_user.id",
+    test "list all ownerships for a profile if {uuid} = current_user.uuid",
          %{conn: conn, user: user} do
-      id = user.id
-      _profile_username = Profiles.get_profile!(id).username
+      uuid = user.uuid
+      _profile_username = Profiles.get_profile!(uuid).username
 
-      private_ownership = ownership_fixture(id)
-      public_ownership = ownership_fixture(id, %{public: true})
+      private_ownership = ownership_fixture(uuid)
+      public_ownership = ownership_fixture(uuid, %{public: true})
 
       third_ownership =
-        ownership_fixture(profile_fixture().id)
+        ownership_fixture(profile_fixture().uuid)
 
       {:ok, _index_live, html} =
-        live(conn, ~p"/profiles/ownerships/by_profile/#{id}")
+        live(conn, ~p"/profiles/ownerships/by_profile/#{uuid}")
 
       assert html =~ "Listing your Ownerships"
-      assert html =~ "ownerships/#{private_ownership.id}"
-      assert html =~ "ownerships/#{public_ownership.id}"
-      refute html =~ "ownerships/#{third_ownership.id}"
+      assert html =~ "ownerships/#{private_ownership.uuid}"
+      assert html =~ "ownerships/#{public_ownership.uuid}"
+      refute html =~ "ownerships/#{third_ownership.uuid}"
     end
 
-    test "list only public ownerships for a profile if {id} != current_user.id",
+    test "list only public ownerships for a profile if {uuid} != current_user.uuid",
          %{conn: conn, profile: profile} do
-      id = profile.id
+      uuid = profile.uuid
       profile_username = profile.username
 
-      private_ownership = ownership_fixture(id)
-      public_ownership = ownership_fixture(id, %{public: true})
+      private_ownership = ownership_fixture(uuid)
+      public_ownership = ownership_fixture(uuid, %{public: true})
 
       third_ownership =
-        ownership_fixture(profile_fixture().id, ownership_valid_attrs())
+        ownership_fixture(profile_fixture().uuid, ownership_valid_attrs())
 
       {:ok, _index_live, html} =
-        live(conn, ~p"/profiles/ownerships/by_profile/#{id}")
+        live(conn, ~p"/profiles/ownerships/by_profile/#{uuid}")
 
       assert html =~ "Listing #{profile_username} public Ownerships"
-      refute html =~ "ownerships/#{private_ownership.id}"
-      assert html =~ "ownerships/#{public_ownership.id}"
-      refute html =~ "ownerships/#{third_ownership.id}"
+      refute html =~ "ownerships/#{private_ownership.uuid}"
+      assert html =~ "ownerships/#{public_ownership.uuid}"
+      refute html =~ "ownerships/#{third_ownership.uuid}"
     end
   end
 end

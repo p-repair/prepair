@@ -69,16 +69,16 @@ defmodule Prepair.Accounts do
 
   ## Examples
 
-      iex> get_user!(123)
+      iex> get_user!("d080e457-b29f-4b55-8cdf-8c0cf462e739")
       %User{}
 
-      iex> get_user!(456)
+      iex> get_user!("0f3b9817-6433-409c-823d-7d1f1083430c")
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id) do
+  def get_user!(uuid) do
     User
-    |> Repo.get!(id)
+    |> Repo.get!(uuid)
     |> Repo.preload(:profile)
   end
 
@@ -99,7 +99,8 @@ defmodule Prepair.Accounts do
   def register_user(user_attrs, profile_attrs) do
     Repo.transaction(fn ->
       with {:ok, user} <- do_register_user(user_attrs),
-           {:ok, _profile} <- Profiles.create_profile(user.id, profile_attrs) do
+           {:ok, _profile} <-
+             Profiles.create_profile(user.uuid, profile_attrs) do
         user |> Repo.preload(:profile)
       else
         {:error, value} -> Repo.rollback(value)
@@ -110,7 +111,7 @@ defmodule Prepair.Accounts do
   defp do_register_user(attrs) do
     %User{}
     |> User.registration_changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert(returning: [:uuid])
   end
 
   @doc """

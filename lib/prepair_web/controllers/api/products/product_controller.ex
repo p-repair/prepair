@@ -7,14 +7,14 @@ defmodule PrepairWeb.Api.Products.ProductController do
 
   action_fallback PrepairWeb.Api.FallbackController
 
-  @index_filters ["product_ids", "category_id", "manufacturer_id"]
+  @index_filters ["product_uuids", "category_uuid", "manufacturer_uuid"]
 
   def index(conn, params) do
     filters =
       params
       |> Map.filter(fn {k, _v} -> k in @index_filters end)
       |> Enum.map(fn {k, v} ->
-        {String.to_existing_atom(k), str_to_int_list(v)}
+        {String.to_existing_atom(k), str_to_list(v)}
       end)
 
     products = Products.list_products(filters)
@@ -38,14 +38,14 @@ defmodule PrepairWeb.Api.Products.ProductController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    product = Products.get_product!(id)
+  def show(conn, %{"uuid" => uuid}) do
+    product = Products.get_product!(uuid)
     render(conn, :show, product: product)
   end
 
-  def update(conn, %{"id" => id, "product" => product_params}) do
+  def update(conn, %{"uuid" => uuid, "product" => product_params}) do
     params = product_params |> normalise_params()
-    product = Products.get_product!(id)
+    product = Products.get_product!(uuid)
 
     # Trick to avoid empty fields returned by FlutterFlow when value isn't changed.
     params =
@@ -57,8 +57,8 @@ defmodule PrepairWeb.Api.Products.ProductController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    product = Products.get_product!(id)
+  def delete(conn, %{"uuid" => uuid}) do
+    product = Products.get_product!(uuid)
 
     with {:ok, %Product{}} <-
            Products.delete_product(product) do
@@ -79,13 +79,12 @@ defmodule PrepairWeb.Api.Products.ProductController do
     end)
   end
 
-  defp str_to_int_list("null") do
+  defp str_to_list("null") do
     []
   end
 
-  defp str_to_int_list(str) do
+  defp str_to_list(str) do
     str
     |> String.split(~r/[\[\],\s]+/, trim: true)
-    |> Enum.map(&String.to_integer/1)
   end
 end

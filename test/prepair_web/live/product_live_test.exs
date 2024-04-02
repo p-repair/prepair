@@ -69,7 +69,7 @@ defmodule PrepairWeb.ProductLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/products")
 
       assert index_live
-             |> element("#products-#{product.id} a", "Edit")
+             |> element("#products-#{product.uuid} a", "Edit")
              |> render_click() =~
                "Edit Product"
 
@@ -94,10 +94,10 @@ defmodule PrepairWeb.ProductLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/products")
 
       assert index_live
-             |> element("#products-#{product.id} a", "Delete")
+             |> element("#products-#{product.uuid} a", "Delete")
              |> render_click()
 
-      refute has_element?(index_live, "#products-#{product.id}")
+      refute has_element?(index_live, "#products-#{product.uuid}")
     end
   end
 

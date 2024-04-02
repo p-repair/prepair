@@ -6,7 +6,14 @@ defmodule PrepairWeb.ProductLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :products, Products.list_products())}
+    socket =
+      socket
+      |> stream_configure(:products,
+        dom_id: &"products-#{&1.uuid}"
+      )
+      |> stream(:products, Products.list_products())
+
+    {:ok, socket}
   end
 
   @impl true
@@ -14,10 +21,10 @@ defmodule PrepairWeb.ProductLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
+  defp apply_action(socket, :edit, %{"uuid" => uuid}) do
     socket
     |> assign(:page_title, "Edit Product")
-    |> assign(:product, Products.get_product!(id))
+    |> assign(:product, Products.get_product!(uuid))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -41,8 +48,8 @@ defmodule PrepairWeb.ProductLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    product = Products.get_product!(id)
+  def handle_event("delete", %{"uuid" => uuid}, socket) do
+    product = Products.get_product!(uuid)
     {:ok, _} = Products.delete_product(product)
 
     {:noreply, stream_delete(socket, :products, product)}

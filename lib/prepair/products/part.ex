@@ -6,16 +6,16 @@ defmodule Prepair.Products.Part do
   alias Prepair.Products.{Category, Manufacturer, Product}
 
   @required_fields [
-    :manufacturer_id,
+    :manufacturer_uuid,
     :name,
     :reference
   ]
 
   @fields @required_fields ++
             [
-              :category_id,
-              :product_ids,
-              :notification_template_ids,
+              :category_uuid,
+              :product_uuids,
+              :notification_template_uuids,
               :description,
               :image,
               :average_lifetime_m,
@@ -25,24 +25,32 @@ defmodule Prepair.Products.Part do
               :main_material
             ]
 
-  @primary_key {:id, :id, autogenerate: true}
+  @derive {Phoenix.Param, key: :uuid}
+  @primary_key {:uuid, Ecto.UUID, autogenerate: true}
   schema "parts" do
-    belongs_to :category, Category, foreign_key: :category_id
-    belongs_to :manufacturer, Manufacturer, foreign_key: :manufacturer_id
+    belongs_to :category, Category,
+      foreign_key: :category_uuid,
+      references: :uuid,
+      type: Ecto.UUID
+
+    belongs_to :manufacturer, Manufacturer,
+      foreign_key: :manufacturer_uuid,
+      references: :uuid,
+      type: Ecto.UUID
 
     many_to_many :products, Product,
       join_through: "product_parts",
-      join_keys: [part_id: :id, product_id: :id],
+      join_keys: [part_uuid: :uuid, product_uuid: :uuid],
       on_replace: :delete
 
     many_to_many :notification_templates, NotificationTemplate,
       join_through: "part_notification_templates",
-      join_keys: [part_id: :id, notification_template_id: :id],
+      join_keys: [part_uuid: :uuid, notification_template_uuid: :uuid],
       on_replace: :delete
 
-    field :product_ids, {:array, :integer}, virtual: true, default: []
+    field :product_uuids, {:array, Ecto.UUID}, virtual: true, default: []
 
-    field :notification_template_ids, {:array, :integer},
+    field :notification_template_uuids, {:array, Ecto.UUID},
       virtual: true,
       default: []
 
@@ -64,6 +72,6 @@ defmodule Prepair.Products.Part do
     part
     |> cast(attrs, @fields)
     |> validate_required(@required_fields)
-    |> unique_constraint([:reference, :manufacturer_id])
+    |> unique_constraint([:reference, :manufacturer_uuid])
   end
 end
