@@ -1,8 +1,8 @@
 <.header>
-  Listing Notification templates
+  <%= gettext "Listing Notification templates" %>
   <:actions>
     <.link patch={~p"/notification_templates/new"}>
-      <.button>New Notification template</.button>
+      <.button><%= gettext "New Notification template" %></.button>
     </.link>
   </:actions>
 </.header>
@@ -12,25 +12,25 @@
   rows={@streams.notification_templates}
   row_click={fn {_id, notification_template} -> JS.navigate(~p"/notification_templates/#{notification_template}") end}
 >
-  <:col :let={{_id, notification_template}} label="Name"><%= notification_template.name %></:col>
-  <:col :let={{_id, notification_template}} label="Title"><%= notification_template.title %></:col>
-  <:col :let={{_id, notification_template}} label="Content"><%= notification_template.content %></:col>
-  <:col :let={{_id, notification_template}} label="Description"><%= notification_template.description %></:col>
-  <:col :let={{_id, notification_template}} label="Condition"><%= notification_template.condition %></:col>
-  <:col :let={{_id, notification_template}} label="User action needed"><%= notification_template.need_action %></:col>
-  <:col :let={{_id, notification_template}} label="Draft"><%= notification_template.draft %></:col>
+  <:col :let={{_id, notification_template}} label={gettext "Name"}><%= notification_template.name %></:col>
+  <:col :let={{_id, notification_template}} label={gettext "Title"}><%= notification_template.title %></:col>
+  <:col :let={{_id, notification_template}} label={gettext "Content"}><%= notification_template.content %></:col>
+  <:col :let={{_id, notification_template}} label={gettext "Description"}><%= notification_template.description %></:col>
+  <:col :let={{_id, notification_template}} label={gettext "Condition"}><%= notification_template.condition %></:col>
+  <:col :let={{_id, notification_template}} label={gettext "User action needed"}><%= notification_template.need_action %></:col>
+  <:col :let={{_id, notification_template}} label={gettext "Draft"}><%= notification_template.draft %></:col>
   <:action :let={{_id, notification_template}}>
     <div class="sr-only">
-      <.link navigate={~p"/notification_templates/#{notification_template}"}>Show</.link>
+      <.link navigate={~p"/notification_templates/#{notification_template}"}><%= gettext "Show" %></.link>
     </div>
-    <.link patch={~p"/notification_templates/#{notification_template}/edit"}>Edit</.link>
+    <.link patch={~p"/notification_templates/#{notification_template}/edit"}><%= gettext "Edit" %></.link>
   </:action>
   <:action :let={{uuid, notification_template}}>
     <.link
       phx-click={JS.push("delete", value: %{uuid: notification_template.uuid}) |> hide("##{uuid}")}
-      data-confirm="Are you sure?"
+      data-confirm={gettext "Are you sure?"}
     >
-      Delete
+      <%= gettext "Delete" %>
     </.link>
   </:action>
 </.table>

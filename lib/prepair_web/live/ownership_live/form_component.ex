@@ -11,7 +11,7 @@ defmodule PrepairWeb.OwnershipLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage ownership records in your database.</:subtitle>
+        <:subtitle><%=gettext "Use this form to manage ownership records in your database." %></:subtitle>
       </.header>
 
       <.simple_form
@@ -23,31 +23,31 @@ defmodule PrepairWeb.OwnershipLive.FormComponent do
       >
         <.input
           field={@form[:category_uuid]}
-          label="Category"
+          label={gettext "Category"}
           type="select"
           prompt="Please select a category"
           options={category_opts(@changeset)}
         />
         <.input
           field={@form[:manufacturer_uuid]}
-          label="Manufacturer"
+          label={gettext "Manufacturer"}
           type="select"
           prompt="Please select a manufacturer"
           options={manufacturer_opts(@changeset)}
         />
         <.input
           field={@form[:product_uuid]}
-          label="Product name"
+          label={gettext "Product name"}
           type="select"
           prompt="Please select a product (filter by category and manufacturer)"
           options={product_opts(@form.params, @changeset)}
         />
-        <.input field={@form[:date_of_purchase]} type="date" label="Date of purchase" />
-        <.input field={@form[:warranty_duration_m]} type="number" label="Warranty duration (in months)" />
-        <.input field={@form[:price_of_purchase]} type="number" label="Price of purchase" />
-        <.input field={@form[:public]} type="checkbox" label="Public" />
+        <.input field={@form[:date_of_purchase]} type="date" label={gettext "Date of purchase"} />
+        <.input field={@form[:warranty_duration_m]} type="number" label={gettext "Warranty duration (in months)"} />
+        <.input field={@form[:price_of_purchase]} type="number" label={gettext "Price of purchase"} />
+        <.input field={@form[:public]} type="checkbox" label={gettext "Public"} />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Ownership</.button>
+          <.button phx-disable-with={gettext "Saving..."}><%=gettext "Save Ownership" %></.button>
         </:actions>
       </.simple_form>
     </div>
@@ -155,7 +155,10 @@ defmodule PrepairWeb.OwnershipLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Ownership updated successfully")
+         |> put_flash(
+           :info,
+           dgettext("infos", "Ownership updated successfully")
+         )
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -173,7 +176,10 @@ defmodule PrepairWeb.OwnershipLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Ownership created successfully")
+         |> put_flash(
+           :info,
+           dgettext("infos", "Ownership created successfully")
+         )
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

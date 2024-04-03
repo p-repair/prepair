@@ -27,20 +27,26 @@ defmodule PrepairWeb.OwnershipLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"uuid" => uuid}) do
+    page_title = gettext("Edit Ownership")
+
     socket
-    |> assign(:page_title, "Edit Ownership")
+    |> assign(:page_title, page_title)
     |> assign(:ownership, Profiles.get_ownership!(uuid))
   end
 
   defp apply_action(socket, :new, _params) do
+    page_title = gettext("New Ownership")
+
     socket
-    |> assign(:page_title, "New Ownership")
+    |> assign(:page_title, page_title)
     |> assign(:ownership, %Ownership{})
   end
 
   defp apply_action(socket, :index, _params) do
+    page_title = gettext("Listing Public Ownerships")
+
     socket
-    |> assign(:page_title, "Listing Public Ownerships")
+    |> assign(:page_title, page_title)
     |> assign(:ownership, nil)
   end
 

@@ -31,6 +31,29 @@ defmodule PrepairWeb.ProfileLiveTest do
       assert html =~ profile.username
     end
 
+    @tag :gettext
+    test "index texts are translated to the first language in 'accept-language'
+  which match one of the locales defined for the application",
+         %{conn: conn, profile: profile} do
+      conn = conn |> set_language_to_de_then_fr()
+      {:ok, _index_live, html} = live(conn, ~p"/profiles")
+
+      assert html =~ "Référencement des profiles"
+      assert html =~ profile.username
+    end
+
+    @tag :gettext
+    test "index texts are not translated ('en' is the default locale) if none
+  of the languages in 'accept-language' is part of the locales defined for
+  the app",
+         %{conn: conn, profile: profile} do
+      conn = conn |> set_language_to_unknown()
+      {:ok, _index_live, html} = live(conn, ~p"/profiles")
+
+      assert html =~ "Listing Profiles"
+      assert html =~ profile.username
+    end
+
     test "updates profile in listing", %{conn: conn, profile: profile} do
       {:ok, index_live, _html} = live(conn, ~p"/profiles")
 
@@ -62,6 +85,29 @@ defmodule PrepairWeb.ProfileLiveTest do
 
     test "displays profile", %{conn: conn, profile: profile} do
       {:ok, _show_live, html} = live(conn, ~p"/profiles/#{profile}")
+
+      assert html =~ "Show Profile"
+      assert html =~ profile.username
+    end
+
+    @tag :gettext
+    test "show texts are translated to the first language in 'accept-language'
+  which match one of the locales defined for the application",
+         %{conn: conn, profile: profile} do
+      conn = conn |> set_language_to_de_then_fr()
+      {:ok, _index_live, html} = live(conn, ~p"/profiles/#{profile}")
+
+      assert html =~ "Afficher le profile"
+      assert html =~ profile.username
+    end
+
+    @tag :gettext
+    test "show texts are not translated ('en' is the default locale) if none
+  of the languages in 'accept-language' is part of the locales defined for
+  the app",
+         %{conn: conn, profile: profile} do
+      conn = conn |> set_language_to_unknown()
+      {:ok, _index_live, html} = live(conn, ~p"/profiles/#{profile}")
 
       assert html =~ "Show Profile"
       assert html =~ profile.username

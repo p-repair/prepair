@@ -42,6 +42,29 @@ defmodule PrepairWeb.PartLiveTest do
       assert html =~ part.country_of_origin
     end
 
+    @tag :gettext
+    test "index texts are translated to the first language in 'accept-language'
+  which match one of the locales defined for the application",
+         %{conn: conn, part: part} do
+      conn = conn |> set_language_to_de_then_fr()
+      {:ok, _index_live, html} = live(conn, ~p"/parts")
+
+      assert html =~ "Référencement des pièces détachées"
+      assert html =~ part.description
+    end
+
+    @tag :gettext
+    test "index texts are not translated ('en' is the default locale) if none
+  of the languages in 'accept-language' is part of the locales defined for
+  the app",
+         %{conn: conn, part: part} do
+      conn = conn |> set_language_to_unknown()
+      {:ok, _index_live, html} = live(conn, ~p"/parts")
+
+      assert html =~ "Listing Parts"
+      assert html =~ part.description
+    end
+
     test "saves new part", %{conn: conn} do
       valid_attrs = part_valid_attrs()
 
@@ -111,6 +134,29 @@ defmodule PrepairWeb.PartLiveTest do
 
       assert html =~ "Show Part"
       assert html =~ part.country_of_origin
+    end
+
+    @tag :gettext
+    test "show texts are translated to the first language in 'accept-language'
+  which match one of the locales defined for the application",
+         %{conn: conn, part: part} do
+      conn = conn |> set_language_to_de_then_fr()
+      {:ok, _index_live, html} = live(conn, ~p"/parts/#{part}")
+
+      assert html =~ "Afficher la pièce détachée"
+      assert html =~ part.description
+    end
+
+    @tag :gettext
+    test "show texts are not translated ('en' is the default locale) if none
+  of the languages in 'accept-language' is part of the locales defined for
+  the app",
+         %{conn: conn, part: part} do
+      conn = conn |> set_language_to_unknown()
+      {:ok, _index_live, html} = live(conn, ~p"/parts/#{part}")
+
+      assert html =~ "Show Part"
+      assert html =~ part.description
     end
 
     test "updates part within modal", %{conn: conn, part: part} do

@@ -29,7 +29,10 @@ defmodule PrepairWeb.PageController do
         conn
         |> put_flash(
           :info,
-          "Merci !! Votre inscription a bien été prise en compte."
+          dgettext(
+            "infos",
+            "Thank you!! Your registration has been taken into account."
+          )
         )
         |> redirect(to: "/")
 
@@ -43,14 +46,20 @@ defmodule PrepairWeb.PageController do
           conn
           |> put_flash(
             :info,
-            "Merci !! Votre inscription a bien été prise en compte."
+            dgettext(
+              "infos",
+              "Thank you!! Your registration has been taken into account."
+            )
           )
           |> redirect(to: "/")
         else
           conn
           |> put_flash(
             :error,
-            "Essayez encore ! L’adresse email saisie n’est pas valide."
+            dgettext(
+              "errors",
+              "Try again! The email address entered is not valid."
+            )
           )
           |> redirect(to: "/")
         end
@@ -59,9 +68,12 @@ defmodule PrepairWeb.PageController do
         conn
         |> put_flash(
           :error,
-          "Nous sommes désolés du probleme…
-            Il y a eu une erreur lors de l’inscription.
-            Réessayez plus tard s’il vous plait !"
+          dgettext(
+            "errors",
+            "Sorry for the issue…
+            There was an error when registering.
+            Please try again later!"
+          )
         )
         |> redirect(to: "/")
     end

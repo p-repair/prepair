@@ -4,6 +4,7 @@ defmodule Prepair.Accounts.User do
   alias Prepair.Profiles.Profile
 
   import Ecto.Changeset
+  import PrepairWeb.Gettext
 
   @derive {Phoenix.Param, key: :uuid}
   @primary_key {:uuid, Ecto.UUID, autogenerate: false}
@@ -53,7 +54,7 @@ defmodule Prepair.Accounts.User do
     changeset
     |> validate_required([:email])
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/,
-      message: "must have the @ sign and no spaces"
+      message: dgettext("errors", "must have the @ sign and no spaces")
     )
     |> validate_length(:email, max: 160)
     |> maybe_validate_unique_email(opts)
@@ -107,8 +108,11 @@ defmodule Prepair.Accounts.User do
     |> cast(attrs, [:email])
     |> validate_email(opts)
     |> case do
-      %{changes: %{email: _}} = changeset -> changeset
-      %{} = changeset -> add_error(changeset, :email, "did not change")
+      %{changes: %{email: _}} = changeset ->
+        changeset
+
+      %{} = changeset ->
+        add_error(changeset, :email, dgettext("errors", "did not change"))
     end
   end
 
@@ -127,7 +131,9 @@ defmodule Prepair.Accounts.User do
   def password_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:password])
-    |> validate_confirmation(:password, message: "does not match password")
+    |> validate_confirmation(:password,
+      message: dgettext("errors", "does not match password")
+    )
     |> validate_password(opts)
   end
 
@@ -165,7 +171,11 @@ defmodule Prepair.Accounts.User do
     if valid_password?(changeset.data, password) do
       changeset
     else
-      add_error(changeset, :current_password, "is not valid")
+      add_error(
+        changeset,
+        :current_password,
+        dgettext("errors", "is not valid")
+      )
     end
   end
 

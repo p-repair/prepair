@@ -19,8 +19,8 @@ defmodule PrepairWeb.NotificationTemplateLive.Show do
      )}
   end
 
-  defp page_title(:show), do: "Show Notification template"
-  defp page_title(:edit), do: "Edit Notification template"
+  defp page_title(:show), do: gettext("Show Notification template")
+  defp page_title(:edit), do: gettext("Edit Notification template")
 
   defp names(item) do
     item

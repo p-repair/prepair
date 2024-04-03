@@ -9,7 +9,7 @@ defmodule PrepairWeb.ManufacturerLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage manufacturer records in your database.</:subtitle>
+        <:subtitle><%= gettext "Use this form to manage manufacturer records in your database."%></:subtitle>
       </.header>
 
       <.simple_form
@@ -19,11 +19,11 @@ defmodule PrepairWeb.ManufacturerLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label="Name" />
-        <.input field={@form[:description]} type="text" label="Description" />
-        <.input field={@form[:image]} type="text" label="Image" />
+        <.input field={@form[:name]} type="text" label={gettext "Name"} />
+        <.input field={@form[:description]} type="text" label={gettext "Description"} />
+        <.input field={@form[:image]} type="text" label={gettext "Image"} />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Manufacturer</.button>
+          <.button phx-disable-with={gettext "Saving..."}><%= gettext "Save Manufacturer" %></.button>
         </:actions>
       </.simple_form>
     </div>
@@ -64,7 +64,10 @@ defmodule PrepairWeb.ManufacturerLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Manufacturer updated successfully")
+         |> put_flash(
+           :info,
+           dgettext("infos", "Manufacturer updated successfully")
+         )
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -79,7 +82,10 @@ defmodule PrepairWeb.ManufacturerLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Manufacturer created successfully")
+         |> put_flash(
+           :info,
+           dgettext("infos", "Manufacturer created successfully")
+         )
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

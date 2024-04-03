@@ -9,7 +9,9 @@ defmodule PrepairWeb.ProfileLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage profile records in your database.</:subtitle>
+        <:subtitle>
+          <%= gettext "Use this form to manage profile records in your database." %>
+        </:subtitle>
       </.header>
 
       <.simple_form
@@ -19,12 +21,12 @@ defmodule PrepairWeb.ProfileLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:username]} type="text" label="Username" />
-        <.input field={@form[:people_in_household]} type="number" label="People in household" />
-        <.input field={@form[:newsletter]} type="checkbox" label="Newsletter" />
+        <.input field={@form[:username]} type="text" label={gettext "Username"} />
+        <.input field={@form[:people_in_household]} type="number" label={gettext "People in household"} />
+        <.input field={@form[:newsletter]} type="checkbox" label={gettext "Newsletter"} />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Profile</.button>
-          <.back navigate={~p"/profiles"}>Back to profiles</.back>
+          <.button phx-disable-with={gettext "Saving..."}><%= gettext "Save Profile" %></.button>
+          <.back navigate={~p"/profiles"}><%= gettext "Back to profiles" %></.back>
         </:actions>
       </.simple_form>
     </div>
@@ -65,7 +67,7 @@ defmodule PrepairWeb.ProfileLive.FormComponent do
 
       {:noreply,
        socket
-       |> put_flash(:info, "Profile updated successfully")
+       |> put_flash(:info, dgettext("infos", "Profile updated successfully"))
        |> push_patch(to: socket.assigns.patch)}
     else
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -80,7 +82,7 @@ defmodule PrepairWeb.ProfileLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Profile created successfully")
+         |> put_flash(:info, dgettext("infos", "Profile created successfully"))
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

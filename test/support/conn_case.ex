@@ -99,4 +99,20 @@ defmodule PrepairWeb.ConnCase do
     |> put_session(:user_token, token)
     |> put_req_header("authorization", "Bearer #{Base.encode64(token)}")
   end
+
+  @doc """
+  Set accepted languages in the request headers of a conn.
+  It is usefull to test gettext.
+  """
+  def set_language_to_de_then_fr(conn) do
+    conn |> put_req_header("accept-language", "de-DE,fr-FR;q=0.8,en-US;q=0.5")
+  end
+
+  @doc """
+  Set an unknown language in the request headers of a conn.
+  It is usefull to test gettext
+  """
+  def set_language_to_unknown(conn) do
+    conn |> put_req_header("accept-language", "unknown")
+  end
 end

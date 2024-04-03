@@ -9,7 +9,9 @@ defmodule PrepairWeb.CategoryLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage category records in your database.</:subtitle>
+        <:subtitle>
+          <%= gettext "Use this form to manage category records in your database."%>
+        </:subtitle>
       </.header>
 
       <.simple_form
@@ -19,12 +21,12 @@ defmodule PrepairWeb.CategoryLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label="Name" />
-        <.input field={@form[:description]} type="text" label="Description" />
-        <.input field={@form[:image]} type="text" label="Image" />
-        <.input field={@form[:average_lifetime_m]} type="number" label="Average lifetime m" />
+        <.input field={@form[:name]} type="text" label={gettext "Name"} />
+        <.input field={@form[:description]} type="text" label={gettext "Description"} />
+        <.input field={@form[:image]} type="text" label={gettext "Image"} />
+        <.input field={@form[:average_lifetime_m]} type="number" label={gettext "Average lifetime m"} />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Category</.button>
+          <.button phx-disable-with={gettext "Saving..."}><%= gettext "Save Category" %></.button>
         </:actions>
       </.simple_form>
     </div>
@@ -62,7 +64,7 @@ defmodule PrepairWeb.CategoryLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Category updated successfully")
+         |> put_flash(:info, dgettext("infos", "Category updated successfully"))
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -77,7 +79,7 @@ defmodule PrepairWeb.CategoryLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Category created successfully")
+         |> put_flash(:info, dgettext("infos", "Category created successfully"))
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

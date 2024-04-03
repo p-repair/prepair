@@ -40,6 +40,29 @@ defmodule PrepairWeb.ProductLiveTest do
       assert html =~ product.country_of_origin
     end
 
+    @tag :gettext
+    test "index texts are translated to the first language in 'accept-language'
+  which match one of the locales defined for the application",
+         %{conn: conn, product: product} do
+      conn = conn |> set_language_to_de_then_fr()
+      {:ok, _index_live, html} = live(conn, ~p"/products")
+
+      assert html =~ "Référencement des produits"
+      assert html =~ product.description
+    end
+
+    @tag :gettext
+    test "index texts are not translated ('en' is the default locale) if none
+  of the languages in 'accept-language' is part of the locales defined for
+  the app",
+         %{conn: conn, product: product} do
+      conn = conn |> set_language_to_unknown()
+      {:ok, _index_live, html} = live(conn, ~p"/products")
+
+      assert html =~ "Listing Products"
+      assert html =~ product.description
+    end
+
     test "saves new product", %{conn: conn} do
       valid_attrs = product_valid_attrs()
 
@@ -109,6 +132,29 @@ defmodule PrepairWeb.ProductLiveTest do
 
       assert html =~ "Show Product"
       assert html =~ product.country_of_origin
+    end
+
+    @tag :gettext
+    test "show texts are translated to the first language in 'accept-language'
+  which match one of the locales defined for the application",
+         %{conn: conn, product: product} do
+      conn = conn |> set_language_to_de_then_fr()
+      {:ok, _index_live, html} = live(conn, ~p"/products/#{product}")
+
+      assert html =~ "Afficher le produit"
+      assert html =~ product.description
+    end
+
+    @tag :gettext
+    test "show texts are not translated ('en' is the default locale) if none
+  of the languages in 'accept-language' is part of the locales defined for
+  the app",
+         %{conn: conn, product: product} do
+      conn = conn |> set_language_to_unknown()
+      {:ok, _index_live, html} = live(conn, ~p"/products/#{product}")
+
+      assert html =~ "Show Product"
+      assert html =~ product.description
     end
 
     test "updates product within modal", %{conn: conn, product: product} do

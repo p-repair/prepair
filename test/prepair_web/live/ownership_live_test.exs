@@ -33,10 +33,37 @@ defmodule PrepairWeb.OwnershipLiveTest do
   describe "Index" do
     setup [:create_public_ownership, :register_and_log_in_user]
 
-    test "lists public ownerships", %{conn: conn} do
+    test "lists public ownerships", %{
+      conn: conn,
+      public_ownership: public_ownership
+    } do
       {:ok, _index_live, html} = live(conn, ~p"/ownerships")
 
       assert html =~ "Listing Public Ownerships"
+      assert html =~ public_ownership.profile.username
+    end
+
+    @tag :gettext
+    test "index texts are translated to the first language in 'accept-language'
+  which match one of the locales defined for the application",
+         %{conn: conn, public_ownership: public_ownership} do
+      conn = conn |> set_language_to_de_then_fr()
+      {:ok, _index_live, html} = live(conn, ~p"/ownerships")
+
+      assert html =~ "Référencement des possessions publiques"
+      assert html =~ public_ownership.profile.username
+    end
+
+    @tag :gettext
+    test "index texts are not translated ('en' is the default locale) if none
+  of the languages in 'accept-language' is part of the locales defined for
+  the app",
+         %{conn: conn, public_ownership: public_ownership} do
+      conn = conn |> set_language_to_unknown()
+      {:ok, _index_live, html} = live(conn, ~p"/ownerships")
+
+      assert html =~ "Listing Public Ownerships"
+      assert html =~ public_ownership.profile.username
     end
 
     test "saves new ownership", %{conn: conn} do
@@ -128,6 +155,29 @@ defmodule PrepairWeb.OwnershipLiveTest do
       {:ok, _show_live, html} = live(conn, ~p"/ownerships/#{public_ownership}")
 
       assert html =~ "Show Ownership"
+    end
+
+    @tag :gettext
+    test "show texts are translated to the first language in 'accept-language'
+  which match one of the locales defined for the application",
+         %{conn: conn, public_ownership: public_ownership} do
+      conn = conn |> set_language_to_de_then_fr()
+      {:ok, _index_live, html} = live(conn, ~p"/ownerships/#{public_ownership}")
+
+      assert html =~ "Afficher la possession"
+      assert html =~ public_ownership.profile.username
+    end
+
+    @tag :gettext
+    test "show texts are not translated ('en' is the default locale) if none
+  of the languages in 'accept-language' is part of the locales defined for
+  the app",
+         %{conn: conn, public_ownership: public_ownership} do
+      conn = conn |> set_language_to_unknown()
+      {:ok, _index_live, html} = live(conn, ~p"/ownerships/#{public_ownership}")
+
+      assert html =~ "Show Ownership"
+      assert html =~ public_ownership.profile.username
     end
 
     test "updates ownership within modal", %{

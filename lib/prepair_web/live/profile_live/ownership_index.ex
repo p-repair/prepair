@@ -18,9 +18,11 @@ defmodule PrepairWeb.ProfileLive.OwnershipIndex do
 
     case user_uuid == profile_uuid do
       true ->
+        title = gettext("Listing your Ownerships")
+
         socket =
           socket
-          |> assign(:profile, "your")
+          |> assign(:title, title)
           |> stream(
             :ownerships,
             Profiles.list_ownerships_by_profile(profile_uuid,
@@ -32,9 +34,14 @@ defmodule PrepairWeb.ProfileLive.OwnershipIndex do
         {:ok, socket}
 
       false ->
+        title =
+          gettext("Listing %{profile_username} public Ownerships",
+            profile_username: profile_username
+          )
+
         socket =
           socket
-          |> assign(:profile, "#{profile_username} public")
+          |> assign(:title, title)
           |> stream(
             :ownerships,
             Profiles.list_ownerships_by_profile(profile_uuid)
@@ -51,8 +58,10 @@ defmodule PrepairWeb.ProfileLive.OwnershipIndex do
   end
 
   def apply_action(socket, :index, _params) do
+    page_title = gettext("Listing Public Ownerships")
+
     socket
-    |> assign(:page_title, "Listing Public Ownerships")
+    |> assign(:page_title, page_title)
     |> assign(:ownership, nil)
   end
 end

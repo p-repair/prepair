@@ -10,7 +10,9 @@ defmodule PrepairWeb.NotificationTemplateLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage notification_template records in your database.</:subtitle>
+        <:subtitle>
+          <%= gettext "Use this form to manage notification_template records in your database." %>
+        </:subtitle>
       </.header>
 
       <.simple_form
@@ -20,36 +22,36 @@ defmodule PrepairWeb.NotificationTemplateLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label="Name" />
-        <.input field={@form[:title]} type="text" label="Title" />
-        <.input field={@form[:content]} type="text" label="Content" />
-        <.input field={@form[:description]} type="text" label="Description" />
+        <.input field={@form[:name]} type="text" label={gettext "Name"} />
+        <.input field={@form[:title]} type="text" label={gettext "Title"} />
+        <.input field={@form[:content]} type="text" label={gettext "Content"} />
+        <.input field={@form[:description]} type="text" label={gettext "Description"} />
         <.input
           field={@form[:category_ids]}
-          label="Categories"
+          label={gettext "Categories"}
           type="select"
           multiple={true}
           options={categories_opts(@form)}
         />
         <.input
           field={@form[:product_ids]}
-          label="Products"
+          label={gettext "Products"}
           type="select"
           multiple={true}
           options={products_opts(@form)}
         />
         <.input
           field={@form[:part_ids]}
-          label="Parts"
+          label={gettext "Parts"}
           type="select"
           multiple={true}
           options={parts_opts(@form)}
         />
-        <.input field={@form[:condition]} type="text" label="Condition" />
-        <.input field={@form[:need_action]} type="checkbox" label="User action needed" />
-        <.input field={@form[:draft]} type="checkbox" label="Draft" />
+        <.input field={@form[:condition]} type="text" label={gettext "Condition"} />
+        <.input field={@form[:need_action]} type="checkbox" label={gettext "User action needed"} />
+        <.input field={@form[:draft]} type="checkbox" label={gettext "Draft"} />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Notification template</.button>
+          <.button phx-disable-with={gettext "Saving..."}><%= gettext "Save Notification template" %></.button>
         </:actions>
       </.simple_form>
     </div>
@@ -154,7 +156,10 @@ defmodule PrepairWeb.NotificationTemplateLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Notification template updated successfully")
+         |> put_flash(
+           :info,
+           dgettext("infos", "Notification template updated successfully")
+         )
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -171,7 +176,10 @@ defmodule PrepairWeb.NotificationTemplateLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Notification template created successfully")
+         |> put_flash(
+           :info,
+           dgettext("infos", "Notification template created successfully")
+         )
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

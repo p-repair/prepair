@@ -1,0 +1,766 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n>1);\n"
+
+#: lib/prepair_web/components/core_components.ex:526
+#, elixir-autogen, elixir-format
+msgid "Actions"
+msgstr "Actions"
+
+#: lib/prepair_web/live/product_live/index.ex:41
+#: lib/prepair_web/live/product_live/index.html.heex:2
+#, elixir-autogen, elixir-format
+msgid "Listing Products"
+msgstr "Référencement des produits"
+
+#: lib/prepair_web/live/product_live/index.ex:33
+#: lib/prepair_web/live/product_live/index.html.heex:5
+#, elixir-autogen, elixir-format
+msgid "New Product"
+msgstr "Nouveau produit"
+
+#: lib/prepair_web/components/core_components.ex:79
+#: lib/prepair_web/components/core_components.ex:178
+#, elixir-autogen, elixir-format
+msgid "close"
+msgstr "fermer"
+
+#: lib/prepair_web/live/category_live/index.html.heex:28
+#: lib/prepair_web/live/manufacturer_live/index.html.heex:27
+#: lib/prepair_web/live/notification_template_live/index.html.heex:31
+#: lib/prepair_web/live/ownership_live/index.html.heex:30
+#: lib/prepair_web/live/part_live/index.html.heex:33
+#: lib/prepair_web/live/product_live/index.html.heex:32
+#: lib/prepair_web/live/profile_live/index.html.heex:29
+#: lib/prepair_web/live/profile_live/ownership_index.html.heex:29
+#, elixir-autogen, elixir-format
+msgid "Are you sure?"
+msgstr "Êtes-vous sûr ?"
+
+#: lib/prepair_web/live/category_live/form_component.ex:27
+#: lib/prepair_web/live/category_live/index.html.heex:18
+#: lib/prepair_web/live/category_live/show.html.heex:15
+#: lib/prepair_web/live/part_live/form_component.ex:39
+#: lib/prepair_web/live/part_live/index.html.heex:19
+#: lib/prepair_web/live/part_live/show.html.heex:16
+#: lib/prepair_web/live/product_live/form_component.ex:36
+#: lib/prepair_web/live/product_live/index.html.heex:19
+#: lib/prepair_web/live/product_live/show.html.heex:16
+#, elixir-autogen, elixir-format
+msgid "Average lifetime m"
+msgstr "Durée de vie moyenne (en mois)"
+
+#: lib/prepair_web/live/category_live/show.html.heex:18
+#, elixir-autogen, elixir-format
+msgid "Back to categories"
+msgstr "Retour aux catégories"
+
+#: lib/prepair_web/live/manufacturer_live/show.html.heex:17
+#, elixir-autogen, elixir-format
+msgid "Back to manufacturers"
+msgstr "Retour aux fabricants"
+
+#: lib/prepair_web/live/notification_template_live/show.html.heex:24
+#, elixir-autogen, elixir-format
+msgid "Back to notification_templates"
+msgstr "Retour aux modèles de notifications"
+
+#: lib/prepair_web/live/ownership_live/show.html.heex:20
+#, elixir-autogen, elixir-format
+msgid "Back to ownerships"
+msgstr "Retour aux possessions"
+
+#: lib/prepair_web/live/part_live/show.html.heex:23
+#, elixir-autogen, elixir-format
+msgid "Back to parts"
+msgstr "Retour aux pièces détachées"
+
+#: lib/prepair_web/live/product_live/show.html.heex:22
+#, elixir-autogen, elixir-format
+msgid "Back to products"
+msgstr "Retour aux produits"
+
+#: lib/prepair_web/live/profile_live/form_component.ex:29
+#: lib/prepair_web/live/profile_live/show.html.heex:20
+#, elixir-autogen, elixir-format
+msgid "Back to profiles"
+msgstr "Retour aux profiles"
+
+#: lib/prepair_web/live/notification_template_live/form_component.ex:31
+#: lib/prepair_web/live/notification_template_live/show.html.heex:16
+#, elixir-autogen, elixir-format
+msgid "Categories"
+msgstr "Catégories"
+
+#: lib/prepair_web/live/category_live/show.html.heex:2
+#: lib/prepair_web/live/ownership_live/form_component.ex:26
+#: lib/prepair_web/live/part_live/form_component.ex:25
+#: lib/prepair_web/live/product_live/form_component.ex:27
+#, elixir-autogen, elixir-format
+msgid "Category"
+msgstr "Catégorie"
+
+#: lib/prepair_web/live/part_live/form_component.ex:34
+#, elixir-autogen, elixir-format
+msgid "Compatible products"
+msgstr "Produits compatibles"
+
+#: lib/prepair_web/live/notification_template_live/form_component.ex:50
+#: lib/prepair_web/live/notification_template_live/index.html.heex:19
+#: lib/prepair_web/live/notification_template_live/show.html.heex:19
+#, elixir-autogen, elixir-format
+msgid "Condition"
+msgstr "Condition"
+
+#: lib/prepair_web/live/notification_template_live/form_component.ex:27
+#: lib/prepair_web/live/notification_template_live/index.html.heex:17
+#: lib/prepair_web/live/notification_template_live/show.html.heex:14
+#, elixir-autogen, elixir-format
+msgid "Content"
+msgstr "Contenu"
+
+#: lib/prepair_web/live/part_live/form_component.ex:40
+#: lib/prepair_web/live/part_live/index.html.heex:20
+#: lib/prepair_web/live/part_live/show.html.heex:17
+#: lib/prepair_web/live/product_live/form_component.ex:37
+#: lib/prepair_web/live/product_live/index.html.heex:20
+#: lib/prepair_web/live/product_live/show.html.heex:17
+#, elixir-autogen, elixir-format
+msgid "Country of origin"
+msgstr "Pays d’origine"
+
+#: lib/prepair_web/live/profile_live/index.html.heex:19
+#, elixir-autogen, elixir-format
+msgid "Created at"
+msgstr "Créé le"
+
+#: lib/prepair_web/live/ownership_live/form_component.ex:45
+#: lib/prepair_web/live/ownership_live/index.html.heex:17
+#: lib/prepair_web/live/ownership_live/show.html.heex:14
+#: lib/prepair_web/live/profile_live/ownership_index.html.heex:16
+#, elixir-autogen, elixir-format
+msgid "Date of purchase"
+msgstr "Date d’achat"
+
+#: lib/prepair_web/live/category_live/index.html.heex:30
+#: lib/prepair_web/live/manufacturer_live/index.html.heex:29
+#: lib/prepair_web/live/notification_template_live/index.html.heex:33
+#: lib/prepair_web/live/ownership_live/index.html.heex:32
+#: lib/prepair_web/live/part_live/index.html.heex:35
+#: lib/prepair_web/live/product_live/index.html.heex:34
+#: lib/prepair_web/live/profile_live/index.html.heex:31
+#: lib/prepair_web/live/profile_live/ownership_index.html.heex:31
+#, elixir-autogen, elixir-format
+msgid "Delete"
+msgstr "Supprimer"
+
+#: lib/prepair_web/live/category_live/form_component.ex:25
+#: lib/prepair_web/live/category_live/index.html.heex:16
+#: lib/prepair_web/live/category_live/show.html.heex:13
+#: lib/prepair_web/live/manufacturer_live/form_component.ex:23
+#: lib/prepair_web/live/manufacturer_live/index.html.heex:16
+#: lib/prepair_web/live/manufacturer_live/show.html.heex:13
+#: lib/prepair_web/live/notification_template_live/form_component.ex:28
+#: lib/prepair_web/live/notification_template_live/index.html.heex:18
+#: lib/prepair_web/live/notification_template_live/show.html.heex:15
+#: lib/prepair_web/live/part_live/form_component.ex:37
+#: lib/prepair_web/live/part_live/index.html.heex:17
+#: lib/prepair_web/live/part_live/show.html.heex:14
+#: lib/prepair_web/live/product_live/form_component.ex:34
+#: lib/prepair_web/live/product_live/index.html.heex:17
+#: lib/prepair_web/live/product_live/show.html.heex:14
+#, elixir-autogen, elixir-format
+msgid "Description"
+msgstr "Description"
+
+#: lib/prepair_web/live/notification_template_live/form_component.ex:52
+#: lib/prepair_web/live/notification_template_live/index.html.heex:21
+#: lib/prepair_web/live/notification_template_live/show.html.heex:21
+#, elixir-autogen, elixir-format
+msgid "Draft"
+msgstr "Brouillon"
+
+#: lib/prepair_web/live/category_live/index.html.heex:23
+#: lib/prepair_web/live/manufacturer_live/index.html.heex:22
+#: lib/prepair_web/live/notification_template_live/index.html.heex:26
+#: lib/prepair_web/live/ownership_live/index.html.heex:25
+#: lib/prepair_web/live/part_live/index.html.heex:28
+#: lib/prepair_web/live/product_live/index.html.heex:27
+#: lib/prepair_web/live/profile_live/index.html.heex:24
+#: lib/prepair_web/live/profile_live/ownership_index.html.heex:24
+#, elixir-autogen, elixir-format
+msgid "Edit"
+msgstr "Modifier"
+
+#: lib/prepair_web/live/category_live/index.ex:25
+#: lib/prepair_web/live/category_live/show.ex:20
+#, elixir-autogen, elixir-format
+msgid "Edit Category"
+msgstr "Modifier la catégorie"
+
+#: lib/prepair_web/live/manufacturer_live/index.ex:25
+#: lib/prepair_web/live/manufacturer_live/show.ex:20
+#, elixir-autogen, elixir-format
+msgid "Edit Manufacturer"
+msgstr "Modifier le fabricant"
+
+#: lib/prepair_web/live/notification_template_live/index.ex:33
+#: lib/prepair_web/live/notification_template_live/show.ex:23
+#, elixir-autogen, elixir-format
+msgid "Edit Notification template"
+msgstr "Modifier le modèle de notification"
+
+#: lib/prepair_web/live/ownership_live/index.ex:30
+#: lib/prepair_web/live/ownership_live/show.ex:25
+#, elixir-autogen, elixir-format
+msgid "Edit Ownership"
+msgstr "Modifier la possession"
+
+#: lib/prepair_web/live/part_live/index.ex:25
+#: lib/prepair_web/live/part_live/show.ex:20
+#, elixir-autogen, elixir-format
+msgid "Edit Part"
+msgstr "Modifier la pièce détachée"
+
+#: lib/prepair_web/live/product_live/index.ex:25
+#: lib/prepair_web/live/product_live/show.ex:20
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Edit Product"
+msgstr "Modifier le produit"
+
+#: lib/prepair_web/live/profile_live/index.ex:30
+#: lib/prepair_web/live/profile_live/show.ex:21
+#, elixir-autogen, elixir-format
+msgid "Edit Profile"
+msgstr "Modifier le profile"
+
+#: lib/prepair_web/live/category_live/show.html.heex:6
+#, elixir-autogen, elixir-format
+msgid "Edit category"
+msgstr "Modifier la catégorie"
+
+#: lib/prepair_web/live/manufacturer_live/show.html.heex:6
+#, elixir-autogen, elixir-format
+msgid "Edit manufacturer"
+msgstr "Modifier le fabricant"
+
+#: lib/prepair_web/live/ownership_live/show.html.heex:6
+#, elixir-autogen, elixir-format
+msgid "Edit ownership"
+msgstr "Modifier la possession"
+
+#: lib/prepair_web/live/part_live/show.html.heex:6
+#, elixir-autogen, elixir-format
+msgid "Edit part"
+msgstr "Modifier la pièce détachée"
+
+#: lib/prepair_web/live/product_live/show.html.heex:6
+#, elixir-autogen, elixir-format
+msgid "Edit product"
+msgstr "Modifier le produit"
+
+#: lib/prepair_web/live/profile_live/show.html.heex:6
+#, elixir-autogen, elixir-format
+msgid "Edit profile"
+msgstr "Modifier le profile"
+
+#: lib/prepair_web/live/user_login_live.ex:12
+#, elixir-autogen, elixir-format
+msgid "Email"
+msgstr "Email"
+
+#: lib/prepair_web/live/part_live/form_component.ex:43
+#: lib/prepair_web/live/part_live/index.html.heex:23
+#: lib/prepair_web/live/part_live/show.html.heex:20
+#: lib/prepair_web/live/product_live/form_component.ex:39
+#: lib/prepair_web/live/product_live/index.html.heex:22
+#: lib/prepair_web/live/product_live/show.html.heex:19
+#, elixir-autogen, elixir-format
+msgid "End of production"
+msgstr "Fin de la production"
+
+#: lib/prepair_web/live/profile_live/index.html.heex:5
+#, elixir-autogen, elixir-format
+msgid "Go Back Home"
+msgstr "Retour à l’accueil"
+
+#: lib/prepair_web/live/category_live/form_component.ex:26
+#: lib/prepair_web/live/category_live/index.html.heex:17
+#: lib/prepair_web/live/category_live/show.html.heex:14
+#: lib/prepair_web/live/manufacturer_live/form_component.ex:24
+#: lib/prepair_web/live/manufacturer_live/index.html.heex:17
+#: lib/prepair_web/live/manufacturer_live/show.html.heex:14
+#: lib/prepair_web/live/part_live/form_component.ex:38
+#: lib/prepair_web/live/part_live/index.html.heex:18
+#: lib/prepair_web/live/part_live/show.html.heex:15
+#: lib/prepair_web/live/product_live/form_component.ex:35
+#: lib/prepair_web/live/product_live/index.html.heex:18
+#: lib/prepair_web/live/product_live/show.html.heex:15
+#, elixir-autogen, elixir-format
+msgid "Image"
+msgstr "Image"
+
+#: lib/prepair_web/live/category_live/index.ex:41
+#: lib/prepair_web/live/category_live/index.html.heex:2
+#, elixir-autogen, elixir-format
+msgid "Listing Categories"
+msgstr "Référencement des catégories"
+
+#: lib/prepair_web/live/manufacturer_live/index.ex:41
+#: lib/prepair_web/live/manufacturer_live/index.html.heex:2
+#, elixir-autogen, elixir-format
+msgid "Listing Manufacturers"
+msgstr "Référencement des fabricants"
+
+#: lib/prepair_web/live/notification_template_live/index.ex:52
+#: lib/prepair_web/live/notification_template_live/index.html.heex:2
+#, elixir-autogen, elixir-format
+msgid "Listing Notification templates"
+msgstr "Référencement des modèles de notifications"
+
+#: lib/prepair_web/live/part_live/index.ex:41
+#: lib/prepair_web/live/part_live/index.html.heex:2
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Listing Parts"
+msgstr "Référencement des pièces détachées"
+
+#: lib/prepair_web/live/profile_live/index.ex:38
+#: lib/prepair_web/live/profile_live/index.html.heex:2
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Listing Profiles"
+msgstr "Référencement des profiles"
+
+#: lib/prepair_web/live/ownership_live/index.ex:46
+#: lib/prepair_web/live/ownership_live/index.html.heex:2
+#: lib/prepair_web/live/profile_live/ownership_index.ex:61
+#, elixir-autogen, elixir-format
+msgid "Listing Public Ownerships"
+msgstr "Référencement des possessions publiques"
+
+#: lib/prepair_web/live/part_live/form_component.ex:41
+#: lib/prepair_web/live/part_live/index.html.heex:21
+#: lib/prepair_web/live/part_live/show.html.heex:18
+#, elixir-autogen, elixir-format
+msgid "Main material"
+msgstr "Matériau principal"
+
+#: lib/prepair_web/live/manufacturer_live/show.html.heex:2
+#: lib/prepair_web/live/ownership_live/form_component.ex:33
+#: lib/prepair_web/live/part_live/form_component.ex:29
+#: lib/prepair_web/live/product_live/form_component.ex:31
+#, elixir-autogen, elixir-format
+msgid "Manufacturer"
+msgstr "Fabricant"
+
+#: lib/prepair_web/live/category_live/form_component.ex:24
+#: lib/prepair_web/live/category_live/index.html.heex:15
+#: lib/prepair_web/live/category_live/show.html.heex:12
+#: lib/prepair_web/live/manufacturer_live/form_component.ex:22
+#: lib/prepair_web/live/manufacturer_live/index.html.heex:15
+#: lib/prepair_web/live/manufacturer_live/show.html.heex:12
+#: lib/prepair_web/live/notification_template_live/form_component.ex:25
+#: lib/prepair_web/live/notification_template_live/index.html.heex:15
+#: lib/prepair_web/live/notification_template_live/show.html.heex:12
+#: lib/prepair_web/live/part_live/form_component.ex:35
+#: lib/prepair_web/live/part_live/index.html.heex:15
+#: lib/prepair_web/live/part_live/show.html.heex:12
+#: lib/prepair_web/live/product_live/form_component.ex:32
+#: lib/prepair_web/live/product_live/index.html.heex:15
+#: lib/prepair_web/live/product_live/show.html.heex:12
+#, elixir-autogen, elixir-format
+msgid "Name"
+msgstr "Nom"
+
+#: lib/prepair_web/live/category_live/index.ex:33
+#: lib/prepair_web/live/category_live/index.html.heex:5
+#, elixir-autogen, elixir-format
+msgid "New Category"
+msgstr "Nouvelle catégorie"
+
+#: lib/prepair_web/live/manufacturer_live/index.ex:33
+#: lib/prepair_web/live/manufacturer_live/index.html.heex:5
+#, elixir-autogen, elixir-format
+msgid "New Manufacturer"
+msgstr "Nouveau fabricant"
+
+#: lib/prepair_web/live/notification_template_live/index.ex:44
+#: lib/prepair_web/live/notification_template_live/index.html.heex:5
+#, elixir-autogen, elixir-format
+msgid "New Notification template"
+msgstr "Nouveau modèle de notification"
+
+#: lib/prepair_web/live/ownership_live/index.ex:38
+#: lib/prepair_web/live/ownership_live/index.html.heex:5
+#: lib/prepair_web/live/profile_live/ownership_index.html.heex:5
+#, elixir-autogen, elixir-format
+msgid "New Ownership"
+msgstr "Nouvelle possession"
+
+#: lib/prepair_web/live/part_live/index.ex:33
+#: lib/prepair_web/live/part_live/index.html.heex:5
+#, elixir-autogen, elixir-format, fuzzy
+msgid "New Part"
+msgstr "Nouvelle pièce détachée"
+
+#: lib/prepair_web/live/profile_live/form_component.ex:26
+#: lib/prepair_web/live/profile_live/index.html.heex:18
+#: lib/prepair_web/live/profile_live/show.html.heex:16
+#, elixir-autogen, elixir-format
+msgid "Newsletter"
+msgstr "Newsletter"
+
+#: lib/prepair_web/live/notification_template_live/show.html.heex:2
+#, elixir-autogen, elixir-format
+msgid "Notification template"
+msgstr "Molèle de notification"
+
+#: lib/prepair_web/live/ownership_live/show.html.heex:2
+#, elixir-autogen, elixir-format
+msgid "Ownership"
+msgstr "Possession"
+
+#: lib/prepair_web/live/part_live/show.html.heex:2
+#, elixir-autogen, elixir-format
+msgid "Part"
+msgstr "Pièce détachée"
+
+#: lib/prepair_web/live/notification_template_live/form_component.ex:45
+#: lib/prepair_web/live/notification_template_live/show.html.heex:18
+#, elixir-autogen, elixir-format
+msgid "Parts"
+msgstr "Pièces détachées"
+
+#: lib/prepair_web/live/user_login_live.ex:13
+#, elixir-autogen, elixir-format
+msgid "Password"
+msgstr "Mot de passe"
+
+#: lib/prepair_web/live/profile_live/form_component.ex:25
+#: lib/prepair_web/live/profile_live/show.html.heex:15
+#, elixir-autogen, elixir-format
+msgid "People in household"
+msgstr "Nombre de personnes dans le foyer"
+
+#: lib/prepair_web/live/ownership_live/form_component.ex:47
+#: lib/prepair_web/live/ownership_live/index.html.heex:19
+#: lib/prepair_web/live/ownership_live/show.html.heex:16
+#: lib/prepair_web/live/profile_live/ownership_index.html.heex:18
+#, elixir-autogen, elixir-format
+msgid "Price of purchase"
+msgstr "Prix d’achat"
+
+#: lib/prepair_web/live/product_live/show.html.heex:2
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Product"
+msgstr "Produit"
+
+#: lib/prepair_web/live/ownership_live/form_component.ex:40
+#: lib/prepair_web/live/ownership_live/index.html.heex:15
+#: lib/prepair_web/live/ownership_live/show.html.heex:12
+#: lib/prepair_web/live/profile_live/ownership_index.html.heex:15
+#, elixir-autogen, elixir-format
+msgid "Product name"
+msgstr "Nom du produit"
+
+#: lib/prepair_web/live/notification_template_live/form_component.ex:38
+#: lib/prepair_web/live/notification_template_live/show.html.heex:17
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Products"
+msgstr "Produits"
+
+#: lib/prepair_web/live/profile_live/show.html.heex:2
+#, elixir-autogen, elixir-format
+msgid "Profile"
+msgstr "Profile"
+
+#: lib/prepair_web/live/ownership_live/form_component.ex:48
+#: lib/prepair_web/live/ownership_live/index.html.heex:20
+#: lib/prepair_web/live/ownership_live/show.html.heex:17
+#: lib/prepair_web/live/profile_live/ownership_index.html.heex:19
+#, elixir-autogen, elixir-format
+msgid "Public"
+msgstr "Publique"
+
+#: lib/prepair_web/live/part_live/form_component.ex:36
+#: lib/prepair_web/live/part_live/index.html.heex:16
+#: lib/prepair_web/live/part_live/show.html.heex:13
+#: lib/prepair_web/live/product_live/form_component.ex:33
+#: lib/prepair_web/live/product_live/index.html.heex:16
+#: lib/prepair_web/live/product_live/show.html.heex:13
+#, elixir-autogen, elixir-format
+msgid "Reference"
+msgstr "Référence"
+
+#: lib/prepair_web/live/category_live/form_component.ex:29
+#, elixir-autogen, elixir-format
+msgid "Save Category"
+msgstr "Enregistrer la catégorie"
+
+#: lib/prepair_web/live/manufacturer_live/form_component.ex:26
+#, elixir-autogen, elixir-format
+msgid "Save Manufacturer"
+msgstr "Enregistrer le fabricant"
+
+#: lib/prepair_web/live/notification_template_live/form_component.ex:54
+#, elixir-autogen, elixir-format
+msgid "Save Notification template"
+msgstr "Enregistrer le modèle de notification"
+
+#: lib/prepair_web/live/ownership_live/form_component.ex:50
+#, elixir-autogen, elixir-format
+msgid "Save Ownership"
+msgstr "Enregistrer la possession"
+
+#: lib/prepair_web/live/part_live/form_component.ex:45
+#, elixir-autogen, elixir-format
+msgid "Save Part"
+msgstr "Enregistrer la pièce détachée"
+
+#: lib/prepair_web/live/product_live/form_component.ex:41
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Save Product"
+msgstr "Enregistrer le produit"
+
+#: lib/prepair_web/live/profile_live/form_component.ex:28
+#, elixir-autogen, elixir-format
+msgid "Save Profile"
+msgstr "Enregistrer le profile"
+
+#: lib/prepair_web/live/category_live/form_component.ex:29
+#: lib/prepair_web/live/manufacturer_live/form_component.ex:26
+#: lib/prepair_web/live/notification_template_live/form_component.ex:54
+#: lib/prepair_web/live/ownership_live/form_component.ex:50
+#: lib/prepair_web/live/part_live/form_component.ex:45
+#: lib/prepair_web/live/product_live/form_component.ex:41
+#: lib/prepair_web/live/profile_live/form_component.ex:28
+#, elixir-autogen, elixir-format
+msgid "Saving..."
+msgstr "Enregistrement..."
+
+#: lib/prepair_web/live/category_live/index.html.heex:21
+#: lib/prepair_web/live/manufacturer_live/index.html.heex:20
+#: lib/prepair_web/live/notification_template_live/index.html.heex:24
+#: lib/prepair_web/live/ownership_live/index.html.heex:23
+#: lib/prepair_web/live/part_live/index.html.heex:26
+#: lib/prepair_web/live/product_live/index.html.heex:25
+#: lib/prepair_web/live/profile_live/index.html.heex:22
+#: lib/prepair_web/live/profile_live/ownership_index.html.heex:22
+#, elixir-autogen, elixir-format
+msgid "Show"
+msgstr "Afficher"
+
+#: lib/prepair_web/live/category_live/show.ex:19
+#, elixir-autogen, elixir-format
+msgid "Show Category"
+msgstr "Afficher la catégorie"
+
+#: lib/prepair_web/live/manufacturer_live/show.ex:19
+#, elixir-autogen, elixir-format
+msgid "Show Manufacturer"
+msgstr "Afficher le fabricant"
+
+#: lib/prepair_web/live/notification_template_live/show.ex:22
+#, elixir-autogen, elixir-format
+msgid "Show Notification template"
+msgstr "Afficher le modèle de notification"
+
+#: lib/prepair_web/live/ownership_live/show.ex:24
+#, elixir-autogen, elixir-format
+msgid "Show Ownership"
+msgstr "Afficher la possession"
+
+#: lib/prepair_web/live/part_live/show.ex:19
+#, elixir-autogen, elixir-format
+msgid "Show Part"
+msgstr "Afficher la pièce détachée"
+
+#: lib/prepair_web/live/product_live/show.ex:19
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Show Product"
+msgstr "Afficher le produit"
+
+#: lib/prepair_web/live/profile_live/show.ex:20
+#, elixir-autogen, elixir-format
+msgid "Show Profile"
+msgstr "Afficher le profile"
+
+#: lib/prepair_web/live/user_login_live.ex:17
+#, elixir-autogen, elixir-format
+msgid "Sign in"
+msgstr "Se connecter"
+
+#: lib/prepair_web/live/user_login_live.ex:8
+#, elixir-autogen, elixir-format
+msgid "Sign in to account"
+msgstr "Se connecter au compte"
+
+#: lib/prepair_web/live/user_login_live.ex:16
+#, elixir-autogen, elixir-format
+msgid "Signing in..."
+msgstr "Connexion..."
+
+#: lib/prepair_web/live/part_live/form_component.ex:42
+#: lib/prepair_web/live/part_live/index.html.heex:22
+#: lib/prepair_web/live/part_live/show.html.heex:19
+#: lib/prepair_web/live/product_live/form_component.ex:38
+#: lib/prepair_web/live/product_live/index.html.heex:21
+#: lib/prepair_web/live/product_live/show.html.heex:18
+#, elixir-autogen, elixir-format
+msgid "Start of production"
+msgstr "Début de la production"
+
+#: lib/prepair_web/live/category_live/show.html.heex:3
+#, elixir-autogen, elixir-format
+msgid "This is a category record from your database."
+msgstr "Ceci est une catégorie"
+
+#: lib/prepair_web/live/manufacturer_live/show.html.heex:3
+#, elixir-autogen, elixir-format
+msgid "This is a manufacturer record from your database."
+msgstr "Ceci est un fabricant"
+
+#: lib/prepair_web/live/notification_template_live/show.html.heex:3
+#, elixir-autogen, elixir-format
+msgid "This is a notification_template record from your database."
+msgstr "Ceci est un modèle de notification"
+
+#: lib/prepair_web/live/part_live/show.html.heex:3
+#, elixir-autogen, elixir-format
+msgid "This is a part record from your database."
+msgstr "Ceci est une pièce détachée"
+
+#: lib/prepair_web/live/product_live/show.html.heex:3
+#, elixir-autogen, elixir-format
+msgid "This is a product record from your database."
+msgstr "Ceci est un produit"
+
+#: lib/prepair_web/live/profile_live/show.html.heex:3
+#, elixir-autogen, elixir-format
+msgid "This is a profile record from your database."
+msgstr "Ceci est un profile"
+
+#: lib/prepair_web/live/ownership_live/show.html.heex:3
+#, elixir-autogen, elixir-format
+msgid "This is an ownership record from your database."
+msgstr "Ceci est une possession"
+
+#: lib/prepair_web/live/notification_template_live/form_component.ex:26
+#: lib/prepair_web/live/notification_template_live/index.html.heex:16
+#: lib/prepair_web/live/notification_template_live/show.html.heex:13
+#, elixir-autogen, elixir-format
+msgid "Title"
+msgstr "Titre"
+
+#: lib/prepair_web/live/category_live/form_component.ex:13
+#, elixir-autogen, elixir-format
+msgid "Use this form to manage category records in your database."
+msgstr "Utilisez ce formulaire pour gérer les catégories"
+
+#: lib/prepair_web/live/manufacturer_live/form_component.ex:12
+#, elixir-autogen, elixir-format
+msgid "Use this form to manage manufacturer records in your database."
+msgstr "Utilisez ce formalaire pour gérer les fabricants"
+
+#: lib/prepair_web/live/notification_template_live/form_component.ex:14
+#, elixir-autogen, elixir-format
+msgid "Use this form to manage notification_template records in your database."
+msgstr "Utilisez ce formalaire pour gérer les modèles de notifications"
+
+#: lib/prepair_web/live/ownership_live/form_component.ex:14
+#, elixir-autogen, elixir-format
+msgid "Use this form to manage ownership records in your database."
+msgstr "Utilisez ce formalaire pour gérer les possessions"
+
+#: lib/prepair_web/live/part_live/form_component.ex:12
+#, elixir-autogen, elixir-format
+msgid "Use this form to manage part records in your database."
+msgstr "Utilisez ce formalaire pour gérer les pièces détachées"
+
+#: lib/prepair_web/live/product_live/form_component.ex:13
+#, elixir-autogen, elixir-format
+msgid "Use this form to manage product records in your database."
+msgstr "Utilisez ce formalaire pour gérer les produits"
+
+#: lib/prepair_web/live/profile_live/form_component.ex:13
+#, elixir-autogen, elixir-format
+msgid "Use this form to manage profile records in your database."
+msgstr "Utilisez ce formalaire pour gérer les profiles"
+
+#: lib/prepair_web/live/notification_template_live/form_component.ex:51
+#: lib/prepair_web/live/notification_template_live/index.html.heex:20
+#: lib/prepair_web/live/notification_template_live/show.html.heex:20
+#, elixir-autogen, elixir-format
+msgid "User action needed"
+msgstr "Action de l’utilisateur requise"
+
+#: lib/prepair_web/live/profile_live/index.html.heex:16
+#: lib/prepair_web/live/profile_live/show.html.heex:13
+#, elixir-autogen, elixir-format
+msgid "User email"
+msgstr "Email de l’utilisateur"
+
+#: lib/prepair_web/live/profile_live/index.html.heex:17
+#: lib/prepair_web/live/profile_live/show.html.heex:14
+#, elixir-autogen, elixir-format
+msgid "User role"
+msgstr "Rôle de l’utilisateur"
+
+#: lib/prepair_web/live/ownership_live/index.html.heex:16
+#: lib/prepair_web/live/ownership_live/show.html.heex:13
+#: lib/prepair_web/live/profile_live/form_component.ex:24
+#: lib/prepair_web/live/profile_live/index.html.heex:15
+#: lib/prepair_web/live/profile_live/show.html.heex:12
+#, elixir-autogen, elixir-format
+msgid "Username"
+msgstr "Username"
+
+#: lib/prepair_web/live/ownership_live/form_component.ex:46
+#, elixir-autogen, elixir-format
+msgid "Warranty duration (in months)"
+msgstr "Durée de garantie (en mois)"
+
+#: lib/prepair_web/live/ownership_live/index.html.heex:18
+#: lib/prepair_web/live/ownership_live/show.html.heex:15
+#: lib/prepair_web/live/profile_live/ownership_index.html.heex:17
+#, elixir-autogen, elixir-format
+msgid "Warranty duration m"
+msgstr "Durée de garantie (en mois)"
+
+#: lib/prepair_web/live/notification_template_live/show.html.heex:6
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Edit notification template"
+msgstr "Modifier le modèle de notification"
+
+#: lib/prepair_web/components/layouts/app.html.heex:22
+#, elixir-autogen, elixir-format
+msgid "Log in"
+msgstr "Se connecter"
+
+#: lib/prepair_web/components/layouts/app.html.heex:13
+#, elixir-autogen, elixir-format
+msgid "Log out"
+msgstr "Se déconnecter"
+
+#: lib/prepair_web/components/core_components.ex:208
+#, elixir-autogen, elixir-format
+msgid "Attempting to reconnect"
+msgstr "Tentative de reconnexion"
+
+#: lib/prepair_web/live/profile_live/ownership_index.ex:38
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Listing %{profile_username} public Ownerships"
+msgstr "Référencement publique des possessions de %{profile_username}"
+
+#: lib/prepair_web/live/profile_live/ownership_index.ex:21
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Listing your Ownerships"
+msgstr "Référencement de vos possessions"

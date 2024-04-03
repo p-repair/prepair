@@ -18,7 +18,7 @@ defmodule PrepairWeb.ContactController do
     case Newsletter.create_contact(contact_params) do
       {:ok, contact} ->
         conn
-        |> put_flash(:info, "Contact created successfully.")
+        |> put_flash(:info, dgettext("infos", "Contact created successfully."))
         |> redirect(to: ~p"/contacts/#{contact}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -43,7 +43,7 @@ defmodule PrepairWeb.ContactController do
     case Newsletter.update_contact(contact, contact_params) do
       {:ok, contact} ->
         conn
-        |> put_flash(:info, "Contact updated successfully.")
+        |> put_flash(:info, dgettext("infos", "Contact updated successfully."))
         |> redirect(to: ~p"/contacts/#{contact}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -56,7 +56,7 @@ defmodule PrepairWeb.ContactController do
     {:ok, _contact} = Newsletter.delete_contact(contact)
 
     conn
-    |> put_flash(:info, "Contact deleted successfully.")
+    |> put_flash(:info, dgettext("infos", "Contact deleted successfully."))
     |> redirect(to: ~p"/contacts")
   end
 end

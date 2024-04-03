@@ -1,8 +1,8 @@
 <.header>
-  Listing Public Ownerships
+  <%= gettext "Listing Public Ownerships" %>
   <:actions>
     <.link patch={~p"/ownerships/new"}>
-      <.button>New Ownership</.button>
+      <.button><%= gettext "New Ownership" %></.button>
     </.link>
   </:actions>
 </.header>
@@ -12,24 +12,24 @@
   rows={@streams.ownerships}
   row_click={fn {_id, ownership} -> JS.navigate(~p"/ownerships/#{ownership}") end}
 >
-  <:col :let={{_id, ownership}} label="Product name"><%= ownership.product.name %></:col>
-  <:col :let={{_id, ownership}} label="Username"><%= ownership.profile.username %></:col>
-  <:col :let={{_id, ownership}} label="Date of purchase"><%= ownership.date_of_purchase %></:col>
-  <:col :let={{_id, ownership}} label="Warranty duration m"><%= ownership.warranty_duration_m %></:col>
-  <:col :let={{_id, ownership}} label="Price of purchase"><%= ownership.price_of_purchase %></:col>
-  <:col :let={{_id, ownership}} label="Public"><%= ownership.public %></:col>
+  <:col :let={{_id, ownership}} label={gettext "Product name"}><%= ownership.product.name %></:col>
+  <:col :let={{_id, ownership}} label={gettext "Username"}><%= ownership.profile.username %></:col>
+  <:col :let={{_id, ownership}} label={gettext "Date of purchase"}><%= ownership.date_of_purchase %></:col>
+  <:col :let={{_id, ownership}} label={gettext "Warranty duration m"}><%= ownership.warranty_duration_m %></:col>
+  <:col :let={{_id, ownership}} label={gettext "Price of purchase"}><%= ownership.price_of_purchase %></:col>
+  <:col :let={{_id, ownership}} label={gettext "Public"}><%= ownership.public %></:col>
   <:action :let={{_id, ownership}}>
     <div class="sr-only">
-      <.link navigate={~p"/ownerships/#{ownership}"}>Show</.link>
+      <.link navigate={~p"/ownerships/#{ownership}"}><%= gettext "Show" %></.link>
     </div>
-    <.link patch={~p"/ownerships/#{ownership}/edit"}>Edit</.link>
+    <.link patch={~p"/ownerships/#{ownership}/edit"}><%= gettext "Edit" %></.link>
   </:action>
   <:action :let={{uuid, ownership}}>
     <.link
       phx-click={JS.push("delete", value: %{uuid: ownership.uuid}) |> hide("##{uuid}")}
-      data-confirm="Are you sure?"
+      data-confirm={gettext "Are you sure?"}
     >
-      Delete
+      <%= gettext "Delete" %>
     </.link>
   </:action>
 </.table>

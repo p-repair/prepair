@@ -1,8 +1,8 @@
 <.header>
-  Listing Parts
+  <%= gettext "Listing Parts" %>
   <:actions>
     <.link patch={~p"/parts/new"}>
-      <.button>New Part</.button>
+      <.button><%= gettext "New Part" %></.button>
     </.link>
   </:actions>
 </.header>
@@ -12,27 +12,27 @@
   rows={@streams.parts}
   row_click={fn {_id, part} -> JS.navigate(~p"/parts/#{part}") end}
 >
-  <:col :let={{_id, part}} label="Name"><%= part.name %></:col>
-  <:col :let={{_id, part}} label="Reference"><%= part.reference %></:col>
-  <:col :let={{_id, part}} label="Description"><%= part.description %></:col>
-  <:col :let={{_id, part}} label="Image"><%= part.image %></:col>
-  <:col :let={{_id, part}} label="Average lifetime m"><%= part.average_lifetime_m %></:col>
-  <:col :let={{_id, part}} label="Country of origin"><%= part.country_of_origin %></:col>
-  <:col :let={{_id, part}} label="Main material"><%= part.main_material %></:col>
-  <:col :let={{_id, part}} label="Start of production"><%= part.start_of_production %></:col>
-  <:col :let={{_id, part}} label="End of production"><%= part.end_of_production %></:col>
+  <:col :let={{_id, part}} label={gettext "Name"}><%= part.name %></:col>
+  <:col :let={{_id, part}} label={gettext "Reference"}><%= part.reference %></:col>
+  <:col :let={{_id, part}} label={gettext "Description"}><%= part.description %></:col>
+  <:col :let={{_id, part}} label={gettext "Image"}><%= part.image %></:col>
+  <:col :let={{_id, part}} label={gettext "Average lifetime m"}><%= part.average_lifetime_m %></:col>
+  <:col :let={{_id, part}} label={gettext "Country of origin"}><%= part.country_of_origin %></:col>
+  <:col :let={{_id, part}} label={gettext "Main material"}><%= part.main_material %></:col>
+  <:col :let={{_id, part}} label={gettext "Start of production"}><%= part.start_of_production %></:col>
+  <:col :let={{_id, part}} label={gettext "End of production"}><%= part.end_of_production %></:col>
   <:action :let={{_id, part}}>
     <div class="sr-only">
-      <.link navigate={~p"/parts/#{part}"}>Show</.link>
+      <.link navigate={~p"/parts/#{part}"}><%= gettext "Show" %></.link>
     </div>
-    <.link patch={~p"/parts/#{part}/edit"}>Edit</.link>
+    <.link patch={~p"/parts/#{part}/edit"}><%= gettext "Edit" %></.link>
   </:action>
   <:action :let={{uuid, part}}>
     <.link
       phx-click={JS.push("delete", value: %{uuid: part.uuid}) |> hide("##{uuid}")}
-      data-confirm="Are you sure?"
+      data-confirm={gettext "Are you sure?"}
     >
-      Delete
+      <%= gettext "Delete" %>
     </.link>
   </:action>
 </.table>

@@ -16,6 +16,6 @@ defmodule PrepairWeb.PartLive.Show do
      |> assign(:part, Products.get_part!(uuid))}
   end
 
-  defp page_title(:show), do: "Show Part"
-  defp page_title(:edit), do: "Edit Part"
+  defp page_title(:show), do: gettext("Show Part")
+  defp page_title(:edit), do: gettext("Edit Part")
 end

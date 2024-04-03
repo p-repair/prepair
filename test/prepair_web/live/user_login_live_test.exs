@@ -11,6 +11,27 @@ defmodule PrepairWeb.UserLoginLiveTest do
       assert html =~ "Log in"
     end
 
+    @tag :gettext
+    test "log in page is translated to the first language in 'accept-language'
+  which match one of the locales defined for the application",
+         %{conn: conn} do
+      conn = conn |> set_language_to_de_then_fr()
+      {:ok, _lv, html} = live(conn, ~p"/users/log_in")
+
+      assert html =~ "Se connecter"
+    end
+
+    @tag :gettext
+    test "log in page is not translated ('en' is the default locale) if none
+  of the languages in 'accept-language' is part of the locales defined for
+  the app",
+         %{conn: conn} do
+      conn = conn |> set_language_to_unknown()
+      {:ok, _lv, html} = live(conn, ~p"/users/log_in")
+
+      assert html =~ "Log in"
+    end
+
     test "redirects if already logged in", %{conn: conn} do
       result =
         conn

@@ -16,6 +16,6 @@ defmodule PrepairWeb.CategoryLive.Show do
      |> assign(:category, Products.get_category!(uuid))}
   end
 
-  defp page_title(:show), do: "Show Category"
-  defp page_title(:edit), do: "Edit Category"
+  defp page_title(:show), do: gettext("Show Category")
+  defp page_title(:edit), do: gettext("Edit Category")
 end
