@@ -54,6 +54,7 @@ defmodule PrepairWeb do
       use Phoenix.LiveView,
         layout: {PrepairWeb.Layouts, :app}
 
+      on_mount PrepairWeb.Localisation
       unquote(html_helpers())
     end
   end

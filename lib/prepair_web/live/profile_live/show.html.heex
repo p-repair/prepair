@@ -1,23 +1,23 @@
 <.header>
-  Profile <%= @profile.uuid %>
-  <:subtitle>This is a profile record from your database.</:subtitle>
+  <%= gettext "Profile" %> <%= @profile.uuid %>
+  <:subtitle><%= gettext "This is a profile record from your database." %></:subtitle>
   <:actions>
     <.link patch={~p"/profiles/#{@profile}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit profile</.button>
+      <.button><%= gettext "Edit profile" %></.button>
     </.link>
   </:actions>
 </.header>
 
 <.list>
-  <:item title="Username"><%= @profile.username %></:item>
-  <:item title="User email"><%= @profile.user.email %></:item>
-  <:item title="User role"><%= @profile.user.role %></:item>
-  <:item title="People in household"><%= @profile.people_in_household %></:item>
-  <:item title="Newsletter"><%= @profile.newsletter %></:item>
+  <:item title={gettext "Username"}><%= @profile.username %></:item>
+  <:item title={gettext "User email"}><%= @profile.user.email %></:item>
+  <:item title={gettext "User role"}><%= @profile.user.role %></:item>
+  <:item title={gettext "People in household"}><%= @profile.people_in_household %></:item>
+  <:item title={gettext "Newsletter"}><%= @profile.newsletter %></:item>
 
 </.list>
 
-<.back navigate={~p"/profiles"}>Back to profiles</.back>
+<.back navigate={~p"/profiles"}><%= gettext "Back to profiles" %></.back>
 
 <.modal :if={@live_action == :edit} id="profile-modal" show on_cancel={JS.patch(~p"/profiles/#{@profile}")}>
   <.live_component

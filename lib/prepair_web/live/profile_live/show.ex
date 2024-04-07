@@ -17,6 +17,6 @@ defmodule PrepairWeb.ProfileLive.Show do
      |> assign(:profile, uuid |> Profiles.get_profile!() |> Repo.preload(:user))}
   end
 
-  defp page_title(:show), do: "Show Profile"
-  defp page_title(:edit), do: "Edit Profile"
+  defp page_title(:show), do: gettext("Show Profile")
+  defp page_title(:edit), do: gettext("Edit Profile")
 end

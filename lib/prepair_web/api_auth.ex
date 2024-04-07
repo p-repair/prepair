@@ -5,6 +5,7 @@ defmodule PrepairWeb.ApiAuth do
 
   import Plug.Conn
   import Phoenix.Controller
+  import PrepairWeb.Gettext
 
   alias Prepair.Auth
 
@@ -21,7 +22,9 @@ defmodule PrepairWeb.ApiAuth do
       _ ->
         conn
         |> put_status(:unauthorized)
-        |> json(%{errors: [%{detail: "missing API key"}]})
+        |> json(%{
+          errors: [%{detail: dgettext("errors", "missing API key")}]
+        })
         |> halt()
     end
   end

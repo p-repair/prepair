@@ -21,6 +21,6 @@ defmodule PrepairWeb.OwnershipLive.Show do
      |> assign(:ownership, ownership)}
   end
 
-  defp page_title(:show), do: "Show Ownership"
-  defp page_title(:edit), do: "Edit Ownership"
+  defp page_title(:show), do: gettext("Show Ownership")
+  defp page_title(:edit), do: gettext("Edit Ownership")
 end

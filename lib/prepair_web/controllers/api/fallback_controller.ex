@@ -29,7 +29,9 @@ defmodule PrepairWeb.Api.FallbackController do
   def call(conn, {:error, :invalid_credentials}) do
     conn
     |> put_status(:unauthorized)
-    |> json(%{errors: [%{details: "Invalid username or password."}]})
+    |> json(%{
+      errors: [%{details: dgettext("errors", "Invalid username or password.")}]
+    })
   end
 
   def call(conn, {:error, :bad_request}) do

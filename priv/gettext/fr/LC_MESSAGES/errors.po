@@ -1,184 +1,173 @@
-## `msgid`s in this file come from POT (.pot) files.
-##
-## Do not add, change, or remove `msgid`s manually here as
-## they're tied to the ones in the corresponding POT file
-## (with the same domain).
-##
-## Use `mix gettext.extract --merge` or `mix gettext.merge`
-## to merge POT files into PO files.
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
 msgid ""
 msgstr ""
-"Language: en\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n>1);\n"
 
-## From Ecto.Changeset.cast/4
 msgid "can't be blank"
-msgstr ""
+msgstr "ne peut pas être vide"
 
-## From Ecto.Changeset.unique_constraint/3
 msgid "has already been taken"
-msgstr ""
+msgstr "a déjà été pris"
 
-## From Ecto.Changeset.put_change/3
 msgid "is invalid"
-msgstr ""
+msgstr "n’est pas valide"
 
-## From Ecto.Changeset.validate_acceptance/3
 msgid "must be accepted"
-msgstr ""
+msgstr "doit être accepté"
 
-## From Ecto.Changeset.validate_format/3
 msgid "has invalid format"
-msgstr ""
+msgstr "a un format non valide"
 
-## From Ecto.Changeset.validate_subset/3
 msgid "has an invalid entry"
-msgstr ""
+msgstr "a une entrée non valide"
 
-## From Ecto.Changeset.validate_exclusion/3
 msgid "is reserved"
-msgstr ""
+msgstr "est réservé"
 
-## From Ecto.Changeset.validate_confirmation/3
 msgid "does not match confirmation"
-msgstr ""
+msgstr "ne correspond pas à la confirmation"
 
-## From Ecto.Changeset.no_assoc_constraint/3
 msgid "is still associated with this entry"
-msgstr ""
+msgstr "est toujours associé à cette entrée"
 
 msgid "are still associated with this entry"
-msgstr ""
+msgstr "sont toujours associés à cette entrée"
 
-## From Ecto.Changeset.validate_length/3
 msgid "should have %{count} item(s)"
 msgid_plural "should have %{count} item(s)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "devrait comporter %{count} élément"
+msgstr[1] "devrait comporter %{counts} éléments"
 
 msgid "should be %{count} character(s)"
 msgid_plural "should be %{count} character(s)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "devrait être %{count} caractère"
+msgstr[1] "devrait être %{count} caractères"
 
 msgid "should be %{count} byte(s)"
 msgid_plural "should be %{count} byte(s)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "devrait être %{count} byte"
+msgstr[1] "devrait être %{count} bytes"
 
 msgid "should have at least %{count} item(s)"
 msgid_plural "should have at least %{count} item(s)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "devrait avoir au moins %{count} élément"
+msgstr[1] "devrait avoir au moins %{count} éléments"
 
 msgid "should be at least %{count} character(s)"
 msgid_plural "should be at least %{count} character(s)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "devrait avoir au moins %{count} caractère"
+msgstr[1] "devrait avoir au moins %{count} caractères"
 
 msgid "should be at least %{count} byte(s)"
 msgid_plural "should be at least %{count} byte(s)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "devrait avoir au moins %{count} byte"
+msgstr[1] "devrait avoir au moins %{count} bytes"
 
 msgid "should have at most %{count} item(s)"
 msgid_plural "should have at most %{count} item(s)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "devrait avoir au moins %{count} élément"
+msgstr[1] "devrait avoir au moins %{count} éléments"
 
 msgid "should be at most %{count} character(s)"
 msgid_plural "should be at most %{count} character(s)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "devrait être au maximum %{count} caractère"
+msgstr[1] "devrait être au maximum %{count} caractères"
 
 msgid "should be at most %{count} byte(s)"
 msgid_plural "should be at most %{count} byte(s)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "devrait être au maximum %{count} byte"
+msgstr[1] "devrait être au maximum %{count} bytes"
 
-## From Ecto.Changeset.validate_number/3
 msgid "must be less than %{number}"
-msgstr ""
+msgstr "doit être inférieur à %{number}"
 
 msgid "must be greater than %{number}"
-msgstr ""
+msgstr "doit être supérieur à %{number} "
 
 msgid "must be less than or equal to %{number}"
-msgstr ""
+msgstr "doit être inférieur ou égal à %{number}"
 
 msgid "must be greater than or equal to %{number}"
-msgstr ""
+msgstr "doit être supérieur ou égal à %{number}"
 
 msgid "must be equal to %{number}"
-msgstr ""
+msgstr "doit être égal à %{number}"
 
 #: lib/prepair_web/controllers/api/fallback_controller.ex:33
 #, elixir-autogen, elixir-format
 msgid "Invalid username or password."
-msgstr ""
+msgstr "Nom d’utilisateur ou mot de passe non valide."
 
 #: lib/prepair_web/api_auth.ex:26
 #, elixir-autogen, elixir-format
 msgid "missing API key"
-msgstr ""
+msgstr "clé API manquante"
 
 #: lib/prepair_web/controllers/user_session_controller.ex:21
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Invalid email or password"
-msgstr ""
+msgstr "Nom d’utilisateur ou mot de passe non valide."
 
 #: lib/prepair_web/controllers/page_controller.ex:71
 #, elixir-autogen, elixir-format
 msgid "Sorry for the issue…\n            There was an error when registering.\n            Please try again later!"
-msgstr ""
+msgstr "Nous sommes désolés du probleme…\n            Il y a eu une erreur lors de l’inscription.\n            Réessayez plus tard s’il vous plait !"
 
 #: lib/prepair_web/controllers/page_controller.ex:59
 #, elixir-autogen, elixir-format
 msgid "Try again! The email address entered is not valid."
-msgstr ""
+msgstr "Essayez encore ! L’adresse email saisie n’est pas valide."
 
 #: lib/prepair_web/user_auth.ex:180
 #, elixir-autogen, elixir-format
 msgid "You must be admin to access this page."
-msgstr ""
+msgstr "Vous devez être administrateur pour accéder à cette page."
 
 #: lib/prepair_web/user_auth.ex:274
 #, elixir-autogen, elixir-format
 msgid "You must be admin to perform this action."
-msgstr ""
+msgstr "Vous devez être administrateur pour effectuer cette action."
 
 #: lib/prepair_web/user_auth.ex:161
 #: lib/prepair_web/user_auth.ex:233
 #, elixir-autogen, elixir-format
 msgid "You must log in to access this page."
-msgstr ""
+msgstr "Vous devez vous connecter pour accéder à cette page."
 
 #: lib/prepair_web/components/core_components.ex:198
 #, elixir-autogen, elixir-format
 msgid "Error!"
-msgstr ""
+msgstr "Erreur !"
 
 #: lib/prepair_web/components/core_components.ex:202
 #, elixir-autogen, elixir-format
 msgid "We can't find the internet"
-msgstr ""
+msgstr "Nous ne pouvons pas trouver l’Internet"
 
 #: lib/prepair/accounts/user.ex:115
 #, elixir-autogen, elixir-format
 msgid "did not change"
-msgstr ""
+msgstr "n'a pas changé"
 
 #: lib/prepair/accounts/user.ex:135
 #, elixir-autogen, elixir-format
 msgid "does not match password"
-msgstr ""
+msgstr "ne correspond pas au mot de passe"
 
-## From Ecto.Changeset.put_change/3
 #: lib/prepair/accounts/user.ex:177
 #, elixir-autogen, elixir-format, fuzzy
 msgid "is not valid"
-msgstr ""
+msgstr "n’est pas valide"
 
 #: lib/prepair/accounts/user.ex:57
 #, elixir-autogen, elixir-format
 msgid "must have the @ sign and no spaces"
-msgstr ""
+msgstr "doit avoir le signe @ et aucun espace"

@@ -1,8 +1,8 @@
 <.header>
-  Listing Profiles
+  <%= gettext "Listing Profiles" %>
   <:actions>
     <.link patch={~p"/"}>
-      <.button>Go Back Home</.button>
+      <.button><%= gettext "Go Back Home" %></.button>
     </.link>
   </:actions>
 </.header>
@@ -12,23 +12,23 @@
   rows={@streams.profiles}
   row_click={fn {_id, profile} -> JS.navigate(~p"/profiles/#{profile}") end}
 >
-  <:col :let={{_id, profile}} label="Username"><%= profile.username %></:col>
-  <:col :let={{_id, profile}} label="User email"><%= profile.user.email %></:col>
-  <:col :let={{_id, profile}} label="User role"><%= profile.user.role %></:col>
-  <:col :let={{_id, profile}} label="Newsletter"><%= profile.newsletter %></:col>
-  <:col :let={{_id, profile}} label="Created at"><%= profile.inserted_at %></:col>
+  <:col :let={{_id, profile}} label={gettext "Username"}><%= profile.username %></:col>
+  <:col :let={{_id, profile}} label={gettext "User email"}><%= profile.user.email %></:col>
+  <:col :let={{_id, profile}} label={gettext "User role"}><%= profile.user.role %></:col>
+  <:col :let={{_id, profile}} label={gettext "Newsletter"}><%= profile.newsletter %></:col>
+  <:col :let={{_id, profile}} label={gettext "Created at"}><%= profile.inserted_at %></:col>
   <:action :let={{_id, profile}}>
     <div class="sr-only">
-      <.link navigate={~p"/profiles/#{profile}"}>Show</.link>
+      <.link navigate={~p"/profiles/#{profile}"}><%= gettext "Show" %></.link>
     </div>
-    <.link patch={~p"/profiles/#{profile}/edit"}>Edit</.link>
+    <.link patch={~p"/profiles/#{profile}/edit"}><%= gettext "Edit" %></.link>
   </:action>
   <:action :let={{uuid, profile}}>
     <.link
       phx-click={JS.push("delete", value: %{uuid: profile.uuid}) |> hide("##{uuid}")}
-      data-confirm="Are you sure?"
+      data-confirm={gettext "Are you sure?"}
     >
-      Delete
+      <%= gettext "Delete" %>
     </.link>
   </:action>
 </.table>

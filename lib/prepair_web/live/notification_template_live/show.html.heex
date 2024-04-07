@@ -1,27 +1,27 @@
 <.header>
-  Notification template <%= @notification_template.uuid %>
-  <:subtitle>This is a notification_template record from your database.</:subtitle>
+  <%= gettext "Notification template" %><%= @notification_template.uuid %>
+  <:subtitle><%= gettext "This is a notification_template record from your database." %></:subtitle>
   <:actions>
     <.link patch={~p"/notification_templates/#{@notification_template}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit notification_template</.button>
+      <.button><%= gettext "Edit notification template" %></.button>
     </.link>
   </:actions>
 </.header>
 
 <.list>
-  <:item title="Name"><%= @notification_template.name %></:item>
-  <:item title="Title"><%= @notification_template.title %></:item>
-  <:item title="Content"><%= @notification_template.content %></:item>
-  <:item title="Description"><%= @notification_template.description %></:item>
-  <:item title="Categories"><%= names(@notification_template.categories) %></:item>
-  <:item title="Products"><%= names(@notification_template.products) %></:item>
-  <:item title="Parts"><%= names(@notification_template.parts) %></:item>
-  <:item title="Condition"><%= @notification_template.condition %></:item>
-  <:item title="User action needed"><%= @notification_template.need_action %></:item>
-  <:item title="Draft"><%= @notification_template.draft %></:item>
+  <:item title={gettext "Name"}><%= @notification_template.name %></:item>
+  <:item title={gettext "Title"}><%= @notification_template.title %></:item>
+  <:item title={gettext "Content"}><%= @notification_template.content %></:item>
+  <:item title={gettext "Description"}><%= @notification_template.description %></:item>
+  <:item title={gettext "Categories"}><%= names(@notification_template.categories) %></:item>
+  <:item title={gettext "Products"}><%= names(@notification_template.products) %></:item>
+  <:item title={gettext "Parts"}><%= names(@notification_template.parts) %></:item>
+  <:item title={gettext "Condition"}><%= @notification_template.condition %></:item>
+  <:item title={gettext "User action needed"}><%= @notification_template.need_action %></:item>
+  <:item title={gettext "Draft"}><%= @notification_template.draft %></:item>
 </.list>
 
-<.back navigate={~p"/notification_templates"}>Back to notification_templates</.back>
+<.back navigate={~p"/notification_templates"}><%= gettext "Back to notification_templates" %></.back>
 
 <.modal :if={@live_action == :edit} id="notification_template-modal" show on_cancel={JS.patch(~p"/notification_templates/#{@notification_template}")}>
   <.live_component

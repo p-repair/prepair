@@ -4,6 +4,8 @@ defmodule PrepairWeb.Router do
   import PrepairWeb.ApiAuth
   import PrepairWeb.UserAuth
   import PrepairWeb.ApiUserAuth
+  import PrepairWeb.Localisation
+  import PrepairWeb.Api.Localisation
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -13,13 +15,19 @@ defmodule PrepairWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
+    plug :set_web_localisation
   end
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :set_api_localisation
     plug :require_valid_api_key
     plug :fetch_api_user
   end
+
+  ##############################################################################
+  ############################### WEB INTERFACES ###############################
+  ##############################################################################
 
   scope "/", PrepairWeb do
     pipe_through :browser
@@ -102,7 +110,11 @@ defmodule PrepairWeb.Router do
   #   pipe_through :api
   # end
 
-  ## Authentication routes
+  ##############################################################################
+  ############################### AUTHENTICATION ###############################
+  ##############################################################################
+
+  ######################## Authentication routes (web) #########################
 
   scope "/", PrepairWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
@@ -121,12 +133,18 @@ defmodule PrepairWeb.Router do
     delete "/users/log_out", UserSessionController, :delete
   end
 
+  ######################## Authentication routes (api) #########################
+
   scope "/api/v1", PrepairWeb do
     pipe_through [:api]
 
     get "/status", Api.StatusController, :status
     post "/users/log_in", Api.SessionController, :create
   end
+
+  ##############################################################################
+  ############################### API INTERFACES ###############################
+  ##############################################################################
 
   scope "/api/v1", PrepairWeb do
     pipe_through [:api, :require_authenticated_api_user]

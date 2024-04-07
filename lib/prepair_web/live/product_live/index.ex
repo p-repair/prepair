@@ -22,20 +22,26 @@ defmodule PrepairWeb.ProductLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"uuid" => uuid}) do
+    page_title = gettext("Edit Product")
+
     socket
-    |> assign(:page_title, "Edit Product")
+    |> assign(:page_title, page_title)
     |> assign(:product, Products.get_product!(uuid))
   end
 
   defp apply_action(socket, :new, _params) do
+    page_title = gettext("New Product")
+
     socket
-    |> assign(:page_title, "New Product")
+    |> assign(:page_title, page_title)
     |> assign(:product, %Product{})
   end
 
   defp apply_action(socket, :index, _params) do
+    page_title = gettext("Listing Products")
+
     socket
-    |> assign(:page_title, "Listing Products")
+    |> assign(:page_title, page_title)
     |> assign(:product, nil)
   end
 

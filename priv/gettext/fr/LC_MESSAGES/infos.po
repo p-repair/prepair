@@ -1,0 +1,118 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n>1);\n"
+
+#: lib/prepair_web/live/category_live/form_component.ex:82
+#, elixir-autogen, elixir-format
+msgid "Category created successfully"
+msgstr "Catégorie créée avec succès"
+
+#: lib/prepair_web/live/category_live/form_component.ex:67
+#, elixir-autogen, elixir-format
+msgid "Category updated successfully"
+msgstr "Catégorie mise à jour avec succès"
+
+#: lib/prepair_web/controllers/contact_controller.ex:21
+#, elixir-autogen, elixir-format
+msgid "Contact created successfully."
+msgstr "Contact créé avec succès"
+
+#: lib/prepair_web/controllers/contact_controller.ex:59
+#, elixir-autogen, elixir-format
+msgid "Contact deleted successfully."
+msgstr "Contact supprimé avec succès"
+
+#: lib/prepair_web/controllers/contact_controller.ex:46
+#, elixir-autogen, elixir-format
+msgid "Contact updated successfully."
+msgstr "Contact mis à jour avec succès"
+
+#: lib/prepair_web/controllers/user_session_controller.ex:29
+#, elixir-autogen, elixir-format
+msgid "Logged out successfully."
+msgstr "Déconnexion réussie"
+
+#: lib/prepair_web/live/manufacturer_live/form_component.ex:87
+#, elixir-autogen, elixir-format
+msgid "Manufacturer created successfully"
+msgstr "Fabricant créé avec succès"
+
+#: lib/prepair_web/live/manufacturer_live/form_component.ex:69
+#, elixir-autogen, elixir-format
+msgid "Manufacturer updated successfully"
+msgstr "Fabricant mis à jour avec succès"
+
+#: lib/prepair_web/live/notification_template_live/form_component.ex:181
+#, elixir-autogen, elixir-format
+msgid "Notification template created successfully"
+msgstr "Modèle de notification créé avec succès"
+
+#: lib/prepair_web/live/notification_template_live/form_component.ex:161
+#, elixir-autogen, elixir-format
+msgid "Notification template updated successfully"
+msgstr "Modèle de notification mis à jour avec succès"
+
+#: lib/prepair_web/live/ownership_live/form_component.ex:181
+#, elixir-autogen, elixir-format
+msgid "Ownership created successfully"
+msgstr "Possession créée avec succès"
+
+#: lib/prepair_web/live/ownership_live/form_component.ex:160
+#, elixir-autogen, elixir-format
+msgid "Ownership updated successfully"
+msgstr "Possession mise à jour avec succès"
+
+#: lib/prepair_web/live/part_live/form_component.ex:141
+#, elixir-autogen, elixir-format
+msgid "Part created successfully"
+msgstr "Pièce détachée créée avec succès"
+
+#: lib/prepair_web/live/part_live/form_component.ex:126
+#, elixir-autogen, elixir-format
+msgid "Part updated successfully"
+msgstr "Pièce détachée mise à jour avec succès"
+
+#: lib/prepair_web/live/product_live/form_component.ex:123
+#, elixir-autogen, elixir-format
+msgid "Product created successfully"
+msgstr "Produit créé avec succès"
+
+#: lib/prepair_web/live/product_live/form_component.ex:108
+#, elixir-autogen, elixir-format
+msgid "Product updated successfully"
+msgstr "Produit mis à jour avec succès"
+
+#: lib/prepair_web/live/profile_live/form_component.ex:85
+#, elixir-autogen, elixir-format
+msgid "Profile created successfully"
+msgstr "Profile créé avec succès"
+
+#: lib/prepair_web/live/profile_live/form_component.ex:70
+#, elixir-autogen, elixir-format
+msgid "Profile updated successfully"
+msgstr "Profile mis à jour avec succès"
+
+#: lib/prepair_web/controllers/page_controller.ex:32
+#: lib/prepair_web/controllers/page_controller.ex:49
+#, elixir-autogen, elixir-format
+msgid "Thank you!! Your registration has been taken into account."
+msgstr "Merci !! Votre inscription a bien été prise en compte."
+
+#: lib/prepair_web/controllers/user_session_controller.ex:8
+#, elixir-autogen, elixir-format
+msgid "Welcome back!"
+msgstr "Bienvenue !"
+
+#: lib/prepair_web/components/core_components.ex:197
+#, elixir-autogen, elixir-format
+msgid "Success!"
+msgstr "Succès !"

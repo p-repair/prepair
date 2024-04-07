@@ -3,6 +3,7 @@ defmodule PrepairWeb.UserAuth do
 
   import Plug.Conn
   import Phoenix.Controller
+  import PrepairWeb.Gettext
 
   alias Prepair.Accounts
 
@@ -157,7 +158,7 @@ defmodule PrepairWeb.UserAuth do
         socket
         |> Phoenix.LiveView.put_flash(
           :error,
-          "You must log in to access this page."
+          dgettext("errors", "You must log in to access this page.")
         )
         |> Phoenix.LiveView.redirect(to: ~p"/users/log_in")
 
@@ -176,7 +177,7 @@ defmodule PrepairWeb.UserAuth do
           socket
           |> Phoenix.LiveView.put_flash(
             :error,
-            "You must be admin to access this page."
+            dgettext("errors", "You must be admin to access this page.")
           )
           # TODO: Error page instead?
           |> Phoenix.LiveView.redirect(to: ~p"/users/log_in")
@@ -227,7 +228,10 @@ defmodule PrepairWeb.UserAuth do
       conn
     else
       conn
-      |> put_flash(:error, "You must log in to access this page.")
+      |> put_flash(
+        :error,
+        dgettext("errors", "You must log in to access this page.")
+      )
       |> maybe_store_return_to()
       |> redirect(to: ~p"/users/log_in")
       |> halt()
@@ -267,7 +271,7 @@ defmodule PrepairWeb.UserAuth do
         socket
         |> Phoenix.LiveView.put_flash(
           :error,
-          "You must be admin to perform this action."
+          dgettext("errors", "You must be admin to perform this action.")
         )
 
       {:noreply, socket}

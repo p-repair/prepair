@@ -28,7 +28,9 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
       create_notification_template_uuids(notification_templates)
 
     category =
-      category_fixture(%{notification_template_uuids: notification_template_uuids})
+      category_fixture(%{
+        notification_template_uuids: notification_template_uuids
+      })
 
     %{category: category}
   end
@@ -140,7 +142,10 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
 
       update_attrs =
         @update_attrs
-        |> Map.put(:notification_template_uuids, new_notification_template_uuids)
+        |> Map.put(
+          :notification_template_uuids,
+          new_notification_template_uuids
+        )
 
       conn =
         put(conn, ~p"/api/v1/products/categories/#{category}",

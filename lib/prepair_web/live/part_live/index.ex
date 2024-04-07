@@ -22,20 +22,26 @@ defmodule PrepairWeb.PartLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"uuid" => uuid}) do
+    page_title = gettext("Edit Part")
+
     socket
-    |> assign(:page_title, "Edit Part")
+    |> assign(:page_title, page_title)
     |> assign(:part, Products.get_part!(uuid))
   end
 
   defp apply_action(socket, :new, _params) do
+    page_title = gettext("New Part")
+
     socket
-    |> assign(:page_title, "New Part")
+    |> assign(:page_title, page_title)
     |> assign(:part, %Part{})
   end
 
   defp apply_action(socket, :index, _params) do
+    page_title = gettext("Listing Parts")
+
     socket
-    |> assign(:page_title, "Listing Parts")
+    |> assign(:page_title, page_title)
     |> assign(:part, nil)
   end
 

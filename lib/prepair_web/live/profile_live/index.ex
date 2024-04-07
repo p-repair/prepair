@@ -27,14 +27,18 @@ defmodule PrepairWeb.ProfileLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"uuid" => uuid}) do
+    page_title = gettext("Edit Profile")
+
     socket
-    |> assign(:page_title, "Edit Profile")
+    |> assign(:page_title, page_title)
     |> assign(:profile, uuid |> Profiles.get_profile!() |> Repo.preload(:user))
   end
 
   defp apply_action(socket, :index, _params) do
+    page_title = gettext("Listing Profiles")
+
     socket
-    |> assign(:page_title, "Listing Profiles")
+    |> assign(:page_title, page_title)
     |> assign(:profile, nil)
   end
 

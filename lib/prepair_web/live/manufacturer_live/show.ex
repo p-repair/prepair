@@ -16,6 +16,6 @@ defmodule PrepairWeb.ManufacturerLive.Show do
      |> assign(:manufacturer, Products.get_manufacturer!(uuid))}
   end
 
-  defp page_title(:show), do: "Show Manufacturer"
-  defp page_title(:edit), do: "Edit Manufacturer"
+  defp page_title(:show), do: gettext("Show Manufacturer")
+  defp page_title(:edit), do: gettext("Edit Manufacturer")
 end

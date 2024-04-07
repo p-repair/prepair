@@ -194,18 +194,19 @@ defmodule PrepairWeb.CoreComponents do
 
   def flash_group(assigns) do
     ~H"""
-    <.flash kind={:info} title="Success!" flash={@flash} />
-    <.flash kind={:error} title="Error!" flash={@flash} />
+    <.flash kind={:info} title={dgettext "infos", "Success!"} flash={@flash} />
+    <.flash kind={:error} title={dgettext "errors", "Error!"} flash={@flash} />
     <.flash
       id="disconnected"
       kind={:error}
-      title="We can't find the internet"
+      title={dgettext("errors", "We can't find the internet")}
       close={false}
       autoshow={false}
       phx-disconnected={show("#disconnected")}
       phx-connected={hide("#disconnected")}
     >
-      Attempting to reconnect <.icon name="hero-arrow-path" class="ml-1 w-3 h-3 animate-spin" />
+      <%= gettext "Attempting to reconnect" %>
+      <.icon name="hero-arrow-path" class="ml-1 w-3 h-3 animate-spin" />
     </.flash>
     """
   end

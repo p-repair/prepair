@@ -30,8 +30,10 @@ defmodule PrepairWeb.NotificationTemplateLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"uuid" => uuid}) do
+    page_title = gettext("Edit Notification template")
+
     socket
-    |> assign(:page_title, "Edit Notification template")
+    |> assign(:page_title, page_title)
     |> assign(
       :notification_template,
       Notifications.get_notification_template!(uuid)
@@ -39,14 +41,18 @@ defmodule PrepairWeb.NotificationTemplateLive.Index do
   end
 
   defp apply_action(socket, :new, _params) do
+    page_title = gettext("New Notification template")
+
     socket
-    |> assign(:page_title, "New Notification template")
+    |> assign(:page_title, page_title)
     |> assign(:notification_template, %NotificationTemplate{})
   end
 
   defp apply_action(socket, :index, _params) do
+    page_title = gettext("Listing Notification templates")
+
     socket
-    |> assign(:page_title, "Listing Notification templates")
+    |> assign(:page_title, page_title)
     |> assign(:notification_template, nil)
   end
 

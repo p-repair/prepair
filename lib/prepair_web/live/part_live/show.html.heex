@@ -1,26 +1,26 @@
 <.header>
-  Part <%= @part.uuid %>
-  <:subtitle>This is a part record from your database.</:subtitle>
+  <%= gettext "Part" %><%= @part.uuid %>
+  <:subtitle><%= gettext "This is a part record from your database." %></:subtitle>
   <:actions>
     <.link patch={~p"/parts/#{@part}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit part</.button>
+      <.button><%= gettext "Edit part" %></.button>
     </.link>
   </:actions>
 </.header>
 
 <.list>
-  <:item title="Name"><%= @part.name %></:item>
-  <:item title="Reference"><%= @part.reference %></:item>
-  <:item title="Description"><%= @part.description %></:item>
-  <:item title="Image"><%= @part.image %></:item>
-  <:item title="Average lifetime m"><%= @part.average_lifetime_m %></:item>
-  <:item title="Country of origin"><%= @part.country_of_origin %></:item>
-  <:item title="Main material"><%= @part.main_material %></:item>
-  <:item title="Start of production"><%= @part.start_of_production %></:item>
-  <:item title="End of production"><%= @part.end_of_production %></:item>
+  <:item title={gettext "Name"}><%= @part.name %></:item>
+  <:item title={gettext "Reference"}><%= @part.reference %></:item>
+  <:item title={gettext "Description"}><%= @part.description %></:item>
+  <:item title={gettext "Image"}><%= @part.image %></:item>
+  <:item title={gettext "Average lifetime m"}><%= @part.average_lifetime_m %></:item>
+  <:item title={gettext "Country of origin"}><%= @part.country_of_origin %></:item>
+  <:item title={gettext "Main material"}><%= @part.main_material %></:item>
+  <:item title={gettext "Start of production"}><%= @part.start_of_production %></:item>
+  <:item title={gettext "End of production"}><%= @part.end_of_production %></:item>
 </.list>
 
-<.back navigate={~p"/parts"}>Back to parts</.back>
+<.back navigate={~p"/parts"}><%= gettext "Back to parts" %></.back>
 
 <.modal :if={@live_action == :edit} id="part-modal" show on_cancel={JS.patch(~p"/parts/#{@part}")}>
   <.live_component

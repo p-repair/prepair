@@ -1,8 +1,8 @@
 <.header>
-  Listing Manufacturers
+  <%= gettext "Listing Manufacturers" %>
   <:actions>
     <.link patch={~p"/manufacturers/new"}>
-      <.button>New Manufacturer</.button>
+      <.button><%= gettext "New Manufacturer" %></.button>
     </.link>
   </:actions>
 </.header>
@@ -12,21 +12,21 @@
   rows={@streams.manufacturers}
   row_click={fn {_id, manufacturer} -> JS.navigate(~p"/manufacturers/#{manufacturer}") end}
 >
-  <:col :let={{_id, manufacturer}} label="Name"><%= manufacturer.name %></:col>
-  <:col :let={{_id, manufacturer}} label="Description"><%= manufacturer.description %></:col>
-  <:col :let={{_id, manufacturer}} label="Image"><%= manufacturer.image %></:col>
+  <:col :let={{_id, manufacturer}} label={gettext "Name"}><%= manufacturer.name %></:col>
+  <:col :let={{_id, manufacturer}} label={gettext "Description"}><%= manufacturer.description %></:col>
+  <:col :let={{_id, manufacturer}} label={gettext "Image"}><%= manufacturer.image %></:col>
   <:action :let={{_id, manufacturer}}>
     <div class="sr-only">
-      <.link navigate={~p"/manufacturers/#{manufacturer}"}>Show</.link>
+      <.link navigate={~p"/manufacturers/#{manufacturer}"}><%= gettext "Show" %></.link>
     </div>
-    <.link patch={~p"/manufacturers/#{manufacturer}/edit"}>Edit</.link>
+    <.link patch={~p"/manufacturers/#{manufacturer}/edit"}><%= gettext "Edit" %></.link>
   </:action>
   <:action :let={{uuid, manufacturer}}>
     <.link
       phx-click={JS.push("delete", value: %{uuid: manufacturer.uuid}) |> hide("##{uuid}")}
-      data-confirm="Are you sure?"
+      data-confirm={gettext "Are you sure?"}
     >
-      Delete
+      <%= gettext "Delete" %>
     </.link>
   </:action>
 </.table>

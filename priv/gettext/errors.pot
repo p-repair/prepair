@@ -7,7 +7,6 @@
 ## Run `mix gettext.extract` to bring this file up to
 ## date. Leave `msgstr`s empty as changing them here has no
 ## effect: edit them in PO (`.po`) files instead.
-
 ## From Ecto.Changeset.cast/4
 msgid "can't be blank"
 msgstr ""
@@ -107,4 +106,75 @@ msgid "must be greater than or equal to %{number}"
 msgstr ""
 
 msgid "must be equal to %{number}"
+msgstr ""
+
+#: lib/prepair_web/controllers/api/fallback_controller.ex:33
+#, elixir-autogen, elixir-format
+msgid "Invalid username or password."
+msgstr ""
+
+#: lib/prepair_web/api_auth.ex:26
+#, elixir-autogen, elixir-format
+msgid "missing API key"
+msgstr ""
+
+#: lib/prepair_web/controllers/user_session_controller.ex:21
+#, elixir-autogen, elixir-format
+msgid "Invalid email or password"
+msgstr ""
+
+#: lib/prepair_web/controllers/page_controller.ex:71
+#, elixir-autogen, elixir-format
+msgid "Sorry for the issue…\n            There was an error when registering.\n            Please try again later!"
+msgstr ""
+
+#: lib/prepair_web/controllers/page_controller.ex:59
+#, elixir-autogen, elixir-format
+msgid "Try again! The email address entered is not valid."
+msgstr ""
+
+#: lib/prepair_web/user_auth.ex:180
+#, elixir-autogen, elixir-format
+msgid "You must be admin to access this page."
+msgstr ""
+
+#: lib/prepair_web/user_auth.ex:274
+#, elixir-autogen, elixir-format
+msgid "You must be admin to perform this action."
+msgstr ""
+
+#: lib/prepair_web/user_auth.ex:161
+#: lib/prepair_web/user_auth.ex:233
+#, elixir-autogen, elixir-format
+msgid "You must log in to access this page."
+msgstr ""
+
+#: lib/prepair_web/components/core_components.ex:198
+#, elixir-autogen, elixir-format
+msgid "Error!"
+msgstr ""
+
+#: lib/prepair_web/components/core_components.ex:202
+#, elixir-autogen, elixir-format
+msgid "We can't find the internet"
+msgstr ""
+
+#: lib/prepair/accounts/user.ex:115
+#, elixir-autogen, elixir-format
+msgid "did not change"
+msgstr ""
+
+#: lib/prepair/accounts/user.ex:135
+#, elixir-autogen, elixir-format
+msgid "does not match password"
+msgstr ""
+
+#: lib/prepair/accounts/user.ex:177
+#, elixir-autogen, elixir-format
+msgid "is not valid"
+msgstr ""
+
+#: lib/prepair/accounts/user.ex:57
+#, elixir-autogen, elixir-format
+msgid "must have the @ sign and no spaces"
 msgstr ""
