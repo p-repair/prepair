@@ -1,4 +1,4 @@
-defmodule PrepairWeb.Api.Accounts.AccountsController do
+defmodule PrepairWeb.Api.Accounts.UserController do
   use PrepairWeb, :controller
 
   action_fallback PrepairWeb.Api.FallbackController

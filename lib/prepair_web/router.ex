@@ -149,7 +149,7 @@ defmodule PrepairWeb.Router do
   scope "/api/v1", PrepairWeb do
     pipe_through [:api, :require_authenticated_api_user]
 
-    get "/users", Api.Accounts.AccountsController, :fetch_api_user
+    get "/users", Api.Accounts.UserController, :fetch_api_user
 
     resources "/products/categories", Api.Products.CategoryController,
       except: [:new, :edit],

@@ -1,13 +1,14 @@
-defmodule PrepairWeb.Api.Accounts.AccountsControllerTest do
+defmodule PrepairWeb.Api.Accounts.UserControllerTest do
   use PrepairWeb.ConnCase, async: true
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  setup [:create_and_set_api_key, :register_and_log_in_user]
-
   describe "GET /api/v1/users" do
+    setup [:create_and_set_api_key, :register_and_log_in_user]
+
+    @tag :user_controller
     test "fetch the current user uuid",
          %{conn: conn, user: user} do
       conn =
