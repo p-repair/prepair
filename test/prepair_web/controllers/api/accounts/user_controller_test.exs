@@ -350,7 +350,11 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
 
       assert %{
                "errors" => %{
-                 "password" => ["should be at least 12 character(s)"]
+                 "password" => [
+                   "at least one digit or punctuation character",
+                   "at least one upper case character",
+                   "should be at least 8 character(s)"
+                 ]
                }
              } ==
                response

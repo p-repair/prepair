@@ -82,18 +82,22 @@ defmodule Prepair.AccountsTest do
     test "validates email and password when given" do
       {:error, changeset} =
         Accounts.register_user(
-          %{email: "not valid", password: "not valid"},
+          %{email: "not valid", password: "not va"},
           profile_valid_attrs()
         )
 
       assert %{
                email: ["must have the @ sign and no spaces"],
-               password: ["should be at least 12 character(s)"]
+               password: [
+                 "at least one digit or punctuation character",
+                 "at least one upper case character",
+                 "should be at least 8 character(s)"
+               ]
              } = errors_on(changeset)
     end
 
     test "validates maximum values for email and password for security" do
-      too_long = String.duplicate("db", 100)
+      too_long = String.duplicate("db", 200)
 
       {:error, changeset} =
         Accounts.register_user(
@@ -103,7 +107,7 @@ defmodule Prepair.AccountsTest do
 
       assert "should be at most 160 character(s)" in errors_on(changeset).email
 
-      assert "should be at most 72 character(s)" in errors_on(changeset).password
+      assert "should be at most 256 character(s)" in errors_on(changeset).password
     end
 
     test "validates email uniqueness" do
@@ -367,13 +371,15 @@ defmodule Prepair.AccountsTest do
     end
 
     test "allows fields to be set" do
+      new_valid_password = valid_user_password()
+
       changeset =
         Accounts.change_user_password(%User{}, %{
-          "password" => "new valid password"
+          "password" => new_valid_password
         })
 
       assert changeset.valid?
-      assert get_change(changeset, :password) == "new valid password"
+      assert get_change(changeset, :password) == new_valid_password
       assert is_nil(get_change(changeset, :hashed_password))
     end
   end
@@ -384,25 +390,29 @@ defmodule Prepair.AccountsTest do
     test "validates password", %{user: user, user_password: user_password} do
       {:error, changeset} =
         Accounts.update_user_password(user, user_password, %{
-          password: "not valid",
-          password_confirmation: "another"
+          password: "not v",
+          password_confirmation: "not valid"
         })
 
       assert %{
-               password: ["should be at least 12 character(s)"],
+               password: [
+                 "at least one digit or punctuation character",
+                 "at least one upper case character",
+                 "should be at least 8 character(s)"
+               ],
                password_confirmation: ["does not match password"]
              } = errors_on(changeset)
     end
 
     test "validates maximum values for password for security", %{user: user} do
-      too_long = String.duplicate("db", 100)
+      too_long = String.duplicate("db", 200)
 
       {:error, changeset} =
         Accounts.update_user_password(user, valid_user_password(), %{
           password: too_long
         })
 
-      assert "should be at most 72 character(s)" in errors_on(changeset).password
+      assert "should be at most 256 character(s)" in errors_on(changeset).password
     end
 
     test "validates current password", %{user: user} do
@@ -415,16 +425,18 @@ defmodule Prepair.AccountsTest do
     end
 
     test "updates the password", %{user: user, user_password: user_password} do
+      new_password = valid_user_password()
+
       {:ok, user} =
         Accounts.update_user_password(user, user_password, %{
-          password: "new valid password"
+          password: new_password
         })
 
       assert is_nil(user.password)
 
       assert Accounts.get_user_by_email_and_password(
                user.email,
-               "new valid password"
+               new_password
              )
     end
 
@@ -436,7 +448,7 @@ defmodule Prepair.AccountsTest do
 
       {:ok, _} =
         Accounts.update_user_password(user, user_password, %{
-          password: "new valid password"
+          password: valid_user_password()
         })
 
       refute Repo.get_by(UserToken, user_uuid: user.uuid)
@@ -642,34 +654,40 @@ defmodule Prepair.AccountsTest do
     test "validates password", %{user: user} do
       {:error, changeset} =
         Accounts.reset_user_password(user, %{
-          password: "not valid",
+          password: "not va",
           password_confirmation: "another"
         })
 
       assert %{
-               password: ["should be at least 12 character(s)"],
+               password: [
+                 "at least one digit or punctuation character",
+                 "at least one upper case character",
+                 "should be at least 8 character(s)"
+               ],
                password_confirmation: ["does not match password"]
              } = errors_on(changeset)
     end
 
     test "validates maximum values for password for security", %{user: user} do
-      too_long = String.duplicate("db", 100)
+      too_long = String.duplicate("db", 200)
 
       {:error, changeset} =
         Accounts.reset_user_password(user, %{password: too_long})
 
-      assert "should be at most 72 character(s)" in errors_on(changeset).password
+      assert "should be at most 256 character(s)" in errors_on(changeset).password
     end
 
     test "updates the password", %{user: user} do
+      new_valid_password = valid_user_password()
+
       {:ok, updated_user} =
-        Accounts.reset_user_password(user, %{password: "new valid password"})
+        Accounts.reset_user_password(user, %{password: new_valid_password})
 
       assert is_nil(updated_user.password)
 
       assert Accounts.get_user_by_email_and_password(
                user.email,
-               "new valid password"
+               new_valid_password
              )
     end
 
@@ -677,7 +695,7 @@ defmodule Prepair.AccountsTest do
       _ = Accounts.generate_user_session_token(user)
 
       {:ok, _} =
-        Accounts.reset_user_password(user, %{password: "new valid password"})
+        Accounts.reset_user_password(user, %{password: valid_user_password()})
 
       refute Repo.get_by(UserToken, user_uuid: user.uuid)
     end

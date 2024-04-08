@@ -6,7 +6,7 @@ defmodule Prepair.AccountsFixtures do
   alias Prepair.ProfilesFixtures
 
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
-  def valid_user_password, do: "hello world!#{System.unique_integer()}"
+  def valid_user_password, do: "Hello world!#{System.unique_integer()}"
 
   def user_valid_attrs(attrs \\ %{}) do
     Enum.into(attrs, %{
