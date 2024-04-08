@@ -139,6 +139,9 @@ defmodule PrepairWeb.Router do
     pipe_through [:api]
 
     get "/status", Api.StatusController, :status
+
+    post "/users/register", Api.Accounts.UserController, :create
+
     post "/users/log_in", Api.SessionController, :create
   end
 
@@ -150,6 +153,12 @@ defmodule PrepairWeb.Router do
     pipe_through [:api, :require_authenticated_api_user]
 
     get "/users", Api.Accounts.UserController, :fetch_api_user
+
+    put "/users/update_password/:uuid",
+        Api.Accounts.UserController,
+        :update_password
+
+    put "/users/update_email/:uuid", Api.Accounts.UserController, :update_email
 
     resources "/products/categories", Api.Products.CategoryController,
       except: [:new, :edit],

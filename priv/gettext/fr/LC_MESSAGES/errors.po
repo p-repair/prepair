@@ -101,7 +101,7 @@ msgstr "doit être supérieur ou égal à %{number}"
 msgid "must be equal to %{number}"
 msgstr "doit être égal à %{number}"
 
-#: lib/prepair_web/controllers/api/fallback_controller.ex:33
+#: lib/prepair_web/controllers/api/fallback_controller.ex:82
 #, elixir-autogen, elixir-format
 msgid "Invalid username or password."
 msgstr "Nom d’utilisateur ou mot de passe non valide."
@@ -152,17 +152,17 @@ msgstr "Erreur !"
 msgid "We can't find the internet"
 msgstr "Nous ne pouvons pas trouver l’Internet"
 
-#: lib/prepair/accounts/user.ex:115
+#: lib/prepair/accounts/user.ex:118
 #, elixir-autogen, elixir-format
 msgid "did not change"
 msgstr "n'a pas changé"
 
-#: lib/prepair/accounts/user.ex:135
+#: lib/prepair/accounts/user.ex:138
 #, elixir-autogen, elixir-format
 msgid "does not match password"
 msgstr "ne correspond pas au mot de passe"
 
-#: lib/prepair/accounts/user.ex:177
+#: lib/prepair/accounts/user.ex:180
 #, elixir-autogen, elixir-format, fuzzy
 msgid "is not valid"
 msgstr "n’est pas valide"
@@ -171,3 +171,23 @@ msgstr "n’est pas valide"
 #, elixir-autogen, elixir-format
 msgid "must have the @ sign and no spaces"
 msgstr "doit avoir le signe @ et aucun espace"
+
+#: lib/prepair_web/controllers/api/fallback_controller.ex:89
+#, elixir-autogen, elixir-format
+msgid "Bad request."
+msgstr "Mauvaise requête."
+
+#: lib/prepair_web/controllers/api/fallback_controller.ex:67
+#, elixir-autogen, elixir-format, fuzzy
+msgid "New email and new email confirmation don’t match."
+msgstr "Le nouvel email et la confirmation du nouvel email ne correspondent pas."
+
+#: lib/prepair_web/controllers/api/fallback_controller.ex:51
+#, elixir-autogen, elixir-format, fuzzy
+msgid "New password and new password confirmation don’t match."
+msgstr "Le nouveau mot de passe et la confirmation du nouveau mot de passe ne correspondent pas."
+
+#: lib/prepair_web/controllers/api/fallback_controller.ex:35
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Password and password confirmation don’t match."
+msgstr "Le mot de passe et la confirmation du mot de passe ne correspondent pas."

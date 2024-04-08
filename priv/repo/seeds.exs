@@ -17,30 +17,30 @@ alias Prepair.Profiles.Ownership
 ##
 
 {:ok, user_1} =
-  Accounts.register_user(
-    %{
-      email: "test@test.com",
-      password: "testtesttest"
-    },
-    %{
-      username: "Test",
-      people_in_household: 1,
-      newsletter: false
-    }
-  )
+  Accounts.register_user(%{
+    username: "Test",
+    email: "test@test.com",
+    password: "Yolo777!",
+    password_confirmation: "Yolo777!",
+    people_in_household: 1,
+    newsletter: false
+  })
 
 {:ok, user_2} =
-  Accounts.register_user(
-    %{
-      email: "test2@test.com",
-      password: "testtesttest"
-    },
-    %{
-      username: "Test2",
-      people_in_household: 1,
-      newsletter: false
-    }
-  )
+  Accounts.register_user(%{
+    username: "Test2",
+    email: "test2@test.com",
+    password: "Yolo777!",
+    password_confirmation: "Yolo777!",
+    people_in_household: 1,
+    newsletter: false
+  })
+
+##
+## Update user_1 to admin
+##
+
+Accounts.update_user_role(user_1, :admin)
 
 ##
 ## Generate a valid API key

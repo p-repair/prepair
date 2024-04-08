@@ -37,6 +37,6 @@ defmodule PrepairWeb.Api.FallbackController do
   def call(conn, {:error, :bad_request}) do
     conn
     |> put_status(:bad_request)
-    |> json(%{errors: [%{details: "Bad request."}]})
+    |> json(%{errors: [%{details: dgettext("errors", "Bad request.")}]})
   end
 end

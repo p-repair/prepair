@@ -22,6 +22,7 @@ defmodule PrepairWeb.Api.Profiles.ProfileJSON do
     %{
       uuid: profile.uuid,
       username: profile.username,
+      people_in_household: profile.people_in_household,
       user_email: profile.user.email,
       user_role: profile.user.role,
       newsletter: profile.newsletter,

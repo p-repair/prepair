@@ -6,7 +6,7 @@ defmodule Prepair.Accounts do
   import Ecto.Query, warn: false
   alias Prepair.Repo
 
-  alias Prepair.Accounts.{User, UserToken, UserNotifier}
+  alias Prepair.Accounts.{Registration, User, UserToken, UserNotifier}
   alias Prepair.Profiles
 
   ## Database getters
@@ -106,6 +106,28 @@ defmodule Prepair.Accounts do
         {:error, value} -> Repo.rollback(value)
       end
     end)
+  end
+
+  def register_user(registration_attrs) do
+    changeset =
+      %Registration{}
+      |> Registration.changeset(registration_attrs)
+
+    if changeset.valid? do
+      Repo.transaction(fn ->
+        with {:ok, user} <- do_register_user(registration_attrs),
+             {:ok, _profile} <-
+               Profiles.create_profile(user.uuid, registration_attrs) do
+          user |> Repo.preload(:profile)
+        else
+          {:error, value} -> Repo.rollback(value)
+        end
+      end)
+    else
+      # TODO: Annotate the action so the UI shows errors
+      changeset = %{changeset | action: :registration}
+      {:error, changeset}
+    end
   end
 
   defp do_register_user(attrs) do
@@ -442,5 +464,45 @@ defmodule Prepair.Accounts do
       {:ok, %{user: user}} -> {:ok, user}
       {:error, :user, changeset, _} -> {:error, changeset}
     end
+  end
+
+  @doc """
+  Update the user email if the given password watch the user password.
+
+  ## Examples
+
+      iex> update_user_email_basic(user, "valid password", %{email: ...})
+      {:ok, %User{}}
+
+      iex> update_user_email_basic(user, "invalid password", %{email: ...})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_user_email_basic(user, password, attrs) do
+    user
+    |> User.email_changeset(attrs)
+    |> User.validate_current_password(password)
+    |> Repo.update()
+  end
+
+  @doc """
+  Update the user password without the need of the current password.
+  The new password should still meet the changeset requirements.
+
+  /!\ BE CAREFUL: ONLY FOR INTERNAL USE!
+
+  ## Examples
+
+      iex> force_user_password(user, "password")
+      {:ok, %User{}}
+
+      iex> force_user_password(user, "pass")
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def force_user_password(user, new_password) do
+    user
+    |> User.password_changeset(%{password: new_password})
+    |> Repo.update()
   end
 end
