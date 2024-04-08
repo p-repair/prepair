@@ -62,7 +62,7 @@ aspirateur_traineau =
   Repo.insert!(
     %Category{
       name: "Aspirateur traineau",
-      average_lifetime_m: 9
+      average_lifetime_m: 108
     },
     returning: [:uuid]
   )
@@ -71,7 +71,7 @@ _bouilloire =
   Repo.insert!(
     %Category{
       name: "Bouilloire",
-      average_lifetime_m: 9
+      average_lifetime_m: 108
     },
     returning: [:uuid]
   )
@@ -88,7 +88,7 @@ _centrale_vapeur =
   Repo.insert!(
     %Category{
       name: "Centrale vapeur",
-      average_lifetime_m: 8
+      average_lifetime_m: 96
     },
     returning: [:uuid]
   )
@@ -97,7 +97,7 @@ _congélateur =
   Repo.insert!(
     %Category{
       name: "Congélateur",
-      average_lifetime_m: 12
+      average_lifetime_m: 144
     },
     returning: [:uuid]
   )
@@ -106,7 +106,7 @@ _fer_à_repasser =
   Repo.insert!(
     %Category{
       name: "Fer à repasser",
-      average_lifetime_m: 8
+      average_lifetime_m: 96
     },
     returning: [:uuid]
   )
@@ -115,7 +115,7 @@ four_encastrable =
   Repo.insert!(
     %Category{
       name: "Four (encastrable)",
-      average_lifetime_m: 11
+      average_lifetime_m: 132
     },
     returning: [:uuid]
   )
@@ -124,7 +124,7 @@ four_non_encastrable =
   Repo.insert!(
     %Category{
       name: "Four (non-encastrable)",
-      average_lifetime_m: 11
+      average_lifetime_m: 132
     },
     returning: [:uuid]
   )
@@ -133,7 +133,7 @@ _grille_pain =
   Repo.insert!(
     %Category{
       name: "Grille-pain",
-      average_lifetime_m: 12
+      average_lifetime_m: 144
     },
     returning: [:uuid]
   )
@@ -142,7 +142,7 @@ _hotte_visière =
   Repo.insert!(
     %Category{
       name: "Hotte visière",
-      average_lifetime_m: 12
+      average_lifetime_m: 144
     },
     returning: [:uuid]
   )
@@ -152,7 +152,7 @@ lave_linge_hublot =
     %Category{
       name: "Lave-linge hublot",
       description: "Lave-linges qui ont un hublot.",
-      average_lifetime_m: 10
+      average_lifetime_m: 120
     },
     returning: [:uuid]
   )
@@ -162,7 +162,7 @@ lave_linge_top =
     %Category{
       name: "Lave-linge top",
       description: "Lave-linges qui s’ouvrent par le dessus.",
-      average_lifetime_m: 10
+      average_lifetime_m: 120
     },
     returning: [:uuid]
   )
@@ -171,7 +171,7 @@ _lave_vaisselle =
   Repo.insert!(
     %Category{
       name: "Lave-vaisselle",
-      average_lifetime_m: 11
+      average_lifetime_m: 132
     },
     returning: [:uuid]
   )
@@ -180,7 +180,7 @@ machine_à_café =
   Repo.insert!(
     %Category{
       name: "Machine à café",
-      average_lifetime_m: 7
+      average_lifetime_m: 84
     },
     returning: [:uuid]
   )
@@ -189,7 +189,7 @@ _machine_à_coudre =
   Repo.insert!(
     %Category{
       name: "Machine à coudre",
-      average_lifetime_m: 20
+      average_lifetime_m: 240
     },
     returning: [:uuid]
   )
@@ -198,7 +198,7 @@ _micro_ondes =
   Repo.insert!(
     %Category{
       name: "Micro-ondes",
-      average_lifetime_m: 11
+      average_lifetime_m: 132
     },
     returning: [:uuid]
   )
@@ -223,7 +223,7 @@ réfrigérateur =
   Repo.insert!(
     %Category{
       name: "Réfrigérateur",
-      average_lifetime_m: 12
+      average_lifetime_m: 144
     },
     returning: [:uuid]
   )
@@ -233,7 +233,7 @@ sèche_linge_hublot =
     %Category{
       name: "Sèche-linge hublot",
       description: "Sèche-linges qui ont un hublot.",
-      average_lifetime_m: 10
+      average_lifetime_m: 120
     },
     returning: [:uuid]
   )
@@ -243,7 +243,7 @@ sèche_linge_top =
     %Category{
       name: "Sèche-linge top",
       description: "Sèche-linges qui s’ouvrent par le dessus",
-      average_lifetime_m: 10
+      average_lifetime_m: 120
     },
     returning: [:uuid]
   )
