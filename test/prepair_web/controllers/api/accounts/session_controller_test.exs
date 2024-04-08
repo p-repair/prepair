@@ -3,19 +3,22 @@ defmodule PrepairWeb.Api.Accounts.SessionControllerTest do
 
   import Prepair.AccountsFixtures
 
-  setup do
-    %{user: user_fixture()}
+  defp create_user(_) do
+    user_password = valid_user_password()
+    user = user_fixture(%{password: user_password})
+
+    %{user: user, user_password: user_password}
   end
 
-  setup [:create_and_set_api_key]
+  setup [:create_and_set_api_key, :create_user]
 
   describe "POST /api/v1/users/log_in" do
     test "fetch a session token when valid credentials are given",
-         %{conn: conn, user: user} do
+         %{conn: conn, user: user, user_password: user_password} do
       conn =
         post(conn, ~p"/api/v1/users/log_in", %{
           "email" => user.email,
-          "password" => valid_user_password()
+          "password" => user_password
         })
 
       response = json_response(conn, :ok)

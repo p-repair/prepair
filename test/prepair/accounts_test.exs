@@ -9,6 +9,13 @@ defmodule Prepair.AccountsTest do
 
   @random_uuid Ecto.UUID.generate()
 
+  defp create_user(_) do
+    user_password = valid_user_password()
+    user = user_fixture(%{password: user_password})
+
+    %{user: user, user_password: user_password}
+  end
+
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do
       refute Accounts.get_user_by_email("unknown@example.com")
@@ -21,6 +28,8 @@ defmodule Prepair.AccountsTest do
   end
 
   describe "get_user_by_email_and_password/2" do
+    setup [:create_user]
+
     test "does not return the user if the email does not exist" do
       refute Accounts.get_user_by_email_and_password(
                "unknown@example.com",
@@ -33,13 +42,16 @@ defmodule Prepair.AccountsTest do
       refute Accounts.get_user_by_email_and_password(user.email, "invalid")
     end
 
-    test "returns the user if the email and password are valid" do
-      %{uuid: uuid} = user = user_fixture()
+    test "returns the user if the email and password are valid", %{
+      user: user,
+      user_password: user_password
+    } do
+      %{uuid: uuid} = user
 
       assert %User{uuid: ^uuid} =
                Accounts.get_user_by_email_and_password(
                  user.email,
-                 valid_user_password()
+                 user_password
                )
     end
   end
@@ -191,19 +203,19 @@ defmodule Prepair.AccountsTest do
 
   describe "change_user_email/2" do
     test "returns a user changeset" do
-      assert %Ecto.Changeset{} = changeset = Accounts.change_user_email(%User{})
+      assert %Ecto.Changeset{} =
+               changeset = Accounts.change_user_email(%User{})
+
       assert changeset.required == [:email]
     end
   end
 
   describe "apply_user_email/3" do
-    setup do
-      %{user: user_fixture()}
-    end
+    setup [:create_user]
 
-    test "requires email to change", %{user: user} do
+    test "requires email to change", %{user: user, user_password: user_password} do
       {:error, changeset} =
-        Accounts.apply_user_email(user, valid_user_password(), %{})
+        Accounts.apply_user_email(user, user_password, %{})
 
       assert %{email: ["did not change"]} = errors_on(changeset)
     end
@@ -246,11 +258,14 @@ defmodule Prepair.AccountsTest do
       assert %{current_password: ["is not valid"]} = errors_on(changeset)
     end
 
-    test "applies the email without persisting it", %{user: user} do
+    test "applies the email without persisting it", %{
+      user: user,
+      user_password: user_password
+    } do
       email = unique_user_email()
 
       {:ok, user} =
-        Accounts.apply_user_email(user, valid_user_password(), %{email: email})
+        Accounts.apply_user_email(user, user_password, %{email: email})
 
       assert user.email == email
       assert Accounts.get_user!(user.uuid).email != email
@@ -364,13 +379,11 @@ defmodule Prepair.AccountsTest do
   end
 
   describe "update_user_password/3" do
-    setup do
-      %{user: user_fixture()}
-    end
+    setup [:create_user]
 
-    test "validates password", %{user: user} do
+    test "validates password", %{user: user, user_password: user_password} do
       {:error, changeset} =
-        Accounts.update_user_password(user, valid_user_password(), %{
+        Accounts.update_user_password(user, user_password, %{
           password: "not valid",
           password_confirmation: "another"
         })
@@ -401,9 +414,9 @@ defmodule Prepair.AccountsTest do
       assert %{current_password: ["is not valid"]} = errors_on(changeset)
     end
 
-    test "updates the password", %{user: user} do
+    test "updates the password", %{user: user, user_password: user_password} do
       {:ok, user} =
-        Accounts.update_user_password(user, valid_user_password(), %{
+        Accounts.update_user_password(user, user_password, %{
           password: "new valid password"
         })
 
@@ -415,11 +428,14 @@ defmodule Prepair.AccountsTest do
              )
     end
 
-    test "deletes all tokens for the given user", %{user: user} do
+    test "deletes all tokens for the given user", %{
+      user: user,
+      user_password: user_password
+    } do
       _ = Accounts.generate_user_session_token(user)
 
       {:ok, _} =
-        Accounts.update_user_password(user, valid_user_password(), %{
+        Accounts.update_user_password(user, user_password, %{
           password: "new valid password"
         })
 

@@ -82,8 +82,15 @@ defmodule PrepairWeb.ConnCase do
   test context.
   """
   def register_and_log_in_user(%{conn: conn}) do
-    user = Prepair.AccountsFixtures.user_fixture()
-    %{conn: log_in_user(conn, user), user: user}
+    %{user: user, user_password: user_password} = create_user()
+    %{conn: log_in_user(conn, user), user: user, user_password: user_password}
+  end
+
+  defp create_user() do
+    user_password = Prepair.AccountsFixtures.valid_user_password()
+    user = Prepair.AccountsFixtures.user_fixture(%{password: user_password})
+
+    %{user: user, user_password: user_password}
   end
 
   @doc """

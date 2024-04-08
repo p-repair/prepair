@@ -3,17 +3,26 @@ defmodule PrepairWeb.UserSessionControllerTest do
 
   import Prepair.AccountsFixtures
 
-  setup do
-    %{user: user_fixture()}
+  defp create_user(_) do
+    user_password = valid_user_password()
+    user = user_fixture(%{password: user_password})
+
+    %{user: user, user_password: user_password}
   end
 
+  setup [:create_user]
+
   describe "POST /users/log_in" do
-    test "logs the user in", %{conn: conn, user: user} do
+    test "logs the user in", %{
+      conn: conn,
+      user: user,
+      user_password: user_password
+    } do
       conn =
         post(conn, ~p"/users/log_in", %{
           "user" => %{
             "email" => user.email,
-            "password" => valid_user_password()
+            "password" => user_password
           }
         })
 
@@ -27,14 +36,18 @@ defmodule PrepairWeb.UserSessionControllerTest do
       assert response =~ ~p"/users/log_out"
     end
 
-    test "logs the user in with return to", %{conn: conn, user: user} do
+    test "logs the user in with return to", %{
+      conn: conn,
+      user: user,
+      user_password: user_password
+    } do
       conn =
         conn
         |> init_test_session(user_return_to: "/foo/bar")
         |> post(~p"/users/log_in", %{
           "user" => %{
             "email" => user.email,
-            "password" => valid_user_password()
+            "password" => user_password
           }
         })
 
