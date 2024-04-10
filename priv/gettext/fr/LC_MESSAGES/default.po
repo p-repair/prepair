@@ -273,7 +273,8 @@ msgstr "Modifier le produit"
 msgid "Edit profile"
 msgstr "Modifier le profile"
 
-#: lib/prepair_web/live/user_login_live.ex:12
+#: lib/prepair_web/live/user_live/user_login_live.ex:12
+#: lib/prepair_web/live/user_live/user_register_live.ex:47
 #, elixir-autogen, elixir-format
 msgid "Email"
 msgstr "Email"
@@ -289,6 +290,8 @@ msgid "End of production"
 msgstr "Fin de la production"
 
 #: lib/prepair_web/live/profile_live/index.html.heex:5
+#: lib/prepair_web/live/user_live/user_update_email_live.ex:17
+#: lib/prepair_web/live/user_live/user_update_password_live.ex:16
 #, elixir-autogen, elixir-format
 msgid "Go Back Home"
 msgstr "Retour à l’accueil"
@@ -439,13 +442,16 @@ msgstr "Pièce détachée"
 msgid "Parts"
 msgstr "Pièces détachées"
 
-#: lib/prepair_web/live/user_login_live.ex:13
+#: lib/prepair_web/live/user_live/user_login_live.ex:13
+#: lib/prepair_web/live/user_live/user_register_live.ex:54
+#: lib/prepair_web/live/user_live/user_update_email_live.ex:42
 #, elixir-autogen, elixir-format
 msgid "Password"
 msgstr "Mot de passe"
 
 #: lib/prepair_web/live/profile_live/form_component.ex:25
 #: lib/prepair_web/live/profile_live/show.html.heex:15
+#: lib/prepair_web/live/user_live/user_register_live.ex:69
 #, elixir-autogen, elixir-format
 msgid "People in household"
 msgstr "Nombre de personnes dans le foyer"
@@ -593,17 +599,18 @@ msgstr "Afficher le produit"
 msgid "Show Profile"
 msgstr "Afficher le profile"
 
-#: lib/prepair_web/live/user_login_live.ex:17
+#: lib/prepair_web/live/user_live/user_login_live.ex:17
+#: lib/prepair_web/live/user_live/user_register_live.ex:18
 #, elixir-autogen, elixir-format
 msgid "Sign in"
 msgstr "Se connecter"
 
-#: lib/prepair_web/live/user_login_live.ex:8
+#: lib/prepair_web/live/user_live/user_login_live.ex:8
 #, elixir-autogen, elixir-format
 msgid "Sign in to account"
 msgstr "Se connecter au compte"
 
-#: lib/prepair_web/live/user_login_live.ex:16
+#: lib/prepair_web/live/user_live/user_login_live.ex:16
 #, elixir-autogen, elixir-format
 msgid "Signing in..."
 msgstr "Connexion..."
@@ -719,9 +726,10 @@ msgstr "Rôle de l’utilisateur"
 #: lib/prepair_web/live/profile_live/form_component.ex:24
 #: lib/prepair_web/live/profile_live/index.html.heex:15
 #: lib/prepair_web/live/profile_live/show.html.heex:12
+#: lib/prepair_web/live/user_live/user_register_live.ex:40
 #, elixir-autogen, elixir-format
 msgid "Username"
-msgstr "Username"
+msgstr "Nom d’utilisateur"
 
 #: lib/prepair_web/live/ownership_live/form_component.ex:46
 #, elixir-autogen, elixir-format
@@ -764,3 +772,115 @@ msgstr "Référencement publique des possessions de %{profile_username}"
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Listing your Ownerships"
 msgstr "Référencement de vos possessions"
+
+#: lib/prepair_web/live/user_live/user_register_live.ex:16
+#, elixir-autogen, elixir-format
+msgid "Already registered?"
+msgstr "Vous avez déjà un compte ?"
+
+#: lib/prepair_web/live/user_live/user_register_live.ex:82
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Create an account"
+msgstr "Créer un compte"
+
+#: lib/prepair_web/live/user_live/user_register_live.ex:82
+#, elixir-autogen, elixir-format
+msgid "Creating account..."
+msgstr "Création du compte..."
+
+#: lib/prepair_web/live/user_live/user_update_password_live.ex:45
+#, elixir-autogen, elixir-format
+msgid "Current password"
+msgstr "Mot de passe actuel"
+
+#: lib/prepair_web/live/user_live/user_register_live.ex:78
+#, elixir-autogen, elixir-format
+msgid "I want to subscribe to the newsletter"
+msgstr "Je veux m’abonner à la newsletter"
+
+#: lib/prepair_web/live/user_live/user_update_email_live.ex:49
+#, elixir-autogen, elixir-format, fuzzy
+msgid "New email"
+msgstr "Nouvel email"
+
+#: lib/prepair_web/live/user_live/user_update_email_live.ex:56
+#, elixir-autogen, elixir-format
+msgid "New email confirmation"
+msgstr "Confirmation du nouvel email"
+
+#: lib/prepair_web/live/user_live/user_update_password_live.ex:52
+#, elixir-autogen, elixir-format
+msgid "New password"
+msgstr "Nouveau mot de passe"
+
+#: lib/prepair_web/live/user_live/user_update_password_live.ex:60
+#, elixir-autogen, elixir-format
+msgid "New password confirmation"
+msgstr "Confirmation du nouveau mot de passe"
+
+#: lib/prepair_web/live/user_live/user_register_live.ex:34
+#: lib/prepair_web/live/user_live/user_update_email_live.ex:30
+#: lib/prepair_web/live/user_live/user_update_password_live.ex:32
+#, elixir-autogen, elixir-format
+msgid "Oops, something went wrong! Please check the errors below."
+msgstr "Oups, quelque chose c’est mal passé ! Veuillez vérifier les erreurs ci-dessous."
+
+#: lib/prepair_web/live/user_live/user_register_live.ex:62
+#, elixir-autogen, elixir-format
+msgid "Password confirmation"
+msgstr "Confirmation du mot de passe"
+
+#: lib/prepair_web/live/ownership_live/form_component.ex:28
+#, elixir-autogen, elixir-format
+msgid "Please select a category"
+msgstr "Sélectionnez une catégorie"
+
+#: lib/prepair_web/live/ownership_live/form_component.ex:35
+#, elixir-autogen, elixir-format
+msgid "Please select a manufacturer"
+msgstr "Sélectionnez un fabricant"
+
+#: lib/prepair_web/live/ownership_live/form_component.ex:42
+#, elixir-autogen, elixir-format
+msgid "Please select a product (filter by category and manufacturer)"
+msgstr "Sélectionnez un produit (filtré par catégorie et fabricant)"
+
+#: lib/prepair_web/live/user_live/user_register_live.ex:14
+#, elixir-autogen, elixir-format
+msgid "Register for an account"
+msgstr "Créer un compte"
+
+#: lib/prepair_web/live/user_live/user_update_email_live.ex:62
+#, elixir-autogen, elixir-format
+msgid "Update email"
+msgstr "Mettre à jour l’email"
+
+#: lib/prepair_web/live/user_live/user_update_password_live.ex:66
+#, elixir-autogen, elixir-format
+msgid "Update password"
+msgstr "Mettre à jour le mot de passe"
+
+#: lib/prepair_web/live/user_live/user_update_email_live.ex:13
+#, elixir-autogen, elixir-format
+msgid "Update your email address"
+msgstr "Mettre à jour mon aresse email"
+
+#: lib/prepair_web/live/user_live/user_update_password_live.ex:12
+#, elixir-autogen, elixir-format
+msgid "Update your password"
+msgstr "Mettre à jour mon mot de passe"
+
+#: lib/prepair_web/live/user_live/user_update_email_live.ex:62
+#, elixir-autogen, elixir-format
+msgid "Updating email..."
+msgstr "Mise à jour de l’email..."
+
+#: lib/prepair_web/live/user_live/user_update_password_live.ex:66
+#, elixir-autogen, elixir-format
+msgid "Updating password..."
+msgstr "Mise à jour du mot de passe..."
+
+#: lib/prepair_web/live/user_live/user_register_live.ex:20
+#, elixir-autogen, elixir-format
+msgid "to your account now."
+msgstr "à votre compte maintenant."

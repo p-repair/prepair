@@ -108,7 +108,7 @@ msgstr ""
 msgid "must be equal to %{number}"
 msgstr ""
 
-#: lib/prepair_web/controllers/api/fallback_controller.ex:82
+#: lib/prepair_web/controllers/api/fallback_controller.ex:33
 #, elixir-autogen, elixir-format
 msgid "Invalid username or password."
 msgstr ""
@@ -118,7 +118,7 @@ msgstr ""
 msgid "missing API key"
 msgstr ""
 
-#: lib/prepair_web/controllers/user_session_controller.ex:21
+#: lib/prepair_web/controllers/user_session_controller.ex:37
 #, elixir-autogen, elixir-format
 msgid "Invalid email or password"
 msgstr ""
@@ -159,42 +159,50 @@ msgstr ""
 msgid "We can't find the internet"
 msgstr ""
 
-#: lib/prepair/accounts/user.ex:118
+#: lib/prepair/accounts/user.ex:127
 #, elixir-autogen, elixir-format
 msgid "did not change"
 msgstr ""
 
-#: lib/prepair/accounts/user.ex:138
+#: lib/prepair/accounts/user.ex:147
 #, elixir-autogen, elixir-format
 msgid "does not match password"
 msgstr ""
 
-#: lib/prepair/accounts/user.ex:180
+#: lib/prepair/accounts/user.ex:189
 #, elixir-autogen, elixir-format
 msgid "is not valid"
 msgstr ""
 
-#: lib/prepair/accounts/user.ex:57
+#: lib/prepair/accounts/registration.ex:46
+#: lib/prepair/accounts/user.ex:61
 #, elixir-autogen, elixir-format
 msgid "must have the @ sign and no spaces"
 msgstr ""
 
-#: lib/prepair_web/controllers/api/fallback_controller.ex:89
+#: lib/prepair_web/controllers/api/fallback_controller.ex:40
 #, elixir-autogen, elixir-format
 msgid "Bad request."
 msgstr ""
 
-#: lib/prepair_web/controllers/api/fallback_controller.ex:67
+#: lib/prepair/accounts/registration.ex:63
 #, elixir-autogen, elixir-format
-msgid "New email and new email confirmation don’t match."
+msgid "at least one digit or punctuation character"
 msgstr ""
 
-#: lib/prepair_web/controllers/api/fallback_controller.ex:51
+#: lib/prepair/accounts/registration.ex:57
 #, elixir-autogen, elixir-format
-msgid "New password and new password confirmation don’t match."
+msgid "at least one lower case character"
 msgstr ""
 
-#: lib/prepair_web/controllers/api/fallback_controller.ex:35
+#: lib/prepair/accounts/registration.ex:60
 #, elixir-autogen, elixir-format
-msgid "Password and password confirmation don’t match."
+msgid "at least one upper case character"
+msgstr ""
+
+#: lib/prepair/accounts/registration.ex:38
+#: lib/prepair/accounts/user.ex:53
+#: lib/prepair/accounts/user.ex:120
+#, elixir-autogen, elixir-format
+msgid "does not match"
 msgstr ""

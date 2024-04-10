@@ -28,7 +28,7 @@ defmodule PrepairWeb.Api.Accounts.UserController do
   both valid.
   """
   def update_password(conn, %{
-        "user" => %{
+        "update_password" => %{
           "password" => current_password,
           "new_password" => new_password,
           "new_password_confirmation" => new_password_confirmation
@@ -51,7 +51,7 @@ defmodule PrepairWeb.Api.Accounts.UserController do
   Updates email when current password and new email are given and are both valid.
   """
   def update_email(conn, %{
-        "user" => %{
+        "update_email" => %{
           "password" => password,
           "new_email" => new_email,
           "new_email_confirmation" => new_email_confirmation

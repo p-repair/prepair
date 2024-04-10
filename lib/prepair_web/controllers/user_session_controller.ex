@@ -4,17 +4,33 @@ defmodule PrepairWeb.UserSessionController do
   alias Prepair.Accounts
   alias PrepairWeb.UserAuth
 
+  def create(conn, %{"_action" => "registered"} = params) do
+    create(
+      conn,
+      params,
+      dgettext("infos", "Account created successfully! Welcome!")
+    )
+  end
+
+  def create(conn, %{"_action" => "password_updated"} = params) do
+    create(
+      conn,
+      params,
+      dgettext("infos", "Password updated successfully!")
+    )
+  end
+
   def create(conn, params) do
     create(conn, params, dgettext("infos", "Welcome back!"))
   end
 
-  defp create(conn, %{"user" => user_params}, info) do
-    %{"email" => email, "password" => password} = user_params
+  defp create(conn, %{"user" => params}, info) do
+    %{"email" => email, "password" => password} = params
 
     if user = Accounts.get_user_by_email_and_password(email, password) do
       conn
       |> put_flash(:info, info)
-      |> UserAuth.log_in_user(user, user_params)
+      |> UserAuth.log_in_user(user, params)
     else
       # In order to prevent user enumeration attacks, don't disclose whether the email is registered.
       conn

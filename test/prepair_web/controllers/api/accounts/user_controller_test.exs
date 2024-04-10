@@ -257,7 +257,7 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
     end
   end
 
-  describe "PUT /api/v1/users/update_password/:uuid" do
+  describe "PUT /api/v1/users/update_password" do
     setup [:create_and_set_api_key, :register_and_log_in_user]
 
     @tag :user_controller
@@ -267,8 +267,8 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
       new_password = valid_user_password()
 
       conn =
-        put(conn, ~p"/api/v1/users/update_password/#{user.uuid}", %{
-          user: %{
+        put(conn, ~p"/api/v1/users/update_password", %{
+          update_password: %{
             password: user_password,
             new_password: new_password,
             new_password_confirmation: new_password
@@ -284,13 +284,13 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
 
     @tag :user_controller
     test "raises an error on update password when current password don’t match",
-         %{conn: conn, user: user} do
+         %{conn: conn} do
       wrong_current_password = valid_user_password()
       new_password = valid_user_password()
 
       conn =
-        put(conn, ~p"/api/v1/users/update_password/#{user.uuid}", %{
-          user: %{
+        put(conn, ~p"/api/v1/users/update_password", %{
+          update_password: %{
             password: wrong_current_password,
             new_password: new_password,
             new_password_confirmation: new_password
@@ -308,13 +308,13 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
     @tag :user_controller
     test "raises an error on update password when new password and new password
     confirmation don’t match",
-         %{conn: conn, user: user, user_password: user_password} do
+         %{conn: conn, user_password: user_password} do
       new_password = valid_user_password()
       new_password_2 = valid_user_password()
 
       conn =
-        put(conn, ~p"/api/v1/users/update_password/#{user.uuid}", %{
-          user: %{
+        put(conn, ~p"/api/v1/users/update_password", %{
+          update_password: %{
             password: user_password,
             new_password: new_password,
             new_password_confirmation: new_password_2
@@ -334,12 +334,12 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
     @tag :user_controller
     test "raises an error on update password when new password don’t meet the
     changeset requirements",
-         %{conn: conn, user: user, user_password: user_password} do
+         %{conn: conn, user_password: user_password} do
       new_password = "bépo"
 
       conn =
-        put(conn, ~p"/api/v1/users/update_password/#{user.uuid}", %{
-          user: %{
+        put(conn, ~p"/api/v1/users/update_password", %{
+          update_password: %{
             password: user_password,
             new_password: new_password,
             new_password_confirmation: new_password
@@ -361,18 +361,18 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
     end
   end
 
-  describe "PUT /api/v1/users/update_email/:uuid" do
+  describe "PUT /api/v1/users/update_email" do
     setup [:create_and_set_api_key, :register_and_log_in_user]
 
     @tag :user_controller
     test "updates email when current password is valid and new email is
     valid",
-         %{conn: conn, user: user, user_password: user_password} do
+         %{conn: conn, user_password: user_password} do
       new_email = unique_user_email()
 
       conn =
-        put(conn, ~p"/api/v1/users/update_email/#{user.uuid}", %{
-          user: %{
+        put(conn, ~p"/api/v1/users/update_email", %{
+          update_email: %{
             password: user_password,
             new_email: new_email,
             new_email_confirmation: new_email
@@ -388,13 +388,13 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
 
     @tag :user_controller
     test "raises an error on update email when current password don’t match",
-         %{conn: conn, user: user} do
+         %{conn: conn} do
       wrong_current_password = valid_user_password()
       new_email = unique_user_email()
 
       conn =
-        put(conn, ~p"/api/v1/users/update_email/#{user.uuid}", %{
-          user: %{
+        put(conn, ~p"/api/v1/users/update_email", %{
+          update_email: %{
             password: wrong_current_password,
             new_email: new_email,
             new_email_confirmation: new_email
@@ -412,13 +412,13 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
     @tag :user_controller
     test "raises an error on update email when new email and new email
     confirmation don’t match",
-         %{conn: conn, user: user, user_password: user_password} do
+         %{conn: conn, user_password: user_password} do
       new_email = unique_user_email()
       new_email_2 = unique_user_email()
 
       conn =
-        put(conn, ~p"/api/v1/users/update_email/#{user.uuid}", %{
-          user: %{
+        put(conn, ~p"/api/v1/users/update_email", %{
+          update_email: %{
             password: user_password,
             new_email: new_email,
             new_email_confirmation: new_email_2
@@ -436,12 +436,12 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
     @tag :user_controller
     test "raises an error on update email when new email don’t meet the
     changeset requirements",
-         %{conn: conn, user: user, user_password: user_password} do
+         %{conn: conn, user_password: user_password} do
       new_email = "invalid_email"
 
       conn =
-        put(conn, ~p"/api/v1/users/update_email/#{user.uuid}", %{
-          user: %{
+        put(conn, ~p"/api/v1/users/update_email", %{
+          update_email: %{
             password: user_password,
             new_email: new_email,
             new_email_confirmation: new_email

@@ -51,7 +51,7 @@ defmodule Prepair.Profiles do
   """
   def create_profile(uuid, attrs \\ %{}) do
     %Profile{uuid: uuid}
-    |> Profile.changeset(attrs)
+    |> Profile.registration_changeset(attrs)
     |> Repo.insert()
   end
 

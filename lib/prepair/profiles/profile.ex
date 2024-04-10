@@ -33,10 +33,17 @@ defmodule Prepair.Profiles.Profile do
     timestamps(type: :utc_datetime)
   end
 
-  @doc false
   def changeset(profile, attrs) do
     profile
     |> cast(attrs, @fields)
+    |> validate_required(@required_fields)
+    |> unique_constraint(:username)
+  end
+
+  def registration_changeset(user_and_profile, attrs) do
+    user_and_profile
+    |> cast(attrs, @fields)
+    |> cast_assoc(:user, with: &User.registration_changeset/2)
     |> validate_required(@required_fields)
     |> unique_constraint(:username)
   end

@@ -96,6 +96,7 @@ defmodule Prepair.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
+
   def register_user(user_attrs, profile_attrs) do
     Repo.transaction(fn ->
       with {:ok, user} <- do_register_user(user_attrs),

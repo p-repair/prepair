@@ -46,8 +46,12 @@ defmodule Prepair.Accounts.User do
   def registration_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:email, :password])
+    |> cast_assoc(:profile, with: &Profile.changeset/2)
     |> validate_email(opts)
     |> validate_password(opts)
+    |> validate_confirmation(:password,
+      message: dgettext("errors", "does not match")
+    )
   end
 
   defp validate_email(changeset, opts) do
@@ -112,6 +116,9 @@ defmodule Prepair.Accounts.User do
     user
     |> cast(attrs, [:email])
     |> validate_email(opts)
+    |> validate_confirmation(:email,
+      message: dgettext("errors", "does not match")
+    )
     |> case do
       %{changes: %{email: _}} = changeset ->
         changeset

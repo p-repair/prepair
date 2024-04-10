@@ -36,7 +36,7 @@ msgstr ""
 msgid "Contact updated successfully."
 msgstr ""
 
-#: lib/prepair_web/controllers/user_session_controller.ex:29
+#: lib/prepair_web/controllers/user_session_controller.ex:45
 #, elixir-autogen, elixir-format
 msgid "Logged out successfully."
 msgstr ""
@@ -107,7 +107,7 @@ msgstr ""
 msgid "Thank you!! Your registration has been taken into account."
 msgstr ""
 
-#: lib/prepair_web/controllers/user_session_controller.ex:8
+#: lib/prepair_web/controllers/user_session_controller.ex:24
 #, elixir-autogen, elixir-format
 msgid "Welcome back!"
 msgstr ""
@@ -115,4 +115,19 @@ msgstr ""
 #: lib/prepair_web/components/core_components.ex:197
 #, elixir-autogen, elixir-format
 msgid "Success!"
+msgstr ""
+
+#: lib/prepair_web/controllers/user_session_controller.ex:11
+#, elixir-autogen, elixir-format
+msgid "Account created successfully! Welcome!"
+msgstr ""
+
+#: lib/prepair_web/live/user_live/user_update_email_live.ex:95
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Email updated successfully!"
+msgstr ""
+
+#: lib/prepair_web/controllers/user_session_controller.ex:19
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Password updated successfully!"
 msgstr ""

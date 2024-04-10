@@ -34,7 +34,9 @@ defmodule Prepair.Accounts.Registration do
     |> unsafe_validate_unique(:username, Repo, query: from(u in Profile))
     |> validate_email()
     |> validate_password()
-    |> validate_confirmation(:password, message: gettext("does not match"))
+    |> validate_confirmation(:password,
+      message: dgettext("errors", "does not match")
+    )
   end
 
   defp validate_email(changeset) do
@@ -52,13 +54,13 @@ defmodule Prepair.Accounts.Registration do
     |> validate_required([:password])
     |> validate_length(:password, min: 8, max: 256)
     |> validate_format(:password, ~r/[a-z]/,
-      message: "at least one lower case character"
+      message: dgettext("errors", "at least one lower case character")
     )
     |> validate_format(:password, ~r/[A-Z]/,
-      message: "at least one upper case character"
+      message: dgettext("errors", "at least one upper case character")
     )
     |> validate_format(:password, ~r/[!?@#$%^&*_0-9]/,
-      message: "at least one digit or punctuation character"
+      message: dgettext("errors", "at least one digit or punctuation character")
     )
   end
 end

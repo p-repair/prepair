@@ -45,6 +45,9 @@ defmodule PrepairWeb.Router do
 
     live_session :require_authenticated_user,
       on_mount: [{PrepairWeb.UserAuth, :ensure_authenticated}] do
+      live "/users/update_password", UserUpdatePasswordLive, :new
+      live "/users/update_email", UserUpdateEmailLive, :new
+
       live "/manufacturers", ManufacturerLive.Index, :index
       live "/manufacturers/new", ManufacturerLive.Index, :new
       live "/manufacturers/:uuid/edit", ManufacturerLive.Index, :edit
@@ -121,6 +124,7 @@ defmodule PrepairWeb.Router do
 
     live_session :redirect_if_user_is_authenticated,
       on_mount: [{PrepairWeb.UserAuth, :redirect_if_user_is_authenticated}] do
+      live "/users/register", UserRegistrationLive, :new
       live "/users/log_in", UserLoginLive, :new
     end
 
@@ -154,11 +158,11 @@ defmodule PrepairWeb.Router do
 
     get "/users", Api.Accounts.UserController, :fetch_api_user
 
-    put "/users/update_password/:uuid",
+    put "/users/update_password",
         Api.Accounts.UserController,
         :update_password
 
-    put "/users/update_email/:uuid", Api.Accounts.UserController, :update_email
+    put "/users/update_email", Api.Accounts.UserController, :update_email
 
     resources "/products/categories", Api.Products.CategoryController,
       except: [:new, :edit],

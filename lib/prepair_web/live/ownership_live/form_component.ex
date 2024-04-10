@@ -25,21 +25,21 @@ defmodule PrepairWeb.OwnershipLive.FormComponent do
           field={@form[:category_uuid]}
           label={gettext "Category"}
           type="select"
-          prompt="Please select a category"
+          prompt={gettext "Please select a category"}
           options={category_opts(@changeset)}
         />
         <.input
           field={@form[:manufacturer_uuid]}
           label={gettext "Manufacturer"}
           type="select"
-          prompt="Please select a manufacturer"
+          prompt={gettext "Please select a manufacturer"}
           options={manufacturer_opts(@changeset)}
         />
         <.input
           field={@form[:product_uuid]}
           label={gettext "Product name"}
           type="select"
-          prompt="Please select a product (filter by category and manufacturer)"
+          prompt={gettext "Please select a product (filter by category and manufacturer)"}
           options={product_opts(@form.params, @changeset)}
         />
         <.input field={@form[:date_of_purchase]} type="date" label={gettext "Date of purchase"} />
