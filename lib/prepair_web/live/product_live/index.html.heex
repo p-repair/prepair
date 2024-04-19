@@ -24,15 +24,19 @@
     <div class="sr-only">
       <.link navigate={~p"/products/#{product}"}><%= gettext "Show" %></.link>
     </div>
+  <%= if @current_user.role == :admin do %>
     <.link patch={~p"/products/#{product}/edit"}><%= gettext "Edit" %></.link>
+  <% end %>
   </:action>
   <:action :let={{uuid, product}}>
+  <%= if @current_user.role == :admin do %>
     <.link
       phx-click={JS.push("delete", value: %{uuid: product.uuid}) |> hide("##{uuid}")}
       data-confirm={gettext "Are you sure?"}
     >
       <%= gettext "Delete" %>
     </.link>
+  <% end %>
   </:action>
 </.table>
 

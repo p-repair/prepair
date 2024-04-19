@@ -166,6 +166,27 @@ defmodule PrepairWeb.UserAuth do
     end
   end
 
+  def on_mount(:ensure_current_user_access_self_data, params, session, socket) do
+    socket = mount_current_user(socket, session)
+
+    if socket.assigns.current_user.uuid == params["uuid"] do
+      {:cont, socket}
+    else
+      socket =
+        socket
+        |> Phoenix.LiveView.put_flash(
+          :error,
+          dgettext("errors", "You are not allowed to access other users
+            private data.")
+        )
+
+        # TODO: Error page instead?
+        |> Phoenix.LiveView.redirect(to: ~p"/")
+
+      {:halt, socket}
+    end
+  end
+
   def on_mount(:ensure_is_admin, params, session, socket) do
     with {:cont, socket} <-
            on_mount(:ensure_authenticated, params, session, socket),
@@ -239,20 +260,106 @@ defmodule PrepairWeb.UserAuth do
   end
 
   @doc """
-  Used for routes that require the user to be an admin.
+  Used for routes which gives access only to self data.
+  Admins still have access too.
   """
-  def require_admin(conn, opts) do
-    with conn <- require_authenticated_user(conn, opts),
-         :admin <- conn.assigns.current_user.role do
+  # TODO: refactor require_authenticated_user to return {:ok, conn} | {:error, conn}
+  # TODO: refactor require_admin to return {:ok, conn} | {:error, conn}
+  # TODO: refactor require_self_or_admin to return {:ok, conn} | {:error, conn}
+  def require_self_or_admin(conn, _opts) do
+    conn = require_authenticated_user(conn, [])
+
+    if conn.assigns[:current_user] != nil do
+      case conn.assigns.current_user.role do
+        :admin ->
+          conn
+
+        _ ->
+          is_self_user?(conn)
+      end
+    else
+      conn
+    end
+  end
+
+  defp is_self_user?(conn) do
+    if conn.assigns.current_user.uuid == conn.path_params["uuid"] do
       conn
     else
-      _ ->
-        conn
-        |> put_status(:forbidden)
-        |> put_view(PrepairWeb.ErrorHTML)
-        |> render(:"403")
-        |> halt()
+      conn
+      # TODO: enhance error pages
+      |> put_status(:forbidden)
+      |> put_view(PrepairWeb.ErrorHTML)
+      |> render(:"403")
+      |> halt()
     end
+  end
+
+  @doc """
+  Used for routes that require the user to be an admin.
+  """
+  # NOTE: J’ai dû changer la fonction car
+  # with conn <- require_authenticated_user(conn, opts) retourne toujours conn
+  # sinon il faudrait modifier son retour en {:ok, conn} | {:error, conn}
+  # mais nous devons voir ça ensemble
+  def require_admin(conn, _opts) do
+    conn = require_authenticated_user(conn, [])
+
+    if conn.assigns[:current_user] != nil do
+      case conn.assigns.current_user.role do
+        :admin ->
+          conn
+
+        _ ->
+          conn
+
+          # # TODO: Proposition
+          # |> put_flash(
+          #   :error,
+          #   dgettext("errors", "You must be admin to access this page.")
+          # )
+          # |> maybe_store_return_to()
+          # |> redirect(to: ~p"/")
+          # |> halt()
+
+          |> put_status(:forbidden)
+          |> put_view(PrepairWeb.ErrorHTML)
+          |> render(:"403")
+          |> halt()
+      end
+    else
+      conn
+    end
+  end
+
+  def require_self_and_do(scope, socket, params, action) do
+    data_owner =
+      case scope do
+        :ownership ->
+          Prepair.Profiles.get_ownership!(params["uuid"]).profile_uuid
+      end
+
+    current_user = socket.assigns.current_user
+
+    if current_user.uuid == data_owner or
+         is_admin?(current_user) do
+      action.()
+    else
+      socket =
+        socket
+        |> Phoenix.LiveView.put_flash(
+          :error,
+          dgettext("errors", "You are not allowed to access other users
+            private data.")
+        )
+        |> Phoenix.LiveView.redirect(to: ~p"/")
+
+      socket
+    end
+  end
+
+  defp is_admin?(user) do
+    if user.role == :admin, do: true, else: false
   end
 
   @doc """

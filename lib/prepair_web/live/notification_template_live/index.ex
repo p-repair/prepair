@@ -4,6 +4,7 @@ defmodule PrepairWeb.NotificationTemplateLive.Index do
   alias Prepair.Notifications
   alias Prepair.Notifications.NotificationTemplate
   alias Prepair.Repo
+  alias PrepairWeb.UserAuth
 
   @impl true
   def mount(_params, _session, socket) do
@@ -68,10 +69,14 @@ defmodule PrepairWeb.NotificationTemplateLive.Index do
 
   @impl true
   def handle_event("delete", %{"uuid" => uuid}, socket) do
-    notification_template = Notifications.get_notification_template!(uuid)
-    {:ok, _} = Notifications.delete_notification_template(notification_template)
+    UserAuth.require_admin_and_do(socket, fn ->
+      notification_template = Notifications.get_notification_template!(uuid)
 
-    {:noreply,
-     stream_delete(socket, :notification_templates, notification_template)}
+      {:ok, _} =
+        Notifications.delete_notification_template(notification_template)
+
+      {:noreply,
+       stream_delete(socket, :notification_templates, notification_template)}
+    end)
   end
 end

@@ -2,9 +2,11 @@
   <%= gettext "Notification template" %><%= @notification_template.uuid %>
   <:subtitle><%= gettext "This is a notification_template record from your database." %></:subtitle>
   <:actions>
+  <%= if @current_user.role == :admin do %>
     <.link patch={~p"/notification_templates/#{@notification_template}/show/edit"} phx-click={JS.push_focus()}>
       <.button><%= gettext "Edit notification template" %></.button>
     </.link>
+  <% end %>
   </:actions>
 </.header>
 

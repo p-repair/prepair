@@ -3,6 +3,7 @@ defmodule PrepairWeb.ManufacturerLive.Index do
 
   alias Prepair.Products
   alias Prepair.Products.Manufacturer
+  alias PrepairWeb.UserAuth
 
   @impl true
   def mount(_params, _session, socket) do
@@ -55,9 +56,11 @@ defmodule PrepairWeb.ManufacturerLive.Index do
 
   @impl true
   def handle_event("delete", %{"uuid" => uuid}, socket) do
-    manufacturer = Products.get_manufacturer!(uuid)
-    {:ok, _} = Products.delete_manufacturer(manufacturer)
+    UserAuth.require_admin_and_do(socket, fn ->
+      manufacturer = Products.get_manufacturer!(uuid)
+      {:ok, _} = Products.delete_manufacturer(manufacturer)
 
-    {:noreply, stream_delete(socket, :manufacturers, manufacturer)}
+      {:noreply, stream_delete(socket, :manufacturers, manufacturer)}
+    end)
   end
 end

@@ -133,18 +133,18 @@ msgstr ""
 msgid "Try again! The email address entered is not valid."
 msgstr ""
 
-#: lib/prepair_web/user_auth.ex:180
+#: lib/prepair_web/user_auth.ex:201
 #, elixir-autogen, elixir-format
 msgid "You must be admin to access this page."
 msgstr ""
 
-#: lib/prepair_web/user_auth.ex:274
+#: lib/prepair_web/user_auth.ex:381
 #, elixir-autogen, elixir-format
 msgid "You must be admin to perform this action."
 msgstr ""
 
 #: lib/prepair_web/user_auth.ex:161
-#: lib/prepair_web/user_auth.ex:233
+#: lib/prepair_web/user_auth.ex:254
 #, elixir-autogen, elixir-format
 msgid "You must log in to access this page."
 msgstr ""
@@ -205,4 +205,10 @@ msgstr ""
 #: lib/prepair/accounts/user.ex:120
 #, elixir-autogen, elixir-format
 msgid "does not match"
+msgstr ""
+
+#: lib/prepair_web/user_auth.ex:179
+#: lib/prepair_web/user_auth.ex:352
+#, elixir-autogen, elixir-format
+msgid "You are not allowed to access other users\n            private data."
 msgstr ""

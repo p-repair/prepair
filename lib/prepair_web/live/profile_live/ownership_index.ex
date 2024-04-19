@@ -6,7 +6,7 @@ defmodule PrepairWeb.ProfileLive.OwnershipIndex do
 
   @impl true
   def mount(params, _session, socket) do
-    user_uuid = socket.assigns.current_user.uuid
+    current_user = socket.assigns.current_user
     profile_uuid = params["uuid"]
     profile_username = Profiles.get_profile!(profile_uuid).username
 
@@ -16,9 +16,16 @@ defmodule PrepairWeb.ProfileLive.OwnershipIndex do
         dom_id: &"ownerships-#{&1.uuid}"
       )
 
-    case user_uuid == profile_uuid do
+    case current_user.uuid == profile_uuid or current_user.role == :admin do
       true ->
-        title = gettext("Listing your Ownerships")
+        title =
+          if current_user.role == :admin do
+            gettext("Listing %{profile_username} Ownerships (admin view)",
+              profile_username: profile_username
+            )
+          else
+            gettext("Listing your Ownerships")
+          end
 
         socket =
           socket

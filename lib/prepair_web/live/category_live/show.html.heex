@@ -2,9 +2,11 @@
   <%= gettext "Category" %> <%= @category.uuid %>
   <:subtitle><%= gettext "This is a category record from your database." %></:subtitle>
   <:actions>
+<%= if @current_user.role == :admin do %>
     <.link patch={~p"/categories/#{@category}/show/edit"} phx-click={JS.push_focus()}>
       <.button><%= gettext "Edit category" %></.button>
     </.link>
+  <% end %>
   </:actions>
 </.header>
 

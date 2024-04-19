@@ -3,6 +3,7 @@ defmodule PrepairWeb.CategoryLive.Index do
 
   alias Prepair.Products
   alias Prepair.Products.Category
+  alias PrepairWeb.UserAuth
 
   @impl true
   def mount(_params, _session, socket) do
@@ -55,9 +56,11 @@ defmodule PrepairWeb.CategoryLive.Index do
 
   @impl true
   def handle_event("delete", %{"uuid" => uuid}, socket) do
-    category = Products.get_category!(uuid)
-    {:ok, _} = Products.delete_category(category)
+    UserAuth.require_admin_and_do(socket, fn ->
+      category = Products.get_category!(uuid)
+      {:ok, _} = Products.delete_category(category)
 
-    {:noreply, stream_delete(socket, :categories, category)}
+      {:noreply, stream_delete(socket, :categories, category)}
+    end)
   end
 end

@@ -32,9 +32,159 @@ defmodule PrepairWeb.PartLiveTest do
     %{part: part}
   end
 
-  describe "Index" do
+  ##############################################################################
+  ########################## AUTHORIZATION - VISITORS ##########################
+  ##############################################################################
+  describe "Authorization - visitors" do
+    setup [:create_part]
+
+    ######################## WHAT VISITORS CAN DO ? ############################
+
+    # Nothing
+
+    ####################### WHAT VISITORS CANNOT DO ? ##########################
+
+    @tag :part_liveview
+    test "visitors CANNOT list, edit or delete parts", %{conn: conn} do
+      {:error, detail} = live(conn, ~p"/parts")
+
+      assert detail ==
+               {:redirect,
+                %{
+                  to: "/users/log_in",
+                  flash: %{"error" => "You must log in to access this page."}
+                }}
+    end
+
+    @tag :part_liveview
+    test "visitors CANNOT see or edit a part",
+         %{conn: conn, part: part} do
+      {:error, detail} = live(conn, ~p"/parts/#{part.uuid}")
+
+      assert detail ==
+               {:redirect,
+                %{
+                  to: "/users/log_in",
+                  flash: %{"error" => "You must log in to access this page."}
+                }}
+    end
+
+    @tag :part_liveview
+    test "visitors CANNOT create a part", %{conn: conn} do
+      {:error, detail} = live(conn, ~p"/parts/new")
+
+      assert detail ==
+               {:redirect,
+                %{
+                  to: "/users/log_in",
+                  flash: %{"error" => "You must log in to access this page."}
+                }}
+    end
+  end
+
+  ##############################################################################
+  ########################### AUTHORIZATION - USERS ############################
+  ##############################################################################
+  describe "Authorization - users" do
     setup [:create_part, :register_and_log_in_user]
 
+    ########################### WHAT USERS CAN DO ? ############################
+
+    @tag :part_liveview
+    test "users CAN list parts", %{conn: conn} do
+      {:ok, _index_live, html} = live(conn, ~p"/parts")
+
+      assert html =~ "Listing Parts"
+    end
+
+    @tag :part_liveview
+    test "users CAN see a part",
+         %{conn: conn, part: part} do
+      {:ok, _index_live, html} = live(conn, ~p"/parts")
+
+      assert html =~ "#{part.name}"
+    end
+
+    @tag :part_liveview
+    test "users CAN create a part", %{conn: conn} do
+      valid_attrs = part_valid_attrs()
+      {:ok, index_live, _html} = live(conn, ~p"/parts")
+
+      assert index_live |> element("a", "New Part") |> render_click() =~
+               "New Part"
+
+      assert index_live
+             |> form("#part-form", part: valid_attrs)
+             |> render_submit()
+
+      assert_patch(index_live, ~p"/parts")
+
+      html = render(index_live)
+      assert html =~ "Part created successfully"
+      assert html =~ "some description"
+    end
+
+    ######################### WHAT USERS CANNOT DO ? ###########################
+
+    @tag :part_liveview
+    test "users CANNOT update a part",
+         %{conn: conn, part: part} do
+      conn = get(conn, ~p"/parts/#{part.uuid}/edit")
+
+      assert conn.status == 403
+      assert response(conn, 403) =~ "Forbidden"
+
+      conn = get(conn, ~p"/parts/#{part.uuid}/show/edit")
+
+      assert conn.status == 403
+      assert response(conn, 403) =~ "Forbidden"
+    end
+
+    @tag :part_liveview
+    test "there is no 'Edit' button in Parts Listing for users when they
+    are not admin",
+         %{conn: conn, part: part} do
+      {:ok, index_live, _html} = live(conn, ~p"/parts")
+
+      refute index_live
+             |> element("#parts-#{part.uuid} a", "Edit")
+             |> has_element?()
+    end
+
+    @tag :part_liveview
+    test "there is no 'Edit' button in Part Show for users when they
+    are not admin",
+         %{conn: conn, part: part} do
+      {:ok, index_live, _html} = live(conn, ~p"/parts/#{part.uuid}")
+
+      refute index_live
+             |> element("#parts-#{part.uuid} a", "Edit")
+             |> has_element?()
+    end
+
+    @tag :part_liveview
+    test "there is no 'Delete' button in Parts Listing for users when they
+    are not admin",
+         %{conn: conn, part: part} do
+      {:ok, index_live, _html} = live(conn, ~p"/parts")
+
+      refute index_live
+             |> element("#parts-#{part.uuid} a", "Delete")
+             |> has_element?()
+    end
+
+    # NOTE: There is no specific route to delete a part, only an
+    # action. Maybe we can still enhance this test.
+  end
+
+  ##############################################################################
+  ########################## FEATURES TESTS - ADMIN ############################
+  ##############################################################################
+
+  describe "Index" do
+    setup [:create_part, :register_and_log_in_user, :make_user_admin]
+
+    @tag :part_liveview
     test "lists all parts", %{conn: conn, part: part} do
       {:ok, _index_live, html} = live(conn, ~p"/parts")
 
@@ -42,6 +192,7 @@ defmodule PrepairWeb.PartLiveTest do
       assert html =~ part.country_of_origin
     end
 
+    @tag :part_liveview
     @tag :gettext
     test "index texts are translated to the first language in 'accept-language'
   which match one of the locales defined for the application",
@@ -53,6 +204,7 @@ defmodule PrepairWeb.PartLiveTest do
       assert html =~ part.description
     end
 
+    @tag :part_liveview
     @tag :gettext
     test "index texts are not translated ('en' is the default locale) if none
   of the languages in 'accept-language' is part of the locales defined for
@@ -65,6 +217,7 @@ defmodule PrepairWeb.PartLiveTest do
       assert html =~ part.description
     end
 
+    @tag :part_liveview
     test "saves new part", %{conn: conn} do
       valid_attrs = part_valid_attrs()
 
@@ -90,6 +243,7 @@ defmodule PrepairWeb.PartLiveTest do
       assert html =~ "some country_of_origin"
     end
 
+    @tag :part_liveview
     test "updates part in listing", %{conn: conn, part: part} do
       {:ok, index_live, _html} = live(conn, ~p"/parts")
 
@@ -115,6 +269,7 @@ defmodule PrepairWeb.PartLiveTest do
       assert html =~ "some updated country_of_origin"
     end
 
+    @tag :part_liveview
     test "deletes part in listing", %{conn: conn, part: part} do
       {:ok, index_live, _html} = live(conn, ~p"/parts")
 
@@ -126,8 +281,9 @@ defmodule PrepairWeb.PartLiveTest do
     end
   end
 
+  @tag :part_liveview
   describe "Show" do
-    setup [:create_part, :register_and_log_in_user]
+    setup [:create_part, :register_and_log_in_user, :make_user_admin]
 
     test "displays part", %{conn: conn, part: part} do
       {:ok, _show_live, html} = live(conn, ~p"/parts/#{part}")
@@ -136,6 +292,7 @@ defmodule PrepairWeb.PartLiveTest do
       assert html =~ part.country_of_origin
     end
 
+    @tag :part_liveview
     @tag :gettext
     test "show texts are translated to the first language in 'accept-language'
   which match one of the locales defined for the application",
@@ -147,6 +304,7 @@ defmodule PrepairWeb.PartLiveTest do
       assert html =~ part.description
     end
 
+    @tag :part_liveview
     @tag :gettext
     test "show texts are not translated ('en' is the default locale) if none
   of the languages in 'accept-language' is part of the locales defined for
@@ -159,6 +317,7 @@ defmodule PrepairWeb.PartLiveTest do
       assert html =~ part.description
     end
 
+    @tag :part_liveview
     test "updates part within modal", %{conn: conn, part: part} do
       {:ok, show_live, _html} = live(conn, ~p"/parts/#{part}")
 

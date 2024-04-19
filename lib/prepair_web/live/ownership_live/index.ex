@@ -4,6 +4,7 @@ defmodule PrepairWeb.OwnershipLive.Index do
   alias Prepair.Profiles
   alias Prepair.Profiles.Ownership
   alias Prepair.Repo
+  alias PrepairWeb.UserAuth
 
   @impl true
   def mount(_params, _session, socket) do
@@ -26,12 +27,14 @@ defmodule PrepairWeb.OwnershipLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"uuid" => uuid}) do
-    page_title = gettext("Edit Ownership")
+  defp apply_action(socket, :edit, %{"uuid" => uuid} = params) do
+    UserAuth.require_self_and_do(:ownership, socket, params, fn ->
+      page_title = gettext("Edit Ownership")
 
-    socket
-    |> assign(:page_title, page_title)
-    |> assign(:ownership, Profiles.get_ownership!(uuid))
+      socket
+      |> assign(:page_title, page_title)
+      |> assign(:ownership, Profiles.get_ownership!(uuid))
+    end)
   end
 
   defp apply_action(socket, :new, _params) do
@@ -59,10 +62,12 @@ defmodule PrepairWeb.OwnershipLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"uuid" => uuid}, socket) do
-    ownership = Profiles.get_ownership!(uuid)
-    {:ok, _} = Profiles.delete_ownership(ownership)
+  def handle_event("delete", %{"uuid" => uuid} = params, socket) do
+    UserAuth.require_self_and_do(:ownership, socket, params, fn ->
+      ownership = Profiles.get_ownership!(uuid)
+      {:ok, _} = Profiles.delete_ownership(ownership)
 
-    {:noreply, stream_delete(socket, :ownerships, ownership)}
+      {:noreply, stream_delete(socket, :ownerships, ownership)}
+    end)
   end
 end

@@ -26,7 +26,7 @@ defmodule PrepairWeb.ProfileLive.FormComponent do
         <.input field={@form[:newsletter]} type="checkbox" label={gettext "Newsletter"} />
         <:actions>
           <.button phx-disable-with={gettext "Saving..."}><%= gettext "Save Profile" %></.button>
-          <.back navigate={~p"/profiles"}><%= gettext "Back to profiles" %></.back>
+          <.back navigate={~p"/profiles/#{@profile}"}><%= gettext "Back to profile" %></.back>
         </:actions>
       </.simple_form>
     </div>

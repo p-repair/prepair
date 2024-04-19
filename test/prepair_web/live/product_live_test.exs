@@ -30,9 +30,159 @@ defmodule PrepairWeb.ProductLiveTest do
     %{product: product}
   end
 
-  describe "Index" do
+  ##############################################################################
+  ########################## AUTHORIZATION - VISITORS ##########################
+  ##############################################################################
+  describe "Authorization - visitors" do
+    setup [:create_product]
+
+    ######################## WHAT VISITORS CAN DO ? ############################
+
+    # Nothing
+
+    ####################### WHAT VISITORS CANNOT DO ? ##########################
+
+    @tag :product_liveview
+    test "visitors CANNOT list, edit or delete products", %{conn: conn} do
+      {:error, detail} = live(conn, ~p"/products")
+
+      assert detail ==
+               {:redirect,
+                %{
+                  to: "/users/log_in",
+                  flash: %{"error" => "You must log in to access this page."}
+                }}
+    end
+
+    @tag :product_liveview
+    test "visitors CANNOT see or edit a product",
+         %{conn: conn, product: product} do
+      {:error, detail} = live(conn, ~p"/products/#{product.uuid}")
+
+      assert detail ==
+               {:redirect,
+                %{
+                  to: "/users/log_in",
+                  flash: %{"error" => "You must log in to access this page."}
+                }}
+    end
+
+    @tag :product_liveview
+    test "visitors CANNOT create a product", %{conn: conn} do
+      {:error, detail} = live(conn, ~p"/products/new")
+
+      assert detail ==
+               {:redirect,
+                %{
+                  to: "/users/log_in",
+                  flash: %{"error" => "You must log in to access this page."}
+                }}
+    end
+  end
+
+  ##############################################################################
+  ########################### AUTHORIZATION - USERS ############################
+  ##############################################################################
+  describe "Authorization - users" do
     setup [:create_product, :register_and_log_in_user]
 
+    ########################### WHAT USERS CAN DO ? ############################
+
+    @tag :product_liveview
+    test "users CAN list product", %{conn: conn} do
+      {:ok, _index_live, html} = live(conn, ~p"/products")
+
+      assert html =~ "Listing Products"
+    end
+
+    @tag :product_liveview
+    test "users CAN see a product",
+         %{conn: conn, product: product} do
+      {:ok, _index_live, html} = live(conn, ~p"/products")
+
+      assert html =~ "#{product.name}"
+    end
+
+    @tag :product_liveview
+    test "users CAN create a product", %{conn: conn} do
+      valid_attrs = product_valid_attrs()
+      {:ok, index_live, _html} = live(conn, ~p"/products")
+
+      assert index_live |> element("a", "New Product") |> render_click() =~
+               "New Product"
+
+      assert index_live
+             |> form("#product-form", product: valid_attrs)
+             |> render_submit()
+
+      assert_patch(index_live, ~p"/products")
+
+      html = render(index_live)
+      assert html =~ "Product created successfully"
+      assert html =~ "some description"
+    end
+
+    ######################### WHAT USERS CANNOT DO ? ###########################
+
+    @tag :product_liveview
+    test "users CANNOT update a product",
+         %{conn: conn, product: product} do
+      conn = get(conn, ~p"/products/#{product.uuid}/edit")
+
+      assert conn.status == 403
+      assert response(conn, 403) =~ "Forbidden"
+
+      conn = get(conn, ~p"/products/#{product.uuid}/show/edit")
+
+      assert conn.status == 403
+      assert response(conn, 403) =~ "Forbidden"
+    end
+
+    @tag :product_liveview
+    test "there is no 'Edit' button in Products Listing for users when they
+    are not admin",
+         %{conn: conn, product: product} do
+      {:ok, index_live, _html} = live(conn, ~p"/products")
+
+      refute index_live
+             |> element("#products-#{product.uuid} a", "Edit")
+             |> has_element?()
+    end
+
+    @tag :product_liveview
+    test "there is no 'Edit' button in Product Show for users when they
+    are not admin",
+         %{conn: conn, product: product} do
+      {:ok, index_live, _html} = live(conn, ~p"/products/#{product.uuid}")
+
+      refute index_live
+             |> element("#products-#{product.uuid} a", "Edit")
+             |> has_element?()
+    end
+
+    @tag :product_liveview
+    test "there is no 'Delete' button in Products Listing for users when they
+    are not admin",
+         %{conn: conn, product: product} do
+      {:ok, index_live, _html} = live(conn, ~p"/products")
+
+      refute index_live
+             |> element("#products-#{product.uuid} a", "Delete")
+             |> has_element?()
+    end
+
+    # NOTE: There is no specific route to delete a product, only an
+    # action. Maybe we can still enhance this test.
+  end
+
+  ##############################################################################
+  ########################## FEATURES TESTS - ADMIN ############################
+  ##############################################################################
+
+  describe "Index" do
+    setup [:create_product, :register_and_log_in_user, :make_user_admin]
+
+    @tag :product_liveview
     test "lists all products", %{conn: conn, product: product} do
       {:ok, _index_live, html} = live(conn, ~p"/products")
 
@@ -40,6 +190,7 @@ defmodule PrepairWeb.ProductLiveTest do
       assert html =~ product.country_of_origin
     end
 
+    @tag :product_liveview
     @tag :gettext
     test "index texts are translated to the first language in 'accept-language'
   which match one of the locales defined for the application",
@@ -51,6 +202,7 @@ defmodule PrepairWeb.ProductLiveTest do
       assert html =~ product.description
     end
 
+    @tag :product_liveview
     @tag :gettext
     test "index texts are not translated ('en' is the default locale) if none
   of the languages in 'accept-language' is part of the locales defined for
@@ -63,6 +215,7 @@ defmodule PrepairWeb.ProductLiveTest do
       assert html =~ product.description
     end
 
+    @tag :product_liveview
     test "saves new product", %{conn: conn} do
       valid_attrs = product_valid_attrs()
 
@@ -88,6 +241,7 @@ defmodule PrepairWeb.ProductLiveTest do
       assert html =~ "some country_of_origin"
     end
 
+    @tag :product_liveview
     test "updates product in listing", %{conn: conn, product: product} do
       {:ok, index_live, _html} = live(conn, ~p"/products")
 
@@ -113,6 +267,7 @@ defmodule PrepairWeb.ProductLiveTest do
       assert html =~ "some updated country_of_origin"
     end
 
+    @tag :product_liveview
     test "deletes product in listing", %{conn: conn, product: product} do
       {:ok, index_live, _html} = live(conn, ~p"/products")
 
@@ -124,8 +279,9 @@ defmodule PrepairWeb.ProductLiveTest do
     end
   end
 
+  @tag :product_liveview
   describe "Show" do
-    setup [:create_product, :register_and_log_in_user]
+    setup [:create_product, :register_and_log_in_user, :make_user_admin]
 
     test "displays product", %{conn: conn, product: product} do
       {:ok, _show_live, html} = live(conn, ~p"/products/#{product}")
@@ -134,6 +290,7 @@ defmodule PrepairWeb.ProductLiveTest do
       assert html =~ product.country_of_origin
     end
 
+    @tag :product_liveview
     @tag :gettext
     test "show texts are translated to the first language in 'accept-language'
   which match one of the locales defined for the application",
@@ -145,6 +302,7 @@ defmodule PrepairWeb.ProductLiveTest do
       assert html =~ product.description
     end
 
+    @tag :product_liveview
     @tag :gettext
     test "show texts are not translated ('en' is the default locale) if none
   of the languages in 'accept-language' is part of the locales defined for
@@ -157,6 +315,7 @@ defmodule PrepairWeb.ProductLiveTest do
       assert html =~ product.description
     end
 
+    @tag :product_liveview
     test "updates product within modal", %{conn: conn, product: product} do
       {:ok, show_live, _html} = live(conn, ~p"/products/#{product}")
 

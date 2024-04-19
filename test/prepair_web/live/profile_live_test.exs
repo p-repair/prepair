@@ -21,16 +21,140 @@ defmodule PrepairWeb.ProfileLiveTest do
     %{profile: profile}
   end
 
-  describe "Index" do
-    setup [:create_profile, :register_and_log_in_user]
+  ##############################################################################
+  ########################## AUTHORIZATION - VISITORS ##########################
+  ##############################################################################
+  describe "Authorization - visitors" do
+    setup [:create_profile]
 
-    test "lists all profiles", %{conn: conn, profile: profile} do
+    ######################## WHAT VISITORS CAN DO ? ############################
+
+    # Nothing
+
+    ####################### WHAT VISITORS CANNOT DO ? ##########################
+
+    @tag :profile_liveview
+    test "visitors CANNOT list, edit or delete profiles", %{conn: conn} do
+      {:error, detail} = live(conn, ~p"/profiles")
+
+      assert detail ==
+               {:redirect,
+                %{
+                  to: "/users/log_in",
+                  flash: %{"error" => "You must log in to access this page."}
+                }}
+    end
+
+    @tag :profile_liveview
+    test "visitors CANNOT see or edit a profile",
+         %{conn: conn, profile: profile} do
+      {:error, detail} = live(conn, ~p"/profiles/#{profile.uuid}")
+
+      assert detail ==
+               {:redirect,
+                %{
+                  to: "/users/log_in",
+                  flash: %{"error" => "You must log in to access this page."}
+                }}
+    end
+
+    # NOTE: There is no route to create a profile, it corresponds to the
+    # registration route.
+  end
+
+  ##############################################################################
+  ########################### AUTHORIZATION - USERS ############################
+  ##############################################################################
+  describe "Authorization - users" do
+    setup [:register_and_log_in_user, :create_profile]
+
+    ########################### WHAT USERS CAN DO ? ############################
+
+    @tag :profile_liveview
+    test "users CAN see their self profile",
+         %{conn: conn, user: user} do
+      self_profile = user.profile
+
+      {:ok, _index_live, html} = live(conn, ~p"/profiles/#{self_profile.uuid}")
+
+      assert html =~ "#{self_profile.username}"
+    end
+
+    @tag :profile_liveview
+    test "users CAN update their self profile",
+         %{conn: conn, user: user} do
+      self_profile = user.profile
+
+      {:ok, _index_live, html} =
+        live(conn, ~p"/profiles/#{self_profile.uuid}/edit")
+
+      assert html =~ "Edit Profile"
+
+      {:ok, _show_live, html} =
+        live(conn, ~p"/profiles/#{self_profile.uuid}/show/edit")
+
+      assert html =~ "Edit Profile"
+    end
+
+    # NOTE: Users CAN delete only their SELF profile.
+    # To come, with user deletion feature.
+
+    # NOTE: There is no route to create a profile, it corresponds to the
+    # registration route.
+
+    ######################### WHAT USERS CANNOT DO ? ###########################
+
+    @tag :profile_liveview
+    test "users CANNOT list profiles", %{conn: conn} do
+      conn = get(conn, ~p"/profiles")
+
+      assert conn.status == 403
+      assert response(conn, 403) =~ "Forbidden"
+    end
+
+    @tag :profile_liveview
+    test "users CANNOT see another profile",
+         %{conn: conn, profile: other_profile} do
+      conn = get(conn, ~p"/profiles/#{other_profile.uuid}")
+
+      assert conn.status == 403
+      assert response(conn, 403) =~ "Forbidden"
+    end
+
+    @tag :profile_liveview
+    test "users CANNOT update another profile",
+         %{conn: conn, profile: other_profile} do
+      conn = get(conn, ~p"/profiles/#{other_profile.uuid}/edit")
+
+      assert conn.status == 403
+      assert response(conn, 403) =~ "Forbidden"
+
+      conn = get(conn, ~p"/profiles/#{other_profile.uuid}/show/edit")
+
+      assert conn.status == 403
+      assert response(conn, 403) =~ "Forbidden"
+    end
+
+    # NOTE: users CANNOT delete a profile which is not their own profile
+    # deleting profiles is not a current feature.
+  end
+
+  ##############################################################################
+  ########################## FEATURES TESTS - ADMIN ############################
+  ##############################################################################
+
+  describe "Index" do
+    setup [:create_profile, :register_and_log_in_user, :make_user_admin]
+
+    @tag :profile_liveview
+    test "lists all profiles", %{conn: conn, user: user} do
       {:ok, _index_live, html} = live(conn, ~p"/profiles")
 
       assert html =~ "Listing Profiles"
-      assert html =~ profile.username
+      assert html =~ user.profile.username
     end
 
+    @tag :profile_liveview
     @tag :gettext
     test "index texts are translated to the first language in 'accept-language'
   which match one of the locales defined for the application",
@@ -42,6 +166,7 @@ defmodule PrepairWeb.ProfileLiveTest do
       assert html =~ profile.username
     end
 
+    @tag :profile_liveview
     @tag :gettext
     test "index texts are not translated ('en' is the default locale) if none
   of the languages in 'accept-language' is part of the locales defined for
@@ -54,6 +179,7 @@ defmodule PrepairWeb.ProfileLiveTest do
       assert html =~ profile.username
     end
 
+    @tag :profile_liveview
     test "updates profile in listing", %{conn: conn, profile: profile} do
       {:ok, index_live, _html} = live(conn, ~p"/profiles")
 
@@ -80,46 +206,50 @@ defmodule PrepairWeb.ProfileLiveTest do
     end
   end
 
+  @tag :profile_liveview
   describe "Show" do
-    setup [:create_profile, :register_and_log_in_user]
+    setup [:create_profile, :register_and_log_in_user, :make_user_admin]
 
-    test "displays profile", %{conn: conn, profile: profile} do
-      {:ok, _show_live, html} = live(conn, ~p"/profiles/#{profile}")
+    test "displays profile", %{conn: conn, user: user} do
+      {:ok, _show_live, html} = live(conn, ~p"/profiles/#{user.uuid}")
 
       assert html =~ "Show Profile"
-      assert html =~ profile.username
+      assert html =~ user.profile.username
     end
 
+    @tag :profile_liveview
     @tag :gettext
     test "show texts are translated to the first language in 'accept-language'
   which match one of the locales defined for the application",
-         %{conn: conn, profile: profile} do
+         %{conn: conn, user: user} do
       conn = conn |> set_language_to_de_then_fr()
-      {:ok, _index_live, html} = live(conn, ~p"/profiles/#{profile}")
+      {:ok, _index_live, html} = live(conn, ~p"/profiles/#{user.uuid}")
 
       assert html =~ "Afficher le profile"
-      assert html =~ profile.username
+      assert html =~ user.profile.username
     end
 
+    @tag :profile_liveview
     @tag :gettext
     test "show texts are not translated ('en' is the default locale) if none
   of the languages in 'accept-language' is part of the locales defined for
   the app",
-         %{conn: conn, profile: profile} do
+         %{conn: conn, user: user} do
       conn = conn |> set_language_to_unknown()
-      {:ok, _index_live, html} = live(conn, ~p"/profiles/#{profile}")
+      {:ok, _index_live, html} = live(conn, ~p"/profiles/#{user.uuid}")
 
       assert html =~ "Show Profile"
-      assert html =~ profile.username
+      assert html =~ user.profile.username
     end
 
-    test "updates profile within modal", %{conn: conn, profile: profile} do
-      {:ok, show_live, _html} = live(conn, ~p"/profiles/#{profile}")
+    @tag :profile_liveview
+    test "updates profile within modal", %{conn: conn, user: user} do
+      {:ok, show_live, _html} = live(conn, ~p"/profiles/#{user.uuid}")
 
       assert show_live |> element("a", "Edit") |> render_click() =~
                "Edit Profile"
 
-      assert_patch(show_live, ~p"/profiles/#{profile}/show/edit")
+      assert_patch(show_live, ~p"/profiles/#{user.uuid}/show/edit")
 
       assert show_live
              |> form("#profile-form", profile: @invalid_attrs)
@@ -129,7 +259,7 @@ defmodule PrepairWeb.ProfileLiveTest do
              |> form("#profile-form", profile: @update_attrs)
              |> render_submit()
 
-      assert_patch(show_live, ~p"/profiles/#{profile}")
+      assert_patch(show_live, ~p"/profiles/#{user.uuid}")
 
       html = render(show_live)
       assert html =~ "Profile updated successfully"
@@ -140,6 +270,7 @@ defmodule PrepairWeb.ProfileLiveTest do
   describe "Ownership Index" do
     setup [:create_profile, :register_and_log_in_user]
 
+    @tag :profile_liveview
     test "list all ownerships for a profile if {uuid} = current_user.uuid",
          %{conn: conn, user: user} do
       uuid = user.uuid
@@ -160,6 +291,28 @@ defmodule PrepairWeb.ProfileLiveTest do
       refute html =~ "ownerships/#{third_ownership.uuid}"
     end
 
+    @tag :profile_liveview
+    test "list all ownerships for a profile if current_user.role == :admin",
+         %{conn: conn, user: user} do
+      make_user_admin(%{user: user})
+
+      third_profile = profile_fixture()
+      uuid = third_profile.uuid
+
+      third_private_ownership = ownership_fixture(uuid)
+      third_public_ownership = ownership_fixture(uuid, %{public: true})
+
+      {:ok, _index_live, html} =
+        live(conn, ~p"/profiles/ownerships/by_profile/#{uuid}")
+
+      assert html =~
+               "Listing #{third_profile.username} Ownerships (admin view)"
+
+      assert html =~ "ownerships/#{third_private_ownership.uuid}"
+      assert html =~ "ownerships/#{third_public_ownership.uuid}"
+    end
+
+    @tag :profile_liveview
     test "list only public ownerships for a profile if {uuid} != current_user.uuid",
          %{conn: conn, profile: profile} do
       uuid = profile.uuid

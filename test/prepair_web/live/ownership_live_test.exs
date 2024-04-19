@@ -30,9 +30,169 @@ defmodule PrepairWeb.OwnershipLiveTest do
     %{public_ownership: public_ownership}
   end
 
-  describe "Index" do
-    setup [:create_public_ownership, :register_and_log_in_user]
+  ##############################################################################
+  ########################## AUTHORIZATION - VISITORS ##########################
+  ##############################################################################
+  describe "Authorization - visitors" do
+    setup [:create_public_ownership]
 
+    ######################## WHAT VISITORS CAN DO ? ############################
+
+    # Nothing
+
+    ####################### WHAT VISITORS CANNOT DO ? ##########################
+
+    # TODO: rework this test for all schemas because it doesn’t really test the
+    # edit and delete actions.
+    @tag :ownership_liveview
+    test "visitors CANNOT list, edit or delete ownerships", %{conn: conn} do
+      {:error, detail} = live(conn, ~p"/ownerships")
+
+      assert detail ==
+               {:redirect,
+                %{
+                  to: "/users/log_in",
+                  flash: %{"error" => "You must log in to access this page."}
+                }}
+    end
+
+    @tag :ownership_liveview
+    test "visitors CANNOT see or edit an ownership",
+         %{conn: conn, public_ownership: public_ownership} do
+      {:error, detail} = live(conn, ~p"/ownerships/#{public_ownership.uuid}")
+
+      assert detail ==
+               {:redirect,
+                %{
+                  to: "/users/log_in",
+                  flash: %{"error" => "You must log in to access this page."}
+                }}
+    end
+
+    @tag :ownership_liveview
+    test "visitors CANNOT create an ownership", %{conn: conn} do
+      {:error, detail} = live(conn, ~p"/ownerships/new")
+
+      assert detail ==
+               {:redirect,
+                %{
+                  to: "/users/log_in",
+                  flash: %{"error" => "You must log in to access this page."}
+                }}
+    end
+  end
+
+  ##############################################################################
+  ########################### AUTHORIZATION - USERS ############################
+  ##############################################################################
+  describe "Authorization - users" do
+    setup [:register_and_log_in_user, :create_public_ownership]
+
+    ########################### WHAT USERS CAN DO ? ############################
+
+    @tag :ownership_liveview
+    test "users CAN see their SELF ownerships",
+         %{conn: conn, user: user} do
+      ownership = ownership_fixture(user.uuid)
+      {:ok, _index_live, html} = live(conn, ~p"/ownerships/#{ownership.uuid}")
+
+      assert html =~ "#{ownership.warranty_duration_m}"
+    end
+
+    @tag :ownership_liveview
+    test "users CAN create an ownership", %{conn: conn} do
+      # A product creation is needed to populate form's dropdowns.
+      product = product_fixture()
+      {:ok, index_live, _html} = live(conn, ~p"/ownerships/new")
+
+      index_live
+      |> form("#ownership-form",
+        ownership: %{
+          category_uuid: product.category_uuid,
+          manufacturer_uuid: product.manufacturer_uuid
+        }
+      )
+      |> render_change()
+
+      assert index_live
+             |> form("#ownership-form",
+               ownership: %{
+                 product_uuid: product.uuid,
+                 date_of_purchase: ~D[2023-10-02],
+                 warranty_duration_m: 36,
+                 price_of_purchase: 500,
+                 public: true
+               }
+             )
+             |> render_submit()
+
+      assert_patch(index_live, ~p"/ownerships")
+
+      html = render(index_live)
+      assert html =~ "Ownership created successfully"
+    end
+
+    @tag :ownership_liveview
+    test "users CAN update their ownerships", %{conn: conn, user: user} do
+      ownership = ownership_fixture(user.uuid)
+
+      {:ok, _index_live, html} =
+        live(conn, ~p"/ownerships/#{ownership.uuid}/edit")
+
+      assert html =~ "Edit Ownership"
+
+      {:ok, _index_live, html} =
+        live(conn, ~p"/ownerships/#{ownership.uuid}/show/edit")
+
+      assert html =~ "Edit Ownership"
+    end
+
+    ######################### WHAT USERS CANNOT DO ? ###########################
+
+    @tag :ownership_liveview
+    test "users CANNOT list ownerships", %{conn: conn} do
+      conn = get(conn, ~p"/ownerships")
+
+      assert conn.status == 403
+      assert response(conn, 403) =~ "Forbidden"
+    end
+
+    # TODO: Modify the function PrepairWeb.UserAuth.require_self_and_do/4 to
+    # make it return a 403 error instead of 302 redirection.
+    @tag :ownership_liveview
+    test "users CANNOT update another profile's ownership",
+         %{conn: conn, public_ownership: public_ownership} do
+      conn = get(conn, ~p"/ownerships/#{public_ownership.uuid}/edit")
+
+      assert conn.status == 302
+
+      assert response(conn, 302) =~
+               "You are being <a href=\"/\">redirected</a>."
+
+      conn = get(conn, ~p"/ownerships/#{public_ownership.uuid}/show/edit")
+
+      assert conn.status == 302
+
+      assert response(conn, 302) =~
+               "You are being <a href=\"/\">redirected</a>."
+    end
+
+    # NOTE: There is no specific route to delete an ownership, only an
+    # action. Maybe we can still enhance this test.
+  end
+
+  ##############################################################################
+  ########################## FEATURES TESTS - ADMIN ############################
+  ##############################################################################
+
+  describe "Index" do
+    setup [
+      :create_public_ownership,
+      :register_and_log_in_user,
+      :make_user_admin
+    ]
+
+    @tag :ownership_liveview
     test "lists public ownerships", %{
       conn: conn,
       public_ownership: public_ownership
@@ -43,6 +203,7 @@ defmodule PrepairWeb.OwnershipLiveTest do
       assert html =~ public_ownership.profile.username
     end
 
+    @tag :ownership_liveview
     @tag :gettext
     test "index texts are translated to the first language in 'accept-language'
   which match one of the locales defined for the application",
@@ -54,6 +215,7 @@ defmodule PrepairWeb.OwnershipLiveTest do
       assert html =~ public_ownership.profile.username
     end
 
+    @tag :ownership_liveview
     @tag :gettext
     test "index texts are not translated ('en' is the default locale) if none
   of the languages in 'accept-language' is part of the locales defined for
@@ -66,7 +228,9 @@ defmodule PrepairWeb.OwnershipLiveTest do
       assert html =~ public_ownership.profile.username
     end
 
+    @tag :ownership_liveview
     test "saves new ownership", %{conn: conn} do
+      # A product creation is needed to populate form's dropdowns.
       product = product_fixture()
 
       {:ok, index_live, _html} = live(conn, ~p"/ownerships")
@@ -107,6 +271,7 @@ defmodule PrepairWeb.OwnershipLiveTest do
       assert html =~ "Ownership created successfully"
     end
 
+    @tag :ownership_liveview
     test "updates ownership in listing", %{
       conn: conn,
       public_ownership: public_ownership
@@ -134,6 +299,7 @@ defmodule PrepairWeb.OwnershipLiveTest do
       assert html =~ "Ownership updated successfully"
     end
 
+    @tag :ownership_liveview
     test "deletes ownership in listing", %{
       conn: conn,
       public_ownership: public_ownership
@@ -148,8 +314,13 @@ defmodule PrepairWeb.OwnershipLiveTest do
     end
   end
 
+  @tag :ownership_liveview
   describe "Show" do
-    setup [:create_public_ownership, :register_and_log_in_user]
+    setup [
+      :register_and_log_in_user,
+      :create_public_ownership,
+      :make_user_admin
+    ]
 
     test "displays ownership", %{conn: conn, public_ownership: public_ownership} do
       {:ok, _show_live, html} = live(conn, ~p"/ownerships/#{public_ownership}")
@@ -157,6 +328,7 @@ defmodule PrepairWeb.OwnershipLiveTest do
       assert html =~ "Show Ownership"
     end
 
+    @tag :ownership_liveview
     @tag :gettext
     test "show texts are translated to the first language in 'accept-language'
   which match one of the locales defined for the application",
@@ -168,6 +340,7 @@ defmodule PrepairWeb.OwnershipLiveTest do
       assert html =~ public_ownership.profile.username
     end
 
+    @tag :ownership_liveview
     @tag :gettext
     test "show texts are not translated ('en' is the default locale) if none
   of the languages in 'accept-language' is part of the locales defined for
@@ -180,6 +353,7 @@ defmodule PrepairWeb.OwnershipLiveTest do
       assert html =~ public_ownership.profile.username
     end
 
+    @tag :ownership_liveview
     test "updates ownership within modal", %{
       conn: conn,
       public_ownership: public_ownership

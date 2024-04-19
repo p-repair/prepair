@@ -29,6 +29,8 @@ defmodule PrepairWeb.Router do
   ############################### WEB INTERFACES ###############################
   ##############################################################################
 
+  ################################## Everyone ##################################
+
   scope "/", PrepairWeb do
     pipe_through :browser
 
@@ -38,10 +40,10 @@ defmodule PrepairWeb.Router do
     post "/subscribe", PageController, :subscribe
   end
 
+  ################################# All users ##################################
+
   scope "/", PrepairWeb do
     pipe_through [:browser, :require_authenticated_user]
-
-    resources "/contacts", ContactController
 
     live_session :require_authenticated_user,
       on_mount: [{PrepairWeb.UserAuth, :ensure_authenticated}] do
@@ -50,68 +52,92 @@ defmodule PrepairWeb.Router do
 
       live "/manufacturers", ManufacturerLive.Index, :index
       live "/manufacturers/new", ManufacturerLive.Index, :new
-      live "/manufacturers/:uuid/edit", ManufacturerLive.Index, :edit
 
       live "/manufacturers/:uuid", ManufacturerLive.Show, :show
-      live "/manufacturers/:uuid/show/edit", ManufacturerLive.Show, :edit
 
       live "/categories", CategoryLive.Index, :index
       live "/categories/new", CategoryLive.Index, :new
-      live "/categories/:uuid/edit", CategoryLive.Index, :edit
 
       live "/categories/:uuid", CategoryLive.Show, :show
-      live "/categories/:uuid/show/edit", CategoryLive.Show, :edit
 
       live "/products", ProductLive.Index, :index
       live "/products/new", ProductLive.Index, :new
-      live "/products/:uuid/edit", ProductLive.Index, :edit
 
       live "/products/:uuid", ProductLive.Show, :show
-      live "/products/:uuid/show/edit", ProductLive.Show, :edit
 
       live "/parts", PartLive.Index, :index
       live "/parts/new", PartLive.Index, :new
-      live "/parts/:uuid/edit", PartLive.Index, :edit
 
       live "/parts/:uuid", PartLive.Show, :show
-      live "/parts/:uuid/show/edit", PartLive.Show, :edit
-
-      live "/profiles", ProfileLive.Index, :index
-      live "/profiles/:uuid/edit", ProfileLive.Index, :edit
-
-      live "/profiles/:uuid", ProfileLive.Show, :show
-      live "/profiles/:uuid/show/edit", ProfileLive.Show, :edit
 
       live "/profiles/ownerships/by_profile/:uuid",
            ProfileLive.OwnershipIndex,
            :index
 
-      live "/ownerships", OwnershipLive.Index, :index
       live "/ownerships/new", OwnershipLive.Index, :new
-      live "/ownerships/:uuid/edit", OwnershipLive.Index, :edit
 
+      ## NOTE: Self only for *ownerships* below (managed at liveview level).
       live "/ownerships/:uuid", OwnershipLive.Show, :show
+      live "/ownerships/:uuid/edit", OwnershipLive.Index, :edit
       live "/ownerships/:uuid/show/edit", OwnershipLive.Show, :edit
 
       live "/notification_templates", NotificationTemplateLive.Index, :index
       live "/notification_templates/new", NotificationTemplateLive.Index, :new
 
+      live "/notification_templates/:uuid", NotificationTemplateLive.Show, :show
+    end
+  end
+
+  ################################# Self only ##################################
+
+  ## TODO: Maybe delete this scope to handle this case at liveview level like for
+  ## ownerships?
+  scope "/", PrepairWeb do
+    pipe_through [:browser, :require_self_or_admin]
+
+    live_session :require_self_or_admin,
+      on_mount: [{PrepairWeb.UserAuth, :ensure_current_user_access_self_data}] do
+      live "/profiles/:uuid", ProfileLive.Show, :show
+      live "/profiles/:uuid/edit", ProfileLive.Index, :edit
+
+      live "/profiles/:uuid/show/edit", ProfileLive.Show, :edit
+    end
+  end
+
+  ################################ Admins only #################################
+
+  scope "/", PrepairWeb do
+    pipe_through [:browser, :require_admin]
+
+    resources "/contacts", ContactController
+
+    live_session :require_admin,
+      on_mount: [{PrepairWeb.UserAuth, :ensure_is_admin}] do
+      live "/manufacturers/:uuid/edit", ManufacturerLive.Index, :edit
+      live "/manufacturers/:uuid/show/edit", ManufacturerLive.Show, :edit
+
+      live "/categories/:uuid/edit", CategoryLive.Index, :edit
+      live "/categories/:uuid/show/edit", CategoryLive.Show, :edit
+
+      live "/products/:uuid/edit", ProductLive.Index, :edit
+      live "/products/:uuid/show/edit", ProductLive.Show, :edit
+
+      live "/parts/:uuid/edit", PartLive.Index, :edit
+      live "/parts/:uuid/show/edit", PartLive.Show, :edit
+
+      live "/profiles", ProfileLive.Index, :index
+
+      live "/ownerships", OwnershipLive.Index, :index
+
       live "/notification_templates/:uuid/edit",
            NotificationTemplateLive.Index,
            :edit
-
-      live "/notification_templates/:uuid", NotificationTemplateLive.Show, :show
 
       live "/notification_templates/:uuid/show/edit",
            NotificationTemplateLive.Show,
            :edit
     end
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", PrepairWeb do
-  #   pipe_through :api
-  # end
 
   ##############################################################################
   ############################### AUTHENTICATION ###############################

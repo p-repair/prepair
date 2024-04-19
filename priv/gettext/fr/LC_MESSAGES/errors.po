@@ -126,18 +126,18 @@ msgstr "Nous sommes désolés du probleme…\n            Il y a eu une erreur l
 msgid "Try again! The email address entered is not valid."
 msgstr "Essayez encore ! L’adresse email saisie n’est pas valide."
 
-#: lib/prepair_web/user_auth.ex:180
+#: lib/prepair_web/user_auth.ex:201
 #, elixir-autogen, elixir-format
 msgid "You must be admin to access this page."
 msgstr "Vous devez être administrateur pour accéder à cette page."
 
-#: lib/prepair_web/user_auth.ex:274
+#: lib/prepair_web/user_auth.ex:381
 #, elixir-autogen, elixir-format
 msgid "You must be admin to perform this action."
 msgstr "Vous devez être administrateur pour effectuer cette action."
 
 #: lib/prepair_web/user_auth.ex:161
-#: lib/prepair_web/user_auth.ex:233
+#: lib/prepair_web/user_auth.ex:254
 #, elixir-autogen, elixir-format
 msgid "You must log in to access this page."
 msgstr "Vous devez vous connecter pour accéder à cette page."
@@ -199,3 +199,9 @@ msgstr "au moins un caractère majuscule"
 #, elixir-autogen, elixir-format, fuzzy
 msgid "does not match"
 msgstr "ne correspond pas"
+
+#: lib/prepair_web/user_auth.ex:179
+#: lib/prepair_web/user_auth.ex:352
+#, elixir-autogen, elixir-format
+msgid "You are not allowed to access other users\n            private data."
+msgstr "Vous n’êtes pas autorisé à accéder aux données\n            privées des autres utilisateurs."

@@ -19,6 +19,7 @@ defmodule PrepairWeb.ConnCase do
 
   import Plug.Conn
 
+  alias Prepair.Accounts
   alias Prepair.Auth
   alias Prepair.Auth.ApiKey
 
@@ -105,6 +106,14 @@ defmodule PrepairWeb.ConnCase do
     |> Phoenix.ConnTest.init_test_session(%{})
     |> put_session(:user_token, token)
     |> put_req_header("authorization", "Bearer #{Base.encode64(token)}")
+  end
+
+  @doc """
+  Makes the user admin.
+  """
+  def make_user_admin(%{user: user}) do
+    {:ok, user} = Accounts.update_user_role(user, :admin)
+    %{user: user}
   end
 
   @doc """

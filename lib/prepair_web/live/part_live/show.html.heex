@@ -2,9 +2,11 @@
   <%= gettext "Part" %><%= @part.uuid %>
   <:subtitle><%= gettext "This is a part record from your database." %></:subtitle>
   <:actions>
+  <%= if @current_user.role == :admin do %>
     <.link patch={~p"/parts/#{@part}/show/edit"} phx-click={JS.push_focus()}>
       <.button><%= gettext "Edit part" %></.button>
     </.link>
+  <% end %>
   </:actions>
 </.header>
 

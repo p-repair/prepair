@@ -3,9 +3,15 @@ defmodule PrepairWeb.OwnershipLive.Show do
 
   alias Prepair.Profiles
   alias Prepair.Repo
+  alias PrepairWeb.UserAuth
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
+    socket =
+      UserAuth.require_self_and_do(:ownership, socket, params, fn ->
+        socket
+      end)
+
     {:ok, socket}
   end
 

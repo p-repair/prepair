@@ -22,9 +22,157 @@ defmodule PrepairWeb.CategoryLiveTest do
     %{category: category}
   end
 
-  describe "Index" do
+  ##############################################################################
+  ########################## AUTHORIZATION - VISITORS ##########################
+  ##############################################################################
+  describe "Authorization - visitors" do
+    setup [:create_category]
+
+    ######################## WHAT VISITORS CAN DO ? ############################
+
+    # Nothing
+
+    ####################### WHAT VISITORS CANNOT DO ? ##########################
+
+    @tag :category_liveview
+    test "visitors CANNOT list, edit or delete categories", %{conn: conn} do
+      {:error, detail} = live(conn, ~p"/categories")
+
+      assert detail ==
+               {:redirect,
+                %{
+                  to: "/users/log_in",
+                  flash: %{"error" => "You must log in to access this page."}
+                }}
+    end
+
+    @tag :category_liveview
+    test "visitors CANNOT see or edit a category",
+         %{conn: conn, category: category} do
+      {:error, detail} = live(conn, ~p"/categories/#{category.uuid}")
+
+      assert detail ==
+               {:redirect,
+                %{
+                  to: "/users/log_in",
+                  flash: %{"error" => "You must log in to access this page."}
+                }}
+    end
+
+    @tag :category_liveview
+    test "visitors CANNOT create a category", %{conn: conn} do
+      {:error, detail} = live(conn, ~p"/categories/new")
+
+      assert detail ==
+               {:redirect,
+                %{
+                  to: "/users/log_in",
+                  flash: %{"error" => "You must log in to access this page."}
+                }}
+    end
+  end
+
+  ##############################################################################
+  ########################### AUTHORIZATION - USERS ############################
+  ##############################################################################
+  describe "Authorization - users" do
     setup [:create_category, :register_and_log_in_user]
 
+    ########################### WHAT USERS CAN DO ? ############################
+
+    @tag :category_liveview
+    test "users CAN list categories", %{conn: conn} do
+      {:ok, _index_live, html} = live(conn, ~p"/categories")
+
+      assert html =~ "Listing Categories"
+    end
+
+    @tag :category_liveview
+    test "users CAN see a category",
+         %{conn: conn, category: category} do
+      {:ok, _index_live, html} = live(conn, ~p"/categories")
+
+      assert html =~ "#{category.name}"
+    end
+
+    @tag :category_liveview
+    test "users CAN create a category", %{conn: conn} do
+      {:ok, index_live, _html} = live(conn, ~p"/categories")
+
+      assert index_live |> element("a", "New Category") |> render_click() =~
+               "New Category"
+
+      assert index_live
+             |> form("#category-form", category: category_valid_attrs())
+             |> render_submit()
+
+      assert_patch(index_live, ~p"/categories")
+
+      html = render(index_live)
+      assert html =~ "Category created successfully"
+      assert html =~ "some description"
+    end
+
+    ######################### WHAT USERS CANNOT DO ? ###########################
+
+    @tag :category_liveview
+    test "users CANNOT update a category",
+         %{conn: conn, category: category} do
+      conn = get(conn, ~p"/categories/#{category.uuid}/edit")
+
+      assert conn.status == 403
+      assert response(conn, 403) =~ "Forbidden"
+
+      conn = get(conn, ~p"/categories/#{category.uuid}/show/edit")
+
+      assert conn.status == 403
+      assert response(conn, 403) =~ "Forbidden"
+    end
+
+    @tag :category_liveview
+    test "there is no 'Edit' button in Categories Listing for users when they
+    are not admin",
+         %{conn: conn, category: category} do
+      {:ok, index_live, _html} = live(conn, ~p"/categories")
+
+      refute index_live
+             |> element("#categories-#{category.uuid} a", "Edit")
+             |> has_element?()
+    end
+
+    @tag :category_liveview
+    test "there is no 'Edit' button in Category Show for users when they
+    are not admin",
+         %{conn: conn, category: category} do
+      {:ok, index_live, _html} = live(conn, ~p"/categories/#{category.uuid}")
+
+      refute index_live
+             |> element("#category-#{category.uuid} a", "Edit")
+             |> has_element?()
+    end
+
+    @tag :category_liveview
+    test "there is no 'Delete' button in Categories Listing for users when they
+    are not admin",
+         %{conn: conn, category: category} do
+      {:ok, index_live, _html} = live(conn, ~p"/categories")
+
+      refute index_live
+             |> element("#categories-#{category.uuid} a", "Delete")
+             |> has_element?()
+    end
+
+    # NOTE: There is no specific route to delete a manufacturer, only an
+    # action. Maybe we can still enhance this test.
+  end
+
+  ##############################################################################
+  ########################## FEATURES TESTS - ADMIN ############################
+  ##############################################################################
+  describe "Index" do
+    setup [:create_category, :register_and_log_in_user, :make_user_admin]
+
+    @tag :category_liveview
     test "lists all categories", %{conn: conn, category: category} do
       {:ok, _index_live, html} = live(conn, ~p"/categories")
 
@@ -32,6 +180,7 @@ defmodule PrepairWeb.CategoryLiveTest do
       assert html =~ category.description
     end
 
+    @tag :category_liveview
     @tag :gettext
     test "index texts are translated to the first language in 'accept-language'
   which match one of the locales defined for the application",
@@ -43,6 +192,7 @@ defmodule PrepairWeb.CategoryLiveTest do
       assert html =~ category.description
     end
 
+    @tag :category_liveview
     @tag :gettext
     test "index texts are not translated ('en' is the default locale) if none
   of the languages in 'accept-language' is part of the locales defined for
@@ -55,6 +205,7 @@ defmodule PrepairWeb.CategoryLiveTest do
       assert html =~ category.description
     end
 
+    @tag :category_liveview
     test "saves new category", %{conn: conn} do
       {:ok, index_live, _html} = live(conn, ~p"/categories")
 
@@ -78,6 +229,7 @@ defmodule PrepairWeb.CategoryLiveTest do
       assert html =~ "some description"
     end
 
+    @tag :category_liveview
     test "updates category in listing", %{conn: conn, category: category} do
       {:ok, index_live, _html} = live(conn, ~p"/categories")
 
@@ -103,6 +255,7 @@ defmodule PrepairWeb.CategoryLiveTest do
       assert html =~ "some updated description"
     end
 
+    @tag :category_liveview
     test "deletes category in listing", %{conn: conn, category: category} do
       {:ok, index_live, _html} = live(conn, ~p"/categories")
 
@@ -114,8 +267,9 @@ defmodule PrepairWeb.CategoryLiveTest do
     end
   end
 
+  @tag :category_liveview
   describe "Show" do
-    setup [:create_category, :register_and_log_in_user]
+    setup [:create_category, :register_and_log_in_user, :make_user_admin]
 
     test "displays category", %{conn: conn, category: category} do
       {:ok, _show_live, html} = live(conn, ~p"/categories/#{category}")
@@ -124,6 +278,7 @@ defmodule PrepairWeb.CategoryLiveTest do
       assert html =~ category.description
     end
 
+    @tag :category_liveview
     @tag :gettext
     test "show texts are translated to the first language in 'accept-language'
   which match one of the locales defined for the application",
@@ -135,6 +290,7 @@ defmodule PrepairWeb.CategoryLiveTest do
       assert html =~ category.description
     end
 
+    @tag :category_liveview
     @tag :gettext
     test "show texts are not translated ('en' is the default locale) if none
   of the languages in 'accept-language' is part of the locales defined for
@@ -147,6 +303,7 @@ defmodule PrepairWeb.CategoryLiveTest do
       assert html =~ category.description
     end
 
+    @tag :category_liveview
     test "updates category within modal", %{conn: conn, category: category} do
       {:ok, show_live, _html} = live(conn, ~p"/categories/#{category}")
 
