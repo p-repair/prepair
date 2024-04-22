@@ -5,6 +5,13 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
   alias PrepairWeb.Api.Profiles.OwnershipJSON
 
   import Prepair.ProfilesFixtures
+  import PrepairWeb.AuthorizationTestsMacro
+
+  # NOTE: params needed for authorization tests macros
+  @group_name "profiles"
+  @context_name "ownerships"
+  @short_module "ownership"
+  @object_name :ownership
 
   @update_attrs %{
     price_of_purchase: 500,
@@ -16,6 +23,25 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
     product_uuid: nil,
     date_of_purchase: nil
   }
+
+  defp create_third_party_private_ownership(_) do
+    profile = profile_fixture()
+    ownership = create_private_ownership(profile.uuid)
+
+    %{ownership: ownership}
+  end
+
+  defp create_third_party_public_ownership(_) do
+    profile = profile_fixture()
+    ownership = create_public_ownership(profile.uuid)
+
+    %{ownership: ownership}
+  end
+
+  defp create_self_ownership(%{user: user}) do
+    ownership = create_private_ownership(user.uuid)
+    %{ownership: ownership}
+  end
 
   defp create_private_ownership(profile_uuid) do
     ownership_fixture(profile_uuid)
@@ -37,21 +63,159 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  setup [:create_and_set_api_key, :register_and_log_in_user]
+  setup [:create_and_set_api_key]
+
+  ##############################################################################
+  ########################## VISITORS - AUTHORIZATION ##########################
+  ##############################################################################
+  describe "visitors authorization:" do
+    setup [:create_third_party_public_ownership]
+
+    ######################## WHAT VISITORS CAN DO ? ############################
+
+    # Nothing
+
+    ####################### WHAT VISITORS CANNOT DO ? ##########################
+
+    @tag :ownership_controller
+    test_visitors_cannot_see_an_object()
+
+    @tag :ownership_controller
+    test_visitors_cannot_create_an_object()
+
+    @tag :ownership_controller
+    test_visitors_cannot_update_an_object()
+
+    @tag :ownership_controller
+    test_visitors_cannot_delete_an_object()
+
+    @tag :ownership_controller
+    test_index_route_does_not_exist()
+  end
+
+  ##############################################################################
+  ########################### USERS - AUTHORIZATION ############################
+  ##############################################################################
+  describe "users authorization:" do
+    setup [:register_and_log_in_user, :create_third_party_private_ownership]
+
+    ########################### WHAT USERS CAN DO ? ############################
+
+    @tag :ownership_controller
+    test "users can see public ownerships from other users",
+         %{conn: conn} do
+      profile = profile_fixture()
+      third_public_ownership = create_public_ownership(profile.uuid)
+
+      conn =
+        get(conn, ~p"/api/v1/profiles/ownerships/by_profile/#{profile.uuid}")
+
+      assert json_response(conn, 200)["data"] ==
+               [third_public_ownership |> to_normalised_json()]
+    end
+
+    ######################### WHAT USERS CANNOT DO ? ###########################
+
+    @tag :ownership_controller
+    test "users cannot see private ownerships from other users",
+         %{conn: conn} do
+      profile = profile_fixture()
+      _third_private_ownership = create_private_ownership(profile.uuid)
+
+      conn =
+        get(conn, ~p"/api/v1/profiles/ownerships/by_profile/#{profile.uuid}")
+
+      assert json_response(conn, 200)["data"] == []
+    end
+
+    @tag :ownership_controller
+    test "users cannot create an ownership (for someone else)", %{conn: conn} do
+      profile = profile_fixture()
+
+      assert conn
+             |> post(~p"/api/v1/profiles/ownerships", %{
+               profile_uuid: profile.uuid,
+               ownership: ownership_valid_attrs()
+             })
+             |> json_response(403)
+    end
+
+    @tag :ownership_controller
+    test_users_cannot_see_an_object()
+
+    @tag :ownership_controller
+    test_users_cannot_update_an_object()
+
+    @tag :ownership_controller
+    test_users_cannot_delete_an_object()
+
+    # Index route does not exist for ownerships (already tested with visitors).
+  end
+
+  ##############################################################################
+  ############################ SELF - AUTHORIZATION ############################
+  ##############################################################################
+  describe "self authorization:" do
+    setup [:register_and_log_in_user, :create_self_ownership]
+
+    ############################ WHAT SELF CAN DO ? ############################
+
+    @tag :ownership_controller
+    test "self can list all its ownerships",
+         %{conn: conn, user: user, ownership: ownership} do
+      private_ownership = create_private_ownership(user.uuid)
+      public_ownership = create_public_ownership(user.uuid)
+
+      conn = get(conn, ~p"/api/v1/profiles/ownerships/by_profile/#{user.uuid}")
+
+      assert json_response(conn, 200)["data"] == [
+               ownership |> to_normalised_json(),
+               private_ownership |> to_normalised_json(),
+               public_ownership |> to_normalised_json()
+             ]
+    end
+
+    @tag :ownership_controller
+    test "self can create an ownership (for themselves)", %{
+      conn: conn,
+      user: user
+    } do
+      assert conn
+             |> post(~p"/api/v1/profiles/ownerships", %{
+               profile_uuid: user.uuid,
+               ownership: ownership_valid_attrs()
+             })
+             |> json_response(201)
+    end
+
+    @tag :ownership_controller
+    test_self_can_see_an_object()
+
+    @tag :ownership_controller
+    test_self_can_update_an_object()
+
+    @tag :ownership_controller
+    test_self_can_delete_an_object()
+
+    ########################## WHAT SELF CANNOT DO ? ###########################
+
+    # Index route does not exist for ownerships (already tested with visitors).
+  end
+
+  ##############################################################################
+  ########################## FEATURES TESTS - ADMIN ############################
+  ##############################################################################
 
   describe "GET /api/v1/profiles/ownerships/by_profile/:uuid" do
-    test "get the full list of ownerships for the given profile :uuid,
-    when :uuid is the currently authenticated user",
+    setup [:register_and_log_in_user, :make_user_admin]
+
+    @tag :ownership_controller
+    test "get the full list of ownerships for the given profile",
          %{conn: conn, user: user} do
-      uuid = user.uuid
+      private_ownership = create_private_ownership(user.uuid)
+      public_ownership = create_public_ownership(user.uuid)
 
-      other_profile_uuid = profile_fixture().uuid
-
-      private_ownership = create_private_ownership(uuid)
-      public_ownership = create_public_ownership(uuid)
-      _third_ownership = create_public_ownership(other_profile_uuid)
-
-      conn = get(conn, ~p"/api/v1/profiles/ownerships/by_profile/#{uuid}")
+      conn = get(conn, ~p"/api/v1/profiles/ownerships/by_profile/#{user.uuid}")
 
       assert json_response(conn, 200)["data"] == [
                private_ownership |> to_normalised_json(),
@@ -59,25 +223,25 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
              ]
     end
 
-    test "get only the public ownerships for the given profile :uuid,
-    when :uuid is not the currently authenticated user",
-         %{conn: conn, user: _user} do
-      uuid = profile_fixture().uuid
-      other_profile_uuid = profile_fixture().uuid
+    @tag :ownership_controller
+    test "don't list other profile ownerships",
+         %{conn: conn, user: user} do
+      other_profile = profile_fixture()
 
-      _private_ownership = create_private_ownership(uuid)
-      public_ownership = create_public_ownership(uuid)
-      _third_ownership = create_public_ownership(other_profile_uuid)
+      private_ownership = create_private_ownership(user.uuid)
+      _third_ownership = create_public_ownership(other_profile.uuid)
 
-      conn = get(conn, ~p"/api/v1/profiles/ownerships/by_profile/#{uuid}")
+      conn = get(conn, ~p"/api/v1/profiles/ownerships/by_profile/#{user.uuid}")
 
-      assert json_response(conn, 200)["data"] == [
-               public_ownership |> to_normalised_json()
-             ]
+      assert json_response(conn, 200)["data"] ==
+               [private_ownership |> to_normalised_json()]
     end
   end
 
   describe "GET /api/v1/profiles/ownerships/{uuid}" do
+    setup [:register_and_log_in_user, :make_user_admin]
+
+    @tag :ownership_controller
     test "get an ownership from its uuid", %{conn: conn, user: _user} do
       profile_uuid = profile_fixture().uuid
       private_ownership = create_private_ownership(profile_uuid)
@@ -91,6 +255,9 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
   end
 
   describe "POST /api/v1/profiles/ownerships" do
+    setup [:register_and_log_in_user, :make_user_admin]
+
+    @tag :ownership_controller
     test "creates an ownership when attrs are valid", %{
       conn: conn,
       user: _user
@@ -119,6 +286,7 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
                ownership |> to_normalised_json()
     end
 
+    @tag :ownership_controller
     test "renders error when attrs are invalid", %{
       conn: conn,
       user: _user
@@ -136,6 +304,9 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
   end
 
   describe "PUT /api/v1/profiles/ownerships/{:uuid}" do
+    setup [:register_and_log_in_user, :make_user_admin]
+
+    @tag :ownership_controller
     test "updates an ownership from its uuid when attrs are valid", %{
       conn: conn,
       user: _user
@@ -163,6 +334,7 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
                ownership |> to_normalised_json()
     end
 
+    @tag :ownership_controller
     test "renders error when attrs are invalid", %{
       conn: conn,
       user: _user
@@ -180,6 +352,9 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
   end
 
   describe "delete ownership" do
+    setup [:register_and_log_in_user, :make_user_admin]
+
+    @tag :ownership_controller
     test "delete chosen ownership", %{conn: conn, user: _user} do
       uuid = ownership_fixture().uuid
 

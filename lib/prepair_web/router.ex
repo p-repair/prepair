@@ -179,6 +179,8 @@ defmodule PrepairWeb.Router do
   ############################### API INTERFACES ###############################
   ##############################################################################
 
+  ################################# All users ##################################
+
   scope "/api/v1", PrepairWeb do
     pipe_through [:api, :require_authenticated_api_user]
 
@@ -191,31 +193,64 @@ defmodule PrepairWeb.Router do
     put "/users/update_email", Api.Accounts.UserController, :update_email
 
     resources "/products/categories", Api.Products.CategoryController,
-      except: [:new, :edit],
+      only: [:index, :show, :create],
       param: "uuid"
 
     resources "/products/manufacturers", Api.Products.ManufacturerController,
-      except: [:new, :edit],
+      only: [:index, :show, :create],
       param: "uuid"
 
     resources "/products/products", Api.Products.ProductController,
-      except: [:new, :edit],
+      only: [:index, :show, :create],
       param: "uuid"
 
     resources "/products/parts", Api.Products.PartController,
-      except: [:new, :edit],
+      only: [:index, :show, :create],
       param: "uuid"
 
-    resources "/profiles/profile", Api.Profiles.ProfileController,
-      only: [:index, :show, :update],
-      param: "uuid"
-
+    # Access is filtered by :public | :private data attribute.
     get "/profiles/ownerships/by_profile/:uuid",
         Api.Profiles.OwnershipController,
         :index_by_profile
+  end
+
+  ################################# Self only ##################################
+
+  scope "/api/v1", PrepairWeb do
+    pipe_through [:api, :require_api_self_or_admin]
+
+    resources "/profiles/profiles", Api.Profiles.ProfileController,
+      only: [:show, :update],
+      param: "uuid"
 
     resources "/profiles/ownerships", Api.Profiles.OwnershipController,
-      except: [:index, :new, :edit],
+      only: [:show, :create, :update, :delete],
+      param: "uuid"
+  end
+
+  ################################ Admins only #################################
+
+  scope "/api/v1", PrepairWeb do
+    pipe_through [:api, :require_api_admin]
+
+    resources "/products/categories", Api.Products.CategoryController,
+      only: [:update, :delete],
+      param: "uuid"
+
+    resources "/products/manufacturers", Api.Products.ManufacturerController,
+      only: [:update, :delete],
+      param: "uuid"
+
+    resources "/products/products", Api.Products.ProductController,
+      only: [:update, :delete],
+      param: "uuid"
+
+    resources "/products/parts", Api.Products.PartController,
+      only: [:update, :delete],
+      param: "uuid"
+
+    resources "/profiles/profiles", Api.Profiles.ProfileController,
+      only: [:index],
       param: "uuid"
   end
 

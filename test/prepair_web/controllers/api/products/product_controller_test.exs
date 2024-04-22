@@ -3,9 +3,16 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
 
   import Prepair.NotificationsFixtures
   import Prepair.ProductsFixtures
+  import PrepairWeb.AuthorizationTestsMacro
   alias Prepair.Products
   alias PrepairWeb.Api.Products.ProductJSON
   alias Prepair.Products.Product
+
+  # NOTE: params needed for authorization tests macros
+  @group_name "products"
+  @context_name "products"
+  @short_module "product"
+  @object_name :product
 
   @update_attrs %{
     name: "some updated name",
@@ -56,11 +63,70 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  setup [:create_and_set_api_key, :register_and_log_in_user]
+  setup [:create_and_set_api_key]
 
-  describe "index" do
+  ##############################################################################
+  ########################## VISITORS - AUTHORIZATION ##########################
+  ##############################################################################
+  describe "visitors authorization:" do
+    ######################## WHAT VISITORS CAN DO ? ############################
+
+    # Nothing
+
+    ####################### WHAT VISITORS CANNOT DO ? ##########################
+
     setup [:create_product]
 
+    @tag :product_controller
+    test_visitors_cannot_list_objects()
+
+    @tag :product_controller
+    test_visitors_cannot_see_an_object()
+
+    @tag :product_controller
+    test_visitors_cannot_create_an_object()
+
+    @tag :product_controller
+    test_visitors_cannot_update_an_object()
+
+    @tag :product_controller
+    test_visitors_cannot_delete_an_object()
+  end
+
+  ##############################################################################
+  ########################### USERS - AUTHORIZATION ############################
+  ##############################################################################
+  describe "users authorization:" do
+    setup [:register_and_log_in_user, :create_product]
+
+    ########################### WHAT USERS CAN DO ? ############################
+
+    @tag :product_controller
+    test_users_can_list_objects()
+
+    @tag :product_controller
+    test_users_can_see_an_object()
+
+    @tag :product_controller
+    test_users_can_create_an_object()
+
+    ######################### WHAT USERS CANNOT DO ? ###########################
+
+    @tag :product_controller
+    test_users_cannot_update_an_object()
+
+    @tag :product_controller
+    test_users_cannot_delete_an_object()
+  end
+
+  ##############################################################################
+  ########################## FEATURES TESTS - ADMIN ############################
+  ##############################################################################
+
+  describe "index" do
+    setup [:register_and_log_in_user, :create_product, :make_user_admin]
+
+    @tag :product_controller
     test "lists all products when no query parameters are passed", %{
       conn: conn,
       product: product
@@ -72,6 +138,7 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
              ]
     end
 
+    @tag :product_controller
     test "filter by product_uuids when :product_uuids is set in query parameters",
          %{conn: conn, product: product} do
       _product_2 = product_fixture()
@@ -86,6 +153,7 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
              ]
     end
 
+    @tag :product_controller
     test "filter by category_uuid when :category_uuid is set in query parameters",
          %{conn: conn, product: _product} do
       category_uuid = category_fixture().uuid
@@ -100,6 +168,7 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
              ]
     end
 
+    @tag :product_controller
     test "filter by manufacturer_uuid when :manufacturer_uuid is set in query
     parameters",
          %{conn: conn, product: _product} do
@@ -115,6 +184,7 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
              ]
     end
 
+    @tag :product_controller
     test "filter by an invalid parameter do nothing (return all products)",
          %{conn: conn, product: product} do
       params = %{"random_parameter" => "random_parameter"}
@@ -126,6 +196,7 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
              ]
     end
 
+    @tag :product_controller
     test "allowed filters can be combined and return corresponding products",
          %{conn: conn, product: _product} do
       category_uuid = category_fixture().uuid
@@ -153,6 +224,9 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
   end
 
   describe "create product" do
+    setup [:register_and_log_in_user, :make_user_admin]
+
+    @tag :product_controller
     test "renders a product when data is valid", %{conn: conn} do
       product = product_valid_attrs()
       conn = post(conn, ~p"/api/v1/products/products", product: product)
@@ -170,6 +244,7 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
                product |> to_normalised_json()
     end
 
+    @tag :product_controller
     test "handle product many_to_many relations creation (which are currently
     not in the JSON render)",
          %{conn: conn} do
@@ -193,6 +268,7 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
       assert product.notification_templates == notification_templates
     end
 
+    @tag :product_controller
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, ~p"/api/v1/products/products", product: @invalid_attrs)
 
@@ -201,8 +277,9 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
   end
 
   describe "update product" do
-    setup [:create_product]
+    setup [:register_and_log_in_user, :create_product, :make_user_admin]
 
+    @tag :product_controller
     test "renders product when data is valid", %{
       conn: conn,
       product: %Product{uuid: uuid} = product
@@ -225,6 +302,7 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
                product |> to_normalised_json()
     end
 
+    @tag :product_controller
     test "updates product many_to_many relations (which are currently not in the
     JSON render)",
          %{
@@ -258,6 +336,7 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
       assert product.notification_templates == new_notification_templates
     end
 
+    @tag :product_controller
     test "renders errors when data is invalid", %{
       conn: conn,
       product: product
@@ -272,8 +351,9 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
   end
 
   describe "delete product" do
-    setup [:create_product]
+    setup [:register_and_log_in_user, :create_product, :make_user_admin]
 
+    @tag :product_controller
     test "delete chosen product", %{conn: conn, product: product} do
       conn = delete(conn, ~p"/api/v1/products/products/#{product}")
       assert response(conn, 204)

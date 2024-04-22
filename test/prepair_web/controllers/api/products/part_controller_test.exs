@@ -3,9 +3,16 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
 
   import Prepair.NotificationsFixtures
   import Prepair.ProductsFixtures
+  import PrepairWeb.AuthorizationTestsMacro
   alias Prepair.Products
   alias Prepair.Products.Part
   alias PrepairWeb.Api.Products.PartJSON
+
+  # NOTE: params needed for authorization tests macros
+  @group_name "products"
+  @context_name "parts"
+  @short_module "part"
+  @object_name :part
 
   @update_attrs %{
     name: "some updated name",
@@ -56,11 +63,71 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  setup [:create_and_set_api_key, :register_and_log_in_user]
+  setup [:create_and_set_api_key]
 
-  describe "index" do
+  ##############################################################################
+  ########################## VISITORS - AUTHORIZATION ##########################
+  ##############################################################################
+  describe "visitors authorization:" do
+    ######################## WHAT VISITORS CAN DO ? ############################
+
+    # Nothing
+
+    ####################### WHAT VISITORS CANNOT DO ? ##########################
+
     setup [:create_part]
 
+    @tag :part_controller
+    test_visitors_cannot_list_objects()
+
+    @tag :part_controller
+    test_visitors_cannot_see_an_object()
+
+    @tag :part_controller
+    test_visitors_cannot_create_an_object()
+
+    @tag :part_controller
+    test_visitors_cannot_update_an_object()
+
+    @tag :part_controller
+    test_visitors_cannot_delete_an_object()
+  end
+
+  ##############################################################################
+  ########################### USERS - AUTHORIZATION ############################
+  ##############################################################################
+  describe "users authorization:" do
+    setup [:register_and_log_in_user, :create_part]
+
+    ########################### WHAT USERS CAN DO ? ############################
+
+    @tag :part_controller
+    test_users_can_list_objects()
+
+    @tag :part_controller
+
+    test_users_can_see_an_object()
+
+    @tag :part_controller
+    test_users_can_create_an_object()
+
+    ######################### WHAT USERS CANNOT DO ? ###########################
+
+    @tag :part_controller
+    test_users_cannot_update_an_object()
+
+    @tag :part_controller
+    test_users_cannot_delete_an_object()
+  end
+
+  ##############################################################################
+  ########################## FEATURES TESTS - ADMIN ############################
+  ##############################################################################
+
+  describe "index" do
+    setup [:register_and_log_in_user, :create_part, :make_user_admin]
+
+    @tag :part_controller
     test "lists all parts", %{conn: conn, part: part} do
       conn = get(conn, ~p"/api/v1/products/parts")
 
@@ -71,6 +138,9 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
   end
 
   describe "create part" do
+    setup [:register_and_log_in_user, :make_user_admin]
+
+    @tag :part_controller
     test "renders a part when data is valid", %{conn: conn} do
       part = part_valid_attrs()
       conn = post(conn, ~p"/api/v1/products/parts", part: part)
@@ -87,6 +157,7 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
       assert json_response(conn, 200)["data"] == part |> to_normalised_json()
     end
 
+    @tag :part_controller
     test "handle part many_to_many relations (which are currently not in the
     JSON render)",
          %{conn: conn} do
@@ -110,6 +181,7 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
       assert part.notification_templates == notification_templates
     end
 
+    @tag :part_controller
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, ~p"/api/v1/products/parts", part: @invalid_attrs)
 
@@ -118,8 +190,9 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
   end
 
   describe "update part" do
-    setup [:create_part]
+    setup [:register_and_log_in_user, :create_part, :make_user_admin]
 
+    @tag :part_controller
     test "renders part when data is valid", %{
       conn: conn,
       part: %Part{uuid: uuid} = part
@@ -138,6 +211,7 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
       assert json_response(conn, 200)["data"] == part |> to_normalised_json()
     end
 
+    @tag :part_controller
     test "updates part many_to_many relations (which are currently not in the
     JSON render)",
          %{
@@ -167,6 +241,7 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
       assert part.notification_templates == new_notification_templates
     end
 
+    @tag :part_controller
     test "renders errors when data is invalid", %{
       conn: conn,
       part: part
@@ -178,8 +253,9 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
   end
 
   describe "delete part" do
-    setup [:create_part]
+    setup [:register_and_log_in_user, :create_part, :make_user_admin]
 
+    @tag :part_controller
     test "delete chosen part", %{conn: conn, part: part} do
       conn = delete(conn, ~p"/api/v1/products/parts/#{part}")
       assert response(conn, 204)

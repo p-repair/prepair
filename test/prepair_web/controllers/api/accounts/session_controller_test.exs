@@ -12,7 +12,14 @@ defmodule PrepairWeb.Api.Accounts.SessionControllerTest do
 
   setup [:create_and_set_api_key, :create_user]
 
+  ##############################################################################
+  ########################## VISITORS - AUTHORIZATION ##########################
+  ##############################################################################
+
+  ######################### WHAT VISITORS CAN DO ? #############################
+
   describe "POST /api/v1/users/log_in" do
+    @tag :session_controller
     test "fetch a session token when valid credentials are given",
          %{conn: conn, user: user, user_password: user_password} do
       conn =
@@ -27,6 +34,7 @@ defmodule PrepairWeb.Api.Accounts.SessionControllerTest do
                response
     end
 
+    @tag :session_controller
     test "raises an error when invalid email is given",
          %{conn: conn} do
       conn =
@@ -41,6 +49,7 @@ defmodule PrepairWeb.Api.Accounts.SessionControllerTest do
                response
     end
 
+    @tag :session_controller
     test "raises an error when invalid password is given",
          %{conn: conn, user: user} do
       conn =
@@ -55,6 +64,7 @@ defmodule PrepairWeb.Api.Accounts.SessionControllerTest do
                response
     end
 
+    @tag :session_controller
     test "raises an error when the request does not contain credentials",
          %{conn: conn} do
       conn =

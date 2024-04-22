@@ -23,8 +23,81 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
+  setup [:create_and_set_api_key]
+
+  ##############################################################################
+  ########################## VISITORS - AUTHORIZATION ##########################
+  ##############################################################################
+  describe "visitors authorization:" do
+    ######################## WHAT VISITORS CAN DO ? ############################
+
+    @tag :user_controller
+    test "visitors can register for an account", %{conn: conn} do
+      password = valid_user_password()
+      email = unique_user_email()
+      profile = profile_valid_attrs()
+
+      registration =
+        %{
+          username: profile.username,
+          email: email,
+          password: password,
+          password_confirmation: password,
+          people_in_household: profile.people_in_household,
+          newsletter: profile.newsletter
+        }
+
+      assert conn
+             |> post(~p"/api/v1/users/register", %{registration: registration})
+             |> json_response(200)
+    end
+
+    # Visitors can log in the app (tested in SessionControllerTest).
+
+    ####################### WHAT VISITORS CANNOT DO ? ##########################
+
+    @tag :user_controller
+    test "visitors cannot fetch the current user uuid", %{conn: conn} do
+      assert conn
+             |> get(~p"/api/v1/users")
+             |> json_response(401)
+    end
+
+    @tag :user_controller
+    test "visitors cannot update password", %{conn: conn} do
+      assert conn
+             |> put(~p"/api/v1/users/update_password", %{})
+             |> json_response(401)
+    end
+
+    @tag :user_controller
+    test "visitors cannot update email", %{conn: conn} do
+      assert conn
+             |> put(~p"/api/v1/users/update_email", %{})
+             |> json_response(401)
+    end
+  end
+
+  ##############################################################################
+  ########################### USERS - AUTHORIZATION ############################
+  ##############################################################################
+
+  ########################### WHAT USERS CAN DO ? ############################
+
+  # Fetch the current_user uuid (tested below).
+  # Udpate their password (tested below).
+  # Update their email (tested below).
+
+  ######################### WHAT USERS CANNOT DO ? ###########################
+
+  # TODO: User cannot register? API redirection? Or not needed?
+
+  ##############################################################################
+  ###################### FEATURES TESTS - USER | ADMIN #########################
+  ##############################################################################
+
   describe "GET /api/v1/users" do
-    setup [:create_and_set_api_key, :register_and_log_in_user]
+    setup [:register_and_log_in_user]
 
     @tag :user_controller
     test "fetch the current user uuid",
@@ -37,8 +110,6 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
   end
 
   describe "POST /api/v1/users/register" do
-    setup [:create_and_set_api_key]
-
     @tag :user_controller
     test "creates a new user when data is valid", %{conn: conn} do
       password = valid_user_password()
@@ -258,7 +329,7 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
   end
 
   describe "PUT /api/v1/users/update_password" do
-    setup [:create_and_set_api_key, :register_and_log_in_user]
+    setup [:register_and_log_in_user]
 
     @tag :user_controller
     test "updates password when current password is valid and new password is
@@ -362,7 +433,7 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
   end
 
   describe "PUT /api/v1/users/update_email" do
-    setup [:create_and_set_api_key, :register_and_log_in_user]
+    setup [:register_and_log_in_user]
 
     @tag :user_controller
     test "updates email when current password is valid and new email is

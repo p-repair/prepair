@@ -3,9 +3,16 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
 
   import Prepair.NotificationsFixtures
   import Prepair.ProductsFixtures
+  import PrepairWeb.AuthorizationTestsMacro
   alias Prepair.Products
   alias Prepair.Products.Category
   alias PrepairWeb.Api.Products.CategoryJSON
+
+  # NOTE: params needed for authorization tests macros
+  @group_name "products"
+  @context_name "categories"
+  @short_module "category"
+  @object_name :category
 
   @update_attrs %{
     average_lifetime_m: 43,
@@ -45,11 +52,70 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  setup [:create_and_set_api_key, :register_and_log_in_user]
+  setup [:create_and_set_api_key]
 
-  describe "index" do
+  ##############################################################################
+  ########################## VISITORS - AUTHORIZATION ##########################
+  ##############################################################################
+  describe "visitors authorization:" do
+    ######################## WHAT VISITORS CAN DO ? ############################
+
+    # Nothing
+
+    ####################### WHAT VISITORS CANNOT DO ? ##########################
+
     setup [:create_category]
 
+    @tag :category_controller
+    test_visitors_cannot_list_objects()
+
+    @tag :category_controller
+    test_visitors_cannot_see_an_object()
+
+    @tag :category_controller
+    test_visitors_cannot_create_an_object()
+
+    @tag :category_controller
+    test_visitors_cannot_update_an_object()
+
+    @tag :category_controller
+    test_visitors_cannot_delete_an_object()
+  end
+
+  ##############################################################################
+  ########################### USERS - AUTHORIZATION ############################
+  ##############################################################################
+  describe "users authorization:" do
+    setup [:register_and_log_in_user, :create_category]
+
+    ########################### WHAT USERS CAN DO ? ############################
+
+    @tag :category_controller
+    test_users_can_list_objects()
+
+    @tag :category_controller
+    test_users_can_see_an_object()
+
+    @tag :category_controller
+    test_users_can_create_an_object()
+
+    ######################### WHAT USERS CANNOT DO ? ###########################
+
+    @tag :category_controller
+    test_users_cannot_update_an_object()
+
+    @tag :category_controller
+    test_users_cannot_delete_an_object()
+  end
+
+  ##############################################################################
+  ########################## FEATURES TESTS - ADMIN ############################
+  ##############################################################################
+
+  describe "index" do
+    setup [:register_and_log_in_user, :create_category, :make_user_admin]
+
+    @tag :category_controller
     test "lists all categories", %{conn: conn, category: category} do
       conn = get(conn, ~p"/api/v1/products/categories")
 
@@ -60,6 +126,9 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
   end
 
   describe "create category" do
+    setup [:register_and_log_in_user, :make_user_admin]
+
+    @tag :category_controller
     test "renders a category when data is valid", %{conn: conn} do
       category = category_valid_attrs()
       conn = post(conn, ~p"/api/v1/products/categories", category: category)
@@ -77,6 +146,7 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
                category |> to_normalised_json()
     end
 
+    @tag :category_controller
     test "handle category many_to_many relations creation (which are currently
     not in the JSON render)",
          %{conn: conn} do
@@ -96,6 +166,7 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
       assert category.notification_templates == notification_templates
     end
 
+    @tag :category_controller
     test "renders errors when data is invalid", %{conn: conn} do
       conn =
         post(conn, ~p"/api/v1/products/categories", category: @invalid_attrs)
@@ -105,8 +176,9 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
   end
 
   describe "update category" do
-    setup [:create_category]
+    setup [:register_and_log_in_user, :create_category, :make_user_admin]
 
+    @tag :category_controller
     test "renders category when data is valid", %{
       conn: conn,
       category: %Category{uuid: uuid} = category
@@ -129,6 +201,7 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
                category |> to_normalised_json()
     end
 
+    @tag :category_controller
     test "updates category many_to_many relations (which are currently not in
     the JSON render)",
          %{
@@ -158,6 +231,7 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
       assert category.notification_templates == new_notification_templates
     end
 
+    @tag :category_controller
     test "renders errors when data is invalid", %{
       conn: conn,
       category: category
@@ -172,8 +246,9 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
   end
 
   describe "delete category" do
-    setup [:create_category]
+    setup [:register_and_log_in_user, :create_category, :make_user_admin]
 
+    @tag :category_controller
     test "delete chosen category", %{conn: conn, category: category} do
       conn = delete(conn, ~p"/api/v1/products/categories/#{category}")
       assert response(conn, 204)

@@ -8,10 +8,10 @@ defmodule PrepairWeb.Api.Profiles.OwnershipController do
   action_fallback PrepairWeb.Api.FallbackController
 
   def index_by_profile(conn, params) do
-    current_user_uuid = conn.assigns.current_user.uuid
+    current_user = conn.assigns.current_user
     profile_uuid = params["uuid"]
 
-    if current_user_uuid == profile_uuid do
+    if current_user.uuid == profile_uuid or current_user.role == :admin do
       ownerships =
         Profiles.list_ownerships_by_profile(profile_uuid, include_private: true)
 

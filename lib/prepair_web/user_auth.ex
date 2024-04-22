@@ -282,6 +282,11 @@ defmodule PrepairWeb.UserAuth do
     end
   end
 
+  # TODO: to make this function universal, we should add an 'or' clause to the
+  # if statement, get the object from "uuid" in params, and search for an
+  # equality between current_user.uuid and object.profile_uuid (that would be
+  # necessary for ownerships, for instance). Just like it has been done on
+  # the ApiUserAuth module.
   defp is_self_user?(conn) do
     if conn.assigns.current_user.uuid == conn.path_params["uuid"] do
       conn

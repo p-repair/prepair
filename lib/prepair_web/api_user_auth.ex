@@ -1,5 +1,6 @@
 defmodule PrepairWeb.ApiUserAuth do
   alias Prepair.Accounts
+  alias Prepair.Profiles
 
   import Plug.Conn
   import Phoenix.Controller
@@ -44,19 +45,88 @@ defmodule PrepairWeb.ApiUserAuth do
   end
 
   @doc """
-  Used for routes that require the user to be an admin.
+  Used for routes which gives access only to self data.
+  Admins still have access too.
   """
-  def require_api_admin(conn, opts) do
-    with conn <- require_authenticated_api_user(conn, opts),
-         :admin <- conn.assigns.current_user.role do
+  # TODO: refactor require_authenticated_user to return {:ok, conn} | {:error, conn}
+  # TODO: refactor require_admin to return {:ok, conn} | {:error, conn}
+  # TODO: refactor require_self_or_admin to return {:ok, conn} | {:error, conn}
+  def require_api_self_or_admin(conn, _opts) do
+    conn = require_authenticated_api_user(conn, [])
+
+    if conn.assigns[:current_user] != nil do
+      case conn.assigns.current_user.role do
+        :admin ->
+          conn
+
+        _ ->
+          is_self_user?(conn)
+      end
+    else
+      conn
+    end
+  end
+
+  defp is_self_user?(conn) do
+    current_user = conn.assigns.current_user
+
+    if current_user.uuid == conn.path_params["uuid"] or
+         current_user.uuid == get_profile_uuid_from_request(conn) do
       conn
     else
-      _ ->
-        conn
-        |> put_status(:forbidden)
-        |> put_view(PrepairWeb.ErrorJSON)
-        |> render(:"403")
-        |> halt()
+      conn
+      # TODO: enhance error pages
+      |> put_status(:forbidden)
+      |> put_view(PrepairWeb.ErrorJSON)
+      |> render(:"403")
+      |> halt()
+    end
+  end
+
+  defp get_profile_uuid_from_request(conn) do
+    method = conn.method
+    context = conn.path_info |> Enum.at(2)
+    schema = conn.path_info |> Enum.at(3)
+
+    profile_uuid =
+      case [method, context, schema] do
+        [_, "profiles", "profiles"] ->
+          conn.path_params["uuid"]
+
+        ["POST", "profiles", "ownerships"] ->
+          conn.params["profile_uuid"]
+
+        [_, "profiles", "ownerships"] ->
+          Profiles.get_ownership!(conn.path_params["uuid"]).profile_uuid
+      end
+
+    profile_uuid
+  end
+
+  @doc """
+  Used for routes that require the user to be an admin.
+  """
+  # NOTE: J’ai dû changer la fonction car
+  # with conn <- require_authenticated_user(conn, opts) retourne toujours conn
+  # sinon il faudrait modifier son retour en {:ok, conn} | {:error, conn}
+  # mais nous devons voir ça ensemble
+  def require_api_admin(conn, _opts) do
+    conn = require_authenticated_api_user(conn, [])
+
+    if conn.assigns[:current_user] != nil do
+      case conn.assigns.current_user.role do
+        :admin ->
+          conn
+
+        _ ->
+          conn
+          |> put_status(:forbidden)
+          |> put_view(PrepairWeb.ErrorJSON)
+          |> render(:"403")
+          |> halt()
+      end
+    else
+      conn
     end
   end
 

@@ -2,8 +2,15 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
   use PrepairWeb.ConnCase
 
   import Prepair.ProductsFixtures
+  import PrepairWeb.AuthorizationTestsMacro
   alias Prepair.Products.Manufacturer
   alias PrepairWeb.Api.Products.ManufacturerJSON
+
+  # NOTE: params needed for authorization tests macros
+  @group_name "products"
+  @context_name "manufacturers"
+  @short_module "manufacturer"
+  @object_name :manufacturer
 
   @update_attrs %{
     description: "some updated description",
@@ -28,11 +35,70 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  setup [:create_and_set_api_key, :register_and_log_in_user]
+  setup [:create_and_set_api_key]
 
-  describe "index" do
+  ##############################################################################
+  ########################## VISITORS - AUTHORIZATION ##########################
+  ##############################################################################
+  describe "visitors authorization:" do
+    ######################## WHAT VISITORS CAN DO ? ############################
+
+    # Nothing
+
+    ####################### WHAT VISITORS CANNOT DO ? ##########################
+
     setup [:create_manufacturer]
 
+    @tag :manufacturer_controller
+    test_visitors_cannot_list_objects()
+
+    @tag :manufacturer_controller
+    test_visitors_cannot_see_an_object()
+
+    @tag :manufacturer_controller
+    test_visitors_cannot_create_an_object()
+
+    @tag :manufacturer_controller
+    test_visitors_cannot_update_an_object()
+
+    @tag :manufacturer_controller
+    test_visitors_cannot_delete_an_object()
+  end
+
+  ##############################################################################
+  ########################### USERS - AUTHORIZATION ############################
+  ##############################################################################
+  describe "users authorization:" do
+    setup [:register_and_log_in_user, :create_manufacturer]
+
+    ########################### WHAT USERS CAN DO ? ############################
+
+    @tag :manufacturer_controller
+    test_users_can_list_objects()
+
+    @tag :manufacturer_controller
+    test_users_can_see_an_object()
+
+    @tag :manufacturer_controller
+    test_users_can_create_an_object()
+
+    ######################### WHAT USERS CANNOT DO ? ###########################
+
+    @tag :manufacturer_controller
+    test_users_cannot_update_an_object()
+
+    @tag :manufacturer_controller
+    test_users_cannot_delete_an_object()
+  end
+
+  ##############################################################################
+  ########################## FEATURES TESTS - ADMIN ############################
+  ##############################################################################
+
+  describe "index" do
+    setup [:register_and_log_in_user, :create_manufacturer, :make_user_admin]
+
+    @tag :manufacturer_controller
     test "lists all manufacturers", %{conn: conn, manufacturer: manufacturer} do
       conn = get(conn, ~p"/api/v1/products/manufacturers")
 
@@ -43,6 +109,9 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
   end
 
   describe "create manufacturer" do
+    setup [:register_and_log_in_user, :make_user_admin]
+
+    @tag :manufacturer_controller
     test "renders manufacturer when data is valid", %{conn: conn} do
       valid_attrs = manufacturer_valid_attrs()
 
@@ -64,6 +133,7 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
                manufacturer |> to_normalised_json()
     end
 
+    @tag :manufacturer_controller
     test "renders errors when data is invalid", %{conn: conn} do
       conn =
         post(conn, ~p"/api/v1/products/manufacturers",
@@ -75,8 +145,9 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
   end
 
   describe "update manufacturer" do
-    setup [:create_manufacturer]
+    setup [:register_and_log_in_user, :create_manufacturer, :make_user_admin]
 
+    @tag :manufacturer_controller
     test "renders manufacturer when data is valid", %{
       conn: conn,
       manufacturer: %Manufacturer{uuid: uuid} = manufacturer
@@ -99,6 +170,7 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
                manufacturer |> to_normalised_json()
     end
 
+    @tag :manufacturer_controller
     test "renders errors when data is invalid", %{
       conn: conn,
       manufacturer: manufacturer
@@ -113,8 +185,9 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
   end
 
   describe "delete manufacturer" do
-    setup [:create_manufacturer]
+    setup [:register_and_log_in_user, :create_manufacturer, :make_user_admin]
 
+    @tag :manufacturer_controller
     test "delete chosen manufacturer", %{conn: conn, manufacturer: manufacturer} do
       conn = delete(conn, ~p"/api/v1/products/manufacturers/#{manufacturer}")
       assert response(conn, 204)
