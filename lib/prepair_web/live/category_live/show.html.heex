@@ -1,5 +1,5 @@
 <.header>
-  <%= gettext "Category" %> <%= @category.uuid %>
+  <%= gettext "Category" %> <%= @category.id %>
   <:subtitle><%= gettext "This is a category record from your database." %></:subtitle>
   <:actions>
 <%= if @current_user.role == :admin do %>
@@ -22,7 +22,7 @@
 <.modal :if={@live_action == :edit} id="category-modal" show on_cancel={JS.patch(~p"/categories/#{@category}")}>
   <.live_component
     module={PrepairWeb.CategoryLive.FormComponent}
-    id={@category.uuid}
+    id={@category.id}
     title={@page_title}
     action={@live_action}
     category={@category}

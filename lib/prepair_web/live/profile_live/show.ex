@@ -10,11 +10,11 @@ defmodule PrepairWeb.ProfileLive.Show do
   end
 
   @impl true
-  def handle_params(%{"uuid" => uuid}, _, socket) do
+  def handle_params(%{"id" => id}, _, socket) do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:profile, uuid |> Profiles.get_profile!() |> Repo.preload(:user))}
+     |> assign(:profile, id |> Profiles.get_profile!() |> Repo.preload(:user))}
   end
 
   defp page_title(:show), do: gettext("Show Profile")

@@ -57,7 +57,7 @@ defmodule PrepairWeb.ProductLiveTest do
     @tag :product_liveview
     test "visitors CANNOT see or edit a product",
          %{conn: conn, product: product} do
-      {:error, detail} = live(conn, ~p"/products/#{product.uuid}")
+      {:error, detail} = live(conn, ~p"/products/#{product.id}")
 
       assert detail ==
                {:redirect,
@@ -127,12 +127,12 @@ defmodule PrepairWeb.ProductLiveTest do
     @tag :product_liveview
     test "users CANNOT update a product",
          %{conn: conn, product: product} do
-      conn = get(conn, ~p"/products/#{product.uuid}/edit")
+      conn = get(conn, ~p"/products/#{product.id}/edit")
 
       assert conn.status == 403
       assert response(conn, 403) =~ "Forbidden"
 
-      conn = get(conn, ~p"/products/#{product.uuid}/show/edit")
+      conn = get(conn, ~p"/products/#{product.id}/show/edit")
 
       assert conn.status == 403
       assert response(conn, 403) =~ "Forbidden"
@@ -145,7 +145,7 @@ defmodule PrepairWeb.ProductLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/products")
 
       refute index_live
-             |> element("#products-#{product.uuid} a", "Edit")
+             |> element("#products-#{product.id} a", "Edit")
              |> has_element?()
     end
 
@@ -153,10 +153,10 @@ defmodule PrepairWeb.ProductLiveTest do
     test "there is no 'Edit' button in Product Show for users when they
     are not admin",
          %{conn: conn, product: product} do
-      {:ok, index_live, _html} = live(conn, ~p"/products/#{product.uuid}")
+      {:ok, index_live, _html} = live(conn, ~p"/products/#{product.id}")
 
       refute index_live
-             |> element("#products-#{product.uuid} a", "Edit")
+             |> element("#products-#{product.id} a", "Edit")
              |> has_element?()
     end
 
@@ -167,7 +167,7 @@ defmodule PrepairWeb.ProductLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/products")
 
       refute index_live
-             |> element("#products-#{product.uuid} a", "Delete")
+             |> element("#products-#{product.id} a", "Delete")
              |> has_element?()
     end
 
@@ -246,7 +246,7 @@ defmodule PrepairWeb.ProductLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/products")
 
       assert index_live
-             |> element("#products-#{product.uuid} a", "Edit")
+             |> element("#products-#{product.id} a", "Edit")
              |> render_click() =~
                "Edit Product"
 
@@ -272,10 +272,10 @@ defmodule PrepairWeb.ProductLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/products")
 
       assert index_live
-             |> element("#products-#{product.uuid} a", "Delete")
+             |> element("#products-#{product.id} a", "Delete")
              |> render_click()
 
-      refute has_element?(index_live, "#products-#{product.uuid}")
+      refute has_element?(index_live, "#products-#{product.id}")
     end
   end
 

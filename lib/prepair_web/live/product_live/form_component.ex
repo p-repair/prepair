@@ -21,11 +21,11 @@ defmodule PrepairWeb.ProductLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:category_uuid]}
+        <.input field={@form[:category_id]}
           type="select"
           options={category_opts(@changeset)}
           label={gettext "Category"} />
-        <.input field={@form[:manufacturer_uuid]}
+        <.input field={@form[:manufacturer_id]}
           type="select"
           options={manufacturer_opts(@changeset)}
           label={gettext "Manufacturer"} />
@@ -71,30 +71,30 @@ defmodule PrepairWeb.ProductLive.FormComponent do
   end
 
   defp category_opts(changeset) do
-    existing_uuids =
+    existing_ids =
       changeset
       |> Ecto.Changeset.get_change(:categories, [])
-      |> Enum.map(& &1.data.uuid)
+      |> Enum.map(& &1.data.id)
 
     for cat <- Prepair.Products.list_categories(),
         do: [
           key: cat.name,
-          value: cat.uuid,
-          selected: cat.uuid in existing_uuids
+          value: cat.id,
+          selected: cat.id in existing_ids
         ]
   end
 
   defp manufacturer_opts(changeset) do
-    existing_uuids =
+    existing_ids =
       changeset
       |> Ecto.Changeset.get_change(:manufacturers, [])
-      |> Enum.map(& &1.data.uuid)
+      |> Enum.map(& &1.data.id)
 
     for man <- Prepair.Products.list_manufacturers(),
         do: [
           key: man.name,
-          value: man.uuid,
-          selected: man.uuid in existing_uuids
+          value: man.id,
+          selected: man.id in existing_ids
         ]
   end
 

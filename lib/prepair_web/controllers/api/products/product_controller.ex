@@ -7,7 +7,7 @@ defmodule PrepairWeb.Api.Products.ProductController do
 
   action_fallback PrepairWeb.Api.FallbackController
 
-  @index_filters ["product_uuids", "category_uuid", "manufacturer_uuid"]
+  @index_filters ["product_ids", "category_id", "manufacturer_id"]
 
   def index(conn, params) do
     filters =
@@ -38,14 +38,14 @@ defmodule PrepairWeb.Api.Products.ProductController do
     end
   end
 
-  def show(conn, %{"uuid" => uuid}) do
-    product = Products.get_product!(uuid)
+  def show(conn, %{"id" => id}) do
+    product = Products.get_product!(id)
     render(conn, :show, product: product)
   end
 
-  def update(conn, %{"uuid" => uuid, "product" => product_params}) do
+  def update(conn, %{"id" => id, "product" => product_params}) do
     params = product_params |> normalise_params()
-    product = Products.get_product!(uuid)
+    product = Products.get_product!(id)
 
     # Trick to avoid empty fields returned by FlutterFlow when value isn't changed.
     params =
@@ -57,8 +57,8 @@ defmodule PrepairWeb.Api.Products.ProductController do
     end
   end
 
-  def delete(conn, %{"uuid" => uuid}) do
-    product = Products.get_product!(uuid)
+  def delete(conn, %{"id" => id}) do
+    product = Products.get_product!(id)
 
     with {:ok, %Product{}} <-
            Products.delete_product(product) do

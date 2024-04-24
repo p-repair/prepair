@@ -120,14 +120,14 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
           manufacturer: valid_attrs
         )
 
-      assert %{"uuid" => uuid} = json_response(conn, 201)["data"]
+      assert %{"id" => id} = json_response(conn, 201)["data"]
 
       # Recycle the connection so we can reuse it for a request.
       conn = recycle(conn)
 
-      conn = get(conn, ~p"/api/v1/products/manufacturers/#{uuid}")
+      conn = get(conn, ~p"/api/v1/products/manufacturers/#{id}")
 
-      manufacturer = Prepair.Products.get_manufacturer!(uuid)
+      manufacturer = Prepair.Products.get_manufacturer!(id)
 
       assert json_response(conn, 200)["data"] ==
                manufacturer |> to_normalised_json()
@@ -150,21 +150,21 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
     @tag :manufacturer_controller
     test "renders manufacturer when data is valid", %{
       conn: conn,
-      manufacturer: %Manufacturer{uuid: uuid} = manufacturer
+      manufacturer: %Manufacturer{id: id} = manufacturer
     } do
       conn =
         put(conn, ~p"/api/v1/products/manufacturers/#{manufacturer}",
           manufacturer: @update_attrs
         )
 
-      assert %{"uuid" => ^uuid} = json_response(conn, 200)["data"]
+      assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
       # Recycle the connection so we can reuse it for a request.
       conn = recycle(conn)
 
-      conn = get(conn, ~p"/api/v1/products/manufacturers/#{uuid}")
+      conn = get(conn, ~p"/api/v1/products/manufacturers/#{id}")
 
-      manufacturer = Prepair.Products.get_manufacturer!(uuid)
+      manufacturer = Prepair.Products.get_manufacturer!(id)
 
       assert json_response(conn, 200)["data"] ==
                manufacturer |> to_normalised_json()

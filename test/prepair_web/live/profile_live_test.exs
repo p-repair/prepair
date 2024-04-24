@@ -48,7 +48,7 @@ defmodule PrepairWeb.ProfileLiveTest do
     @tag :profile_liveview
     test "visitors CANNOT see or edit a profile",
          %{conn: conn, profile: profile} do
-      {:error, detail} = live(conn, ~p"/profiles/#{profile.uuid}")
+      {:error, detail} = live(conn, ~p"/profiles/#{profile.id}")
 
       assert detail ==
                {:redirect,
@@ -75,7 +75,7 @@ defmodule PrepairWeb.ProfileLiveTest do
          %{conn: conn, user: user} do
       self_profile = user.profile
 
-      {:ok, _index_live, html} = live(conn, ~p"/profiles/#{self_profile.uuid}")
+      {:ok, _index_live, html} = live(conn, ~p"/profiles/#{self_profile.id}")
 
       assert html =~ "#{self_profile.username}"
     end
@@ -86,12 +86,12 @@ defmodule PrepairWeb.ProfileLiveTest do
       self_profile = user.profile
 
       {:ok, _index_live, html} =
-        live(conn, ~p"/profiles/#{self_profile.uuid}/edit")
+        live(conn, ~p"/profiles/#{self_profile.id}/edit")
 
       assert html =~ "Edit Profile"
 
       {:ok, _show_live, html} =
-        live(conn, ~p"/profiles/#{self_profile.uuid}/show/edit")
+        live(conn, ~p"/profiles/#{self_profile.id}/show/edit")
 
       assert html =~ "Edit Profile"
     end
@@ -115,7 +115,7 @@ defmodule PrepairWeb.ProfileLiveTest do
     @tag :profile_liveview
     test "users CANNOT see another profile",
          %{conn: conn, profile: other_profile} do
-      conn = get(conn, ~p"/profiles/#{other_profile.uuid}")
+      conn = get(conn, ~p"/profiles/#{other_profile.id}")
 
       assert conn.status == 403
       assert response(conn, 403) =~ "Forbidden"
@@ -124,12 +124,12 @@ defmodule PrepairWeb.ProfileLiveTest do
     @tag :profile_liveview
     test "users CANNOT update another profile",
          %{conn: conn, profile: other_profile} do
-      conn = get(conn, ~p"/profiles/#{other_profile.uuid}/edit")
+      conn = get(conn, ~p"/profiles/#{other_profile.id}/edit")
 
       assert conn.status == 403
       assert response(conn, 403) =~ "Forbidden"
 
-      conn = get(conn, ~p"/profiles/#{other_profile.uuid}/show/edit")
+      conn = get(conn, ~p"/profiles/#{other_profile.id}/show/edit")
 
       assert conn.status == 403
       assert response(conn, 403) =~ "Forbidden"
@@ -184,7 +184,7 @@ defmodule PrepairWeb.ProfileLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/profiles")
 
       assert index_live
-             |> element("#profiles-#{profile.uuid} a", "Edit")
+             |> element("#profiles-#{profile.id} a", "Edit")
              |> render_click() =~
                "Edit Profile"
 
@@ -211,7 +211,7 @@ defmodule PrepairWeb.ProfileLiveTest do
     setup [:create_profile, :register_and_log_in_user, :make_user_admin]
 
     test "displays profile", %{conn: conn, user: user} do
-      {:ok, _show_live, html} = live(conn, ~p"/profiles/#{user.uuid}")
+      {:ok, _show_live, html} = live(conn, ~p"/profiles/#{user.id}")
 
       assert html =~ "Show Profile"
       assert html =~ user.profile.username
@@ -223,7 +223,7 @@ defmodule PrepairWeb.ProfileLiveTest do
   which match one of the locales defined for the application",
          %{conn: conn, user: user} do
       conn = conn |> set_language_to_de_then_fr()
-      {:ok, _index_live, html} = live(conn, ~p"/profiles/#{user.uuid}")
+      {:ok, _index_live, html} = live(conn, ~p"/profiles/#{user.id}")
 
       assert html =~ "Afficher le profile"
       assert html =~ user.profile.username
@@ -236,7 +236,7 @@ defmodule PrepairWeb.ProfileLiveTest do
   the app",
          %{conn: conn, user: user} do
       conn = conn |> set_language_to_unknown()
-      {:ok, _index_live, html} = live(conn, ~p"/profiles/#{user.uuid}")
+      {:ok, _index_live, html} = live(conn, ~p"/profiles/#{user.id}")
 
       assert html =~ "Show Profile"
       assert html =~ user.profile.username
@@ -244,12 +244,12 @@ defmodule PrepairWeb.ProfileLiveTest do
 
     @tag :profile_liveview
     test "updates profile within modal", %{conn: conn, user: user} do
-      {:ok, show_live, _html} = live(conn, ~p"/profiles/#{user.uuid}")
+      {:ok, show_live, _html} = live(conn, ~p"/profiles/#{user.id}")
 
       assert show_live |> element("a", "Edit") |> render_click() =~
                "Edit Profile"
 
-      assert_patch(show_live, ~p"/profiles/#{user.uuid}/show/edit")
+      assert_patch(show_live, ~p"/profiles/#{user.id}/show/edit")
 
       assert show_live
              |> form("#profile-form", profile: @invalid_attrs)
@@ -259,7 +259,7 @@ defmodule PrepairWeb.ProfileLiveTest do
              |> form("#profile-form", profile: @update_attrs)
              |> render_submit()
 
-      assert_patch(show_live, ~p"/profiles/#{user.uuid}")
+      assert_patch(show_live, ~p"/profiles/#{user.id}")
 
       html = render(show_live)
       assert html =~ "Profile updated successfully"
@@ -271,24 +271,24 @@ defmodule PrepairWeb.ProfileLiveTest do
     setup [:create_profile, :register_and_log_in_user]
 
     @tag :profile_liveview
-    test "list all ownerships for a profile if {uuid} = current_user.uuid",
+    test "list all ownerships for a profile if {id} = current_user.id",
          %{conn: conn, user: user} do
-      uuid = user.uuid
-      _profile_username = Profiles.get_profile!(uuid).username
+      id = user.id
+      _profile_username = Profiles.get_profile!(id).username
 
-      private_ownership = ownership_fixture(uuid)
-      public_ownership = ownership_fixture(uuid, %{public: true})
+      private_ownership = ownership_fixture(id)
+      public_ownership = ownership_fixture(id, %{public: true})
 
       third_ownership =
-        ownership_fixture(profile_fixture().uuid)
+        ownership_fixture(profile_fixture().id)
 
       {:ok, _index_live, html} =
-        live(conn, ~p"/profiles/ownerships/by_profile/#{uuid}")
+        live(conn, ~p"/profiles/ownerships/by_profile/#{id}")
 
       assert html =~ "Listing your Ownerships"
-      assert html =~ "ownerships/#{private_ownership.uuid}"
-      assert html =~ "ownerships/#{public_ownership.uuid}"
-      refute html =~ "ownerships/#{third_ownership.uuid}"
+      assert html =~ "ownerships/#{private_ownership.id}"
+      assert html =~ "ownerships/#{public_ownership.id}"
+      refute html =~ "ownerships/#{third_ownership.id}"
     end
 
     @tag :profile_liveview
@@ -297,40 +297,40 @@ defmodule PrepairWeb.ProfileLiveTest do
       make_user_admin(%{user: user})
 
       third_profile = profile_fixture()
-      uuid = third_profile.uuid
+      id = third_profile.id
 
-      third_private_ownership = ownership_fixture(uuid)
-      third_public_ownership = ownership_fixture(uuid, %{public: true})
+      third_private_ownership = ownership_fixture(id)
+      third_public_ownership = ownership_fixture(id, %{public: true})
 
       {:ok, _index_live, html} =
-        live(conn, ~p"/profiles/ownerships/by_profile/#{uuid}")
+        live(conn, ~p"/profiles/ownerships/by_profile/#{id}")
 
       assert html =~
                "Listing #{third_profile.username} Ownerships (admin view)"
 
-      assert html =~ "ownerships/#{third_private_ownership.uuid}"
-      assert html =~ "ownerships/#{third_public_ownership.uuid}"
+      assert html =~ "ownerships/#{third_private_ownership.id}"
+      assert html =~ "ownerships/#{third_public_ownership.id}"
     end
 
     @tag :profile_liveview
-    test "list only public ownerships for a profile if {uuid} != current_user.uuid",
+    test "list only public ownerships for a profile if {id} != current_user.id",
          %{conn: conn, profile: profile} do
-      uuid = profile.uuid
+      id = profile.id
       profile_username = profile.username
 
-      private_ownership = ownership_fixture(uuid)
-      public_ownership = ownership_fixture(uuid, %{public: true})
+      private_ownership = ownership_fixture(id)
+      public_ownership = ownership_fixture(id, %{public: true})
 
       third_ownership =
-        ownership_fixture(profile_fixture().uuid, ownership_valid_attrs())
+        ownership_fixture(profile_fixture().id, ownership_valid_attrs())
 
       {:ok, _index_live, html} =
-        live(conn, ~p"/profiles/ownerships/by_profile/#{uuid}")
+        live(conn, ~p"/profiles/ownerships/by_profile/#{id}")
 
       assert html =~ "Listing #{profile_username} public Ownerships"
-      refute html =~ "ownerships/#{private_ownership.uuid}"
-      assert html =~ "ownerships/#{public_ownership.uuid}"
-      refute html =~ "ownerships/#{third_ownership.uuid}"
+      refute html =~ "ownerships/#{private_ownership.id}"
+      assert html =~ "ownerships/#{public_ownership.id}"
+      refute html =~ "ownerships/#{third_ownership.id}"
     end
   end
 end

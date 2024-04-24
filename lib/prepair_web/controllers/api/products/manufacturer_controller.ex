@@ -24,13 +24,13 @@ defmodule PrepairWeb.Api.Products.ManufacturerController do
     end
   end
 
-  def show(conn, %{"uuid" => uuid}) do
-    manufacturer = Products.get_manufacturer!(uuid)
+  def show(conn, %{"id" => id}) do
+    manufacturer = Products.get_manufacturer!(id)
     render(conn, :show, manufacturer: manufacturer)
   end
 
-  def update(conn, %{"uuid" => uuid, "manufacturer" => manufacturer_params}) do
-    manufacturer = Products.get_manufacturer!(uuid)
+  def update(conn, %{"id" => id, "manufacturer" => manufacturer_params}) do
+    manufacturer = Products.get_manufacturer!(id)
 
     # Trick to avoid empty fields returned by FlutterFlow when value isn't changed.
     manufacturer_params =
@@ -42,8 +42,8 @@ defmodule PrepairWeb.Api.Products.ManufacturerController do
     end
   end
 
-  def delete(conn, %{"uuid" => uuid}) do
-    manufacturer = Products.get_manufacturer!(uuid)
+  def delete(conn, %{"id" => id}) do
+    manufacturer = Products.get_manufacturer!(id)
 
     with {:ok, %Manufacturer{}} <-
            Products.delete_manufacturer(manufacturer) do

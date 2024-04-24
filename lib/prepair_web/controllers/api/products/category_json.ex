@@ -17,7 +17,7 @@ defmodule PrepairWeb.Api.Products.CategoryJSON do
 
   def data(%Category{} = category) do
     %{
-      uuid: category.uuid,
+      id: category.id,
       average_lifetime_m: category.average_lifetime_m,
       description: category.description,
       image: category.image,

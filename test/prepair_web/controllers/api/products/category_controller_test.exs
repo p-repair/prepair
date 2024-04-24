@@ -31,12 +31,12 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
   defp create_category(_) do
     notification_templates = create_notification_templates()
 
-    notification_template_uuids =
-      create_notification_template_uuids(notification_templates)
+    notification_template_ids =
+      create_notification_template_ids(notification_templates)
 
     category =
       category_fixture(%{
-        notification_template_uuids: notification_template_uuids
+        notification_template_ids: notification_template_ids
       })
 
     %{category: category}
@@ -133,14 +133,14 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
       category = category_valid_attrs()
       conn = post(conn, ~p"/api/v1/products/categories", category: category)
 
-      assert %{"uuid" => uuid} = json_response(conn, 201)["data"]
+      assert %{"id" => id} = json_response(conn, 201)["data"]
 
       # Recycle the connection so we can reuse it for a request.
       conn = recycle(conn)
 
-      conn = get(conn, ~p"/api/v1/products/categories/#{uuid}")
+      conn = get(conn, ~p"/api/v1/products/categories/#{id}")
 
-      category = Prepair.Products.get_category!(uuid)
+      category = Prepair.Products.get_category!(id)
 
       assert json_response(conn, 200)["data"] ==
                category |> to_normalised_json()
@@ -152,17 +152,17 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
          %{conn: conn} do
       notification_templates = create_notification_templates()
 
-      notification_template_uuids =
-        create_notification_template_uuids(notification_templates)
+      notification_template_ids =
+        create_notification_template_ids(notification_templates)
 
       category =
         category_valid_attrs()
-        |> Map.put(:notification_template_uuids, notification_template_uuids)
+        |> Map.put(:notification_template_ids, notification_template_ids)
 
       conn = post(conn, ~p"/api/v1/products/categories", category: category)
-      assert %{"uuid" => uuid} = json_response(conn, 201)["data"]
+      assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      category = Products.get_category!(uuid)
+      category = Products.get_category!(id)
       assert category.notification_templates == notification_templates
     end
 
@@ -181,21 +181,21 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
     @tag :category_controller
     test "renders category when data is valid", %{
       conn: conn,
-      category: %Category{uuid: uuid} = category
+      category: %Category{id: id} = category
     } do
       conn =
         put(conn, ~p"/api/v1/products/categories/#{category}",
           category: @update_attrs
         )
 
-      assert %{"uuid" => ^uuid} = json_response(conn, 200)["data"]
+      assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
       # Recycle the connection so we can reuse it for a request.
       conn = recycle(conn)
 
-      conn = get(conn, ~p"/api/v1/products/categories/#{uuid}")
+      conn = get(conn, ~p"/api/v1/products/categories/#{id}")
 
-      category = Prepair.Products.get_category!(uuid)
+      category = Prepair.Products.get_category!(id)
 
       assert json_response(conn, 200)["data"] ==
                category |> to_normalised_json()
@@ -206,18 +206,18 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
     the JSON render)",
          %{
            conn: conn,
-           category: %Category{uuid: uuid} = category
+           category: %Category{id: id} = category
          } do
       new_notification_templates = create_notification_templates()
 
-      new_notification_template_uuids =
-        create_notification_template_uuids(new_notification_templates)
+      new_notification_template_ids =
+        create_notification_template_ids(new_notification_templates)
 
       update_attrs =
         @update_attrs
         |> Map.put(
-          :notification_template_uuids,
-          new_notification_template_uuids
+          :notification_template_ids,
+          new_notification_template_ids
         )
 
       conn =
@@ -225,9 +225,9 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
           category: update_attrs
         )
 
-      assert %{"uuid" => ^uuid} = json_response(conn, 200)["data"]
+      assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
-      category = Products.get_category!(uuid)
+      category = Products.get_category!(id)
       assert category.notification_templates == new_notification_templates
     end
 

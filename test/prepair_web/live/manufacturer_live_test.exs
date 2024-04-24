@@ -43,7 +43,7 @@ defmodule PrepairWeb.ManufacturerLiveTest do
     @tag :manufacturer_liveview
     test "visitors CANNOT see or edit a manufacturer",
          %{conn: conn, manufacturer: manufacturer} do
-      {:error, detail} = live(conn, ~p"/manufacturers/#{manufacturer.uuid}")
+      {:error, detail} = live(conn, ~p"/manufacturers/#{manufacturer.id}")
 
       assert detail ==
                {:redirect,
@@ -114,12 +114,12 @@ defmodule PrepairWeb.ManufacturerLiveTest do
     @tag :manufacturer_liveview
     test "users CANNOT update a manufacturer",
          %{conn: conn, manufacturer: manufacturer} do
-      conn = get(conn, ~p"/manufacturers/#{manufacturer.uuid}/edit")
+      conn = get(conn, ~p"/manufacturers/#{manufacturer.id}/edit")
 
       assert conn.status == 403
       assert response(conn, 403) =~ "Forbidden"
 
-      conn = get(conn, ~p"/manufacturers/#{manufacturer.uuid}/show/edit")
+      conn = get(conn, ~p"/manufacturers/#{manufacturer.id}/show/edit")
 
       assert conn.status == 403
       assert response(conn, 403) =~ "Forbidden"
@@ -132,7 +132,7 @@ defmodule PrepairWeb.ManufacturerLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/manufacturers")
 
       refute index_live
-             |> element("#manufacturers-#{manufacturer.uuid} a", "Edit")
+             |> element("#manufacturers-#{manufacturer.id} a", "Edit")
              |> has_element?()
     end
 
@@ -141,10 +141,10 @@ defmodule PrepairWeb.ManufacturerLiveTest do
     are not admin",
          %{conn: conn, manufacturer: manufacturer} do
       {:ok, index_live, _html} =
-        live(conn, ~p"/manufacturers/#{manufacturer.uuid}")
+        live(conn, ~p"/manufacturers/#{manufacturer.id}")
 
       refute index_live
-             |> element("#manufacturers-#{manufacturer.uuid} a", "Edit")
+             |> element("#manufacturers-#{manufacturer.id} a", "Edit")
              |> has_element?()
     end
 
@@ -155,7 +155,7 @@ defmodule PrepairWeb.ManufacturerLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/manufacturers")
 
       refute index_live
-             |> element("#manufacturers-#{manufacturer.uuid} a", "Delete")
+             |> element("#manufacturers-#{manufacturer.id} a", "Delete")
              |> has_element?()
     end
 
@@ -236,7 +236,7 @@ defmodule PrepairWeb.ManufacturerLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/manufacturers")
 
       assert index_live
-             |> element("#manufacturers-#{manufacturer.uuid} a", "Edit")
+             |> element("#manufacturers-#{manufacturer.id} a", "Edit")
              |> render_click() =~
                "Edit Manufacturer"
 
@@ -265,10 +265,10 @@ defmodule PrepairWeb.ManufacturerLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/manufacturers")
 
       assert index_live
-             |> element("#manufacturers-#{manufacturer.uuid} a", "Delete")
+             |> element("#manufacturers-#{manufacturer.id} a", "Delete")
              |> render_click()
 
-      refute has_element?(index_live, "#manufacturers-#{manufacturer.uuid}")
+      refute has_element?(index_live, "#manufacturers-#{manufacturer.id}")
     end
   end
 

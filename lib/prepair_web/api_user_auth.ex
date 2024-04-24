@@ -70,8 +70,8 @@ defmodule PrepairWeb.ApiUserAuth do
   defp is_self_user?(conn) do
     current_user = conn.assigns.current_user
 
-    if current_user.uuid == conn.path_params["uuid"] or
-         current_user.uuid == get_profile_uuid_from_request(conn) do
+    if current_user.id == conn.path_params["id"] or
+         current_user.id == get_profile_id_from_request(conn) do
       conn
     else
       conn
@@ -83,24 +83,24 @@ defmodule PrepairWeb.ApiUserAuth do
     end
   end
 
-  defp get_profile_uuid_from_request(conn) do
+  defp get_profile_id_from_request(conn) do
     method = conn.method
     context = conn.path_info |> Enum.at(2)
     schema = conn.path_info |> Enum.at(3)
 
-    profile_uuid =
+    profile_id =
       case [method, context, schema] do
         [_, "profiles", "profiles"] ->
-          conn.path_params["uuid"]
+          conn.path_params["id"]
 
         ["POST", "profiles", "ownerships"] ->
-          conn.params["profile_uuid"]
+          conn.params["profile_id"]
 
         [_, "profiles", "ownerships"] ->
-          Profiles.get_ownership!(conn.path_params["uuid"]).profile_uuid
+          Profiles.get_ownership!(conn.path_params["id"]).profile_id
       end
 
-    profile_uuid
+    profile_id
   end
 
   @doc """

@@ -6,10 +6,10 @@ defmodule Prepair.Accounts.User do
   import Ecto.Changeset
   import PrepairWeb.Gettext
 
-  @derive {Phoenix.Param, key: :uuid}
-  @primary_key {:uuid, Ecto.UUID, autogenerate: false}
+  @derive {Phoenix.Param, key: :id}
+  @primary_key {:id, Ecto.UUID, autogenerate: false}
   schema "users" do
-    has_one :profile, Profile, foreign_key: :uuid, references: :uuid
+    has_one :profile, Profile, foreign_key: :id, references: :id
 
     field :email, :string
     field :password, :string, virtual: true, redact: true

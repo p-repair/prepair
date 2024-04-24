@@ -1,5 +1,5 @@
 <.header>
-  <%= gettext "Profile" %> <%= @profile.uuid %>
+  <%= gettext "Profile" %> <%= @profile.id %>
   <:subtitle><%= gettext "This is a profile record from your database." %></:subtitle>
   <:actions>
     <.link patch={~p"/profiles/#{@profile}/show/edit"} phx-click={JS.push_focus()}>
@@ -24,7 +24,7 @@
 <.modal :if={@live_action == :edit} id="profile-modal" show on_cancel={JS.patch(~p"/profiles/#{@profile}")}>
   <.live_component
     module={PrepairWeb.ProfileLive.FormComponent}
-    id={@profile.uuid}
+    id={@profile.id}
     title={@page_title}
     action={@live_action}
     profile={@profile}

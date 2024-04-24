@@ -66,7 +66,7 @@ defmodule PrepairWeb.NotificationTemplateLiveTest do
     test "visitors CANNOT see or edit a notification template",
          %{conn: conn, notification_template: notification_template} do
       {:error, detail} =
-        live(conn, ~p"/notification_templates/#{notification_template.uuid}")
+        live(conn, ~p"/notification_templates/#{notification_template.id}")
 
       assert detail ==
                {:redirect,
@@ -108,7 +108,7 @@ defmodule PrepairWeb.NotificationTemplateLiveTest do
     test "users CAN see a notification template",
          %{conn: conn, notification_template: notification_template} do
       {:ok, _index_live, html} =
-        live(conn, ~p"/notification_templates/#{notification_template.uuid}")
+        live(conn, ~p"/notification_templates/#{notification_template.id}")
 
       assert html =~ "#{notification_template.name}"
     end
@@ -143,7 +143,7 @@ defmodule PrepairWeb.NotificationTemplateLiveTest do
       conn =
         get(
           conn,
-          ~p"/notification_templates/#{notification_template.uuid}/edit"
+          ~p"/notification_templates/#{notification_template.id}/edit"
         )
 
       assert conn.status == 403
@@ -152,7 +152,7 @@ defmodule PrepairWeb.NotificationTemplateLiveTest do
       conn =
         get(
           conn,
-          ~p"/notification_templates/#{notification_template.uuid}/show/edit"
+          ~p"/notification_templates/#{notification_template.id}/show/edit"
         )
 
       assert conn.status == 403
@@ -167,7 +167,7 @@ defmodule PrepairWeb.NotificationTemplateLiveTest do
 
       refute index_live
              |> element(
-               "#notification_templates-#{notification_template.uuid} a",
+               "#notification_templates-#{notification_template.id} a",
                "Edit"
              )
              |> has_element?()
@@ -178,11 +178,11 @@ defmodule PrepairWeb.NotificationTemplateLiveTest do
     they are not admin",
          %{conn: conn, notification_template: notification_template} do
       {:ok, index_live, _html} =
-        live(conn, ~p"/notification_templates/#{notification_template.uuid}")
+        live(conn, ~p"/notification_templates/#{notification_template.id}")
 
       refute index_live
              |> element(
-               "#notification_template-#{notification_template.uuid} a",
+               "#notification_template-#{notification_template.id} a",
                "Edit"
              )
              |> has_element?()
@@ -196,7 +196,7 @@ defmodule PrepairWeb.NotificationTemplateLiveTest do
 
       refute index_live
              |> element(
-               "#notification_templates-#{notification_template.uuid} a",
+               "#notification_templates-#{notification_template.id} a",
                "Delete"
              )
              |> has_element?()
@@ -292,7 +292,7 @@ defmodule PrepairWeb.NotificationTemplateLiveTest do
 
       assert index_live
              |> element(
-               "#notification_templates-#{notification_template.uuid} a",
+               "#notification_templates-#{notification_template.id} a",
                "Edit"
              )
              |> render_click() =~
@@ -331,14 +331,14 @@ defmodule PrepairWeb.NotificationTemplateLiveTest do
 
       assert index_live
              |> element(
-               "#notification_templates-#{notification_template.uuid} a",
+               "#notification_templates-#{notification_template.id} a",
                "Delete"
              )
              |> render_click()
 
       refute has_element?(
                index_live,
-               "#notification_templates-#{notification_template.uuid}"
+               "#notification_templates-#{notification_template.id}"
              )
     end
   end

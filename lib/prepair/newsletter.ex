@@ -40,7 +40,7 @@ defmodule Prepair.Newsletter do
       ** (Ecto.NoResultsError)
 
   """
-  def get_contact!(uuid), do: Repo.get!(Contact, uuid)
+  def get_contact!(id), do: Repo.get!(Contact, id)
 
   @doc """
   Creates a contact.
@@ -57,7 +57,7 @@ defmodule Prepair.Newsletter do
   def create_contact(attrs \\ %{}) do
     %Contact{}
     |> Contact.changeset(attrs)
-    |> Repo.insert(returning: [:uuid])
+    |> Repo.insert(returning: [:id])
     |> case do
       {:ok, %Contact{} = contact} ->
         _ = notify_subscription(contact)

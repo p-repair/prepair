@@ -11,7 +11,7 @@ defmodule PrepairWeb.Api.Accounts.UserJSON do
 
   def data(%User{} = user) do
     %{
-      uuid: user.uuid,
+      id: user.id,
       email: user.email
     }
   end

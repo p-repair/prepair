@@ -31,13 +31,13 @@ defmodule Prepair.ProfilesFixtures do
   @doc """
   Arbitrary defined valid attributes for an ownership.
   """
-  def profile_uuid(), do: profile_fixture().uuid
+  def profile_id(), do: profile_fixture().id
 
   def ownership_valid_attrs() do
     product = ProductsFixtures.product_fixture()
 
     %{
-      product_uuid: product.uuid,
+      product_id: product.id,
       date_of_purchase: ~D[2024-01-14],
       warranty_duration_m: 24,
       price_of_purchase: 400,
@@ -48,9 +48,9 @@ defmodule Prepair.ProfilesFixtures do
   @doc """
   Generate an ownership.
   """
-  def ownership_fixture(profile_uuid \\ profile_uuid(), attrs \\ %{}) do
+  def ownership_fixture(profile_id \\ profile_id(), attrs \\ %{}) do
     attrs = attrs |> Enum.into(ownership_valid_attrs())
-    {:ok, ownership} = Prepair.Profiles.create_ownership(profile_uuid, attrs)
+    {:ok, ownership} = Prepair.Profiles.create_ownership(profile_id, attrs)
 
     ownership
   end

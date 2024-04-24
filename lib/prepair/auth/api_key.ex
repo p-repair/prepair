@@ -6,8 +6,8 @@ defmodule Prepair.Auth.ApiKey do
   @fields ~w(name key revoked_at)a
   @required_fields ~w(name key)a
 
-  @derive {Phoenix.Param, key: :uuid}
-  @primary_key {:uuid, Ecto.UUID, autogenerate: false}
+  @derive {Phoenix.Param, key: :id}
+  @primary_key {:id, Ecto.UUID, autogenerate: false}
   typed_schema "api_keys" do
     field :name, :string, enforce: true, null: false
     field :key, :string, enforce: true, null: false

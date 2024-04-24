@@ -15,39 +15,39 @@ defmodule Prepair.ProfilesTest do
       people_in_household: nil
     }
 
-    @random_uuid Ecto.UUID.generate()
+    @random_id Ecto.UUID.generate()
 
     test "list_profiles/0 returns all profiles" do
       profile = profile_fixture()
       assert Profiles.list_profiles() == [profile]
     end
 
-    test "get_profile!/1 returns the profile with given uuid" do
+    test "get_profile!/1 returns the profile with given id" do
       profile = profile_fixture()
-      assert Profiles.get_profile!(profile.uuid) == profile
+      assert Profiles.get_profile!(profile.id) == profile
     end
 
-    test "get_profile!/1 raises if there is no profile with given uuid" do
+    test "get_profile!/1 raises if there is no profile with given id" do
       assert_raise Ecto.NoResultsError, fn ->
-        Profiles.get_profile!(@random_uuid)
+        Profiles.get_profile!(@random_id)
       end
     end
 
-    test "create_profile/2 raises if the given uuid does not match a user" do
+    test "create_profile/2 raises if the given id does not match a user" do
       assert_raise Ecto.ConstraintError, fn ->
         Profiles.create_profile(
-          @random_uuid,
+          @random_id,
           profile_valid_attrs()
         )
       end
     end
 
-    test "create_profile/2 raises if the given uuid is already created" do
-      existing_uuid = profile_fixture().uuid
+    test "create_profile/2 raises if the given id is already created" do
+      existing_id = profile_fixture().id
 
       assert_raise Ecto.ConstraintError, fn ->
         Profiles.create_profile(
-          existing_uuid,
+          existing_id,
           profile_valid_attrs()
         )
       end
@@ -76,7 +76,7 @@ defmodule Prepair.ProfilesTest do
       assert {:error, %Ecto.Changeset{}} =
                Profiles.update_profile(profile, @invalid_attrs)
 
-      assert profile == Profiles.get_profile!(profile.uuid)
+      assert profile == Profiles.get_profile!(profile.id)
     end
 
     test "change_profile/1 returns a profile changeset" do
@@ -92,7 +92,7 @@ defmodule Prepair.ProfilesTest do
     import Prepair.ProductsFixtures
 
     @invalid_attrs %{
-      product_uuid: nil,
+      product_id: nil,
       public: nil,
       date_of_purchase: nil,
       warranty_duration_m: nil,
@@ -106,35 +106,35 @@ defmodule Prepair.ProfilesTest do
 
     test "list_ownerships_by_profile/2 returns only the profile public
     ownerships by default" do
-      profile_uuid = profile_fixture().uuid
+      profile_id = profile_fixture().id
 
-      private_ownership = ownership_fixture(profile_uuid)
+      private_ownership = ownership_fixture(profile_id)
 
-      public_ownership = ownership_fixture(profile_uuid, %{public: true})
+      public_ownership = ownership_fixture(profile_id, %{public: true})
 
       third_ownership = ownership_fixture()
 
       assert Profiles.list_ownerships() ==
                [private_ownership, public_ownership, third_ownership]
 
-      assert Profiles.list_ownerships_by_profile(profile_uuid) ==
+      assert Profiles.list_ownerships_by_profile(profile_id) ==
                [public_ownership]
     end
 
     test "list_ownerships_by_profile/2 returns all the profile ownerships when
     :include_private is set to true" do
-      profile_uuid = profile_fixture().uuid
+      profile_id = profile_fixture().id
 
-      private_ownership = ownership_fixture(profile_uuid)
+      private_ownership = ownership_fixture(profile_id)
 
-      public_ownership = ownership_fixture(profile_uuid, %{public: true})
+      public_ownership = ownership_fixture(profile_id, %{public: true})
 
       third_ownership = ownership_fixture()
 
       assert Profiles.list_ownerships() ==
                [private_ownership, public_ownership, third_ownership]
 
-      assert Profiles.list_ownerships_by_profile(profile_uuid,
+      assert Profiles.list_ownerships_by_profile(profile_id,
                include_private: true
              ) ==
                [private_ownership, public_ownership]
@@ -142,14 +142,14 @@ defmodule Prepair.ProfilesTest do
 
     test "list_ownerships_by_product/2 returns only the product public
     ownerships by default" do
-      product_uuid = product_fixture().uuid
+      product_id = product_fixture().id
 
       private_ownership =
-        ownership_fixture(profile_fixture().uuid, %{product_uuid: product_uuid})
+        ownership_fixture(profile_fixture().id, %{product_id: product_id})
 
       public_ownership =
-        ownership_fixture(profile_fixture().uuid, %{
-          product_uuid: product_uuid,
+        ownership_fixture(profile_fixture().id, %{
+          product_id: product_id,
           public: true
         })
 
@@ -158,20 +158,20 @@ defmodule Prepair.ProfilesTest do
       assert Profiles.list_ownerships() ==
                [private_ownership, public_ownership, third_ownership]
 
-      assert Profiles.list_ownerships_by_product(product_uuid) ==
+      assert Profiles.list_ownerships_by_product(product_id) ==
                [public_ownership]
     end
 
     test "list_ownerships_by_product/2 returns all the product ownerships when
     include_private: is set to true" do
-      product_uuid = product_fixture().uuid
+      product_id = product_fixture().id
 
       private_ownership =
-        ownership_fixture(profile_fixture().uuid, %{product_uuid: product_uuid})
+        ownership_fixture(profile_fixture().id, %{product_id: product_id})
 
       public_ownership =
-        ownership_fixture(profile_fixture().uuid, %{
-          product_uuid: product_uuid,
+        ownership_fixture(profile_fixture().id, %{
+          product_id: product_id,
           public: true
         })
 
@@ -180,7 +180,7 @@ defmodule Prepair.ProfilesTest do
       assert Profiles.list_ownerships() ==
                [private_ownership, public_ownership, third_ownership]
 
-      assert Profiles.list_ownerships_by_product(product_uuid,
+      assert Profiles.list_ownerships_by_product(product_id,
                include_private: true
              ) ==
                [private_ownership, public_ownership]
@@ -188,32 +188,32 @@ defmodule Prepair.ProfilesTest do
 
     test "count_ownerships_by_product returns the ownership count for the given
     product" do
-      product_uuid = product_fixture().uuid
+      product_id = product_fixture().id
 
       _private_ownership =
-        ownership_fixture(profile_fixture().uuid, %{product_uuid: product_uuid})
+        ownership_fixture(profile_fixture().id, %{product_id: product_id})
 
       _public_ownership =
-        ownership_fixture(profile_fixture().uuid, %{
-          product_uuid: product_uuid,
+        ownership_fixture(profile_fixture().id, %{
+          product_id: product_id,
           public: true
         })
 
       _third_ownership = ownership_fixture()
 
       assert Profiles.list_ownerships() |> Enum.count() == 3
-      assert Profiles.count_ownerships_by_product(product_uuid) == 2
+      assert Profiles.count_ownerships_by_product(product_id) == 2
     end
 
-    test "get_ownership!/1 returns the ownership with given uuid" do
+    test "get_ownership!/1 returns the ownership with given id" do
       ownership = ownership_fixture()
-      assert Profiles.get_ownership!(ownership.uuid) == ownership
+      assert Profiles.get_ownership!(ownership.id) == ownership
     end
 
     test "create_ownership/2 with valid data creates an ownership" do
       assert {:ok, %Ownership{} = ownership} =
                Profiles.create_ownership(
-                 profile_uuid(),
+                 profile_id(),
                  ownership_valid_attrs()
                )
 
@@ -225,7 +225,7 @@ defmodule Prepair.ProfilesTest do
 
     test "create_ownership/2 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} =
-               Profiles.create_ownership(profile_uuid(), @invalid_attrs)
+               Profiles.create_ownership(profile_id(), @invalid_attrs)
     end
 
     test "update_ownership/2 with valid data updates the ownership" do
@@ -253,7 +253,7 @@ defmodule Prepair.ProfilesTest do
       assert {:error, %Ecto.Changeset{}} =
                Profiles.update_ownership(ownership, @invalid_attrs)
 
-      assert ownership == Profiles.get_ownership!(ownership.uuid)
+      assert ownership == Profiles.get_ownership!(ownership.id)
     end
 
     test "delete_ownership/1 deletes the ownership" do
@@ -261,7 +261,7 @@ defmodule Prepair.ProfilesTest do
       assert {:ok, %Ownership{}} = Profiles.delete_ownership(ownership)
 
       assert_raise Ecto.NoResultsError, fn ->
-        Profiles.get_ownership!(ownership.uuid)
+        Profiles.get_ownership!(ownership.id)
       end
     end
 

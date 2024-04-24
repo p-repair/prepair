@@ -7,16 +7,16 @@ defmodule PrepairWeb.ProfileLive.OwnershipIndex do
   @impl true
   def mount(params, _session, socket) do
     current_user = socket.assigns.current_user
-    profile_uuid = params["uuid"]
-    profile_username = Profiles.get_profile!(profile_uuid).username
+    profile_id = params["id"]
+    profile_username = Profiles.get_profile!(profile_id).username
 
     socket =
       socket
       |> stream_configure(:ownerships,
-        dom_id: &"ownerships-#{&1.uuid}"
+        dom_id: &"ownerships-#{&1.id}"
       )
 
-    case current_user.uuid == profile_uuid or current_user.role == :admin do
+    case current_user.id == profile_id or current_user.role == :admin do
       true ->
         title =
           if current_user.role == :admin do
@@ -32,7 +32,7 @@ defmodule PrepairWeb.ProfileLive.OwnershipIndex do
           |> assign(:title, title)
           |> stream(
             :ownerships,
-            Profiles.list_ownerships_by_profile(profile_uuid,
+            Profiles.list_ownerships_by_profile(profile_id,
               include_private: true
             )
             |> Repo.preload([:product, :profile])
@@ -51,7 +51,7 @@ defmodule PrepairWeb.ProfileLive.OwnershipIndex do
           |> assign(:title, title)
           |> stream(
             :ownerships,
-            Profiles.list_ownerships_by_profile(profile_uuid)
+            Profiles.list_ownerships_by_profile(profile_id)
             |> Repo.preload([:product, :profile])
           )
 

@@ -8,10 +8,10 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
   import Prepair.AccountsFixtures
   import Prepair.ProfilesFixtures
 
-  defp get_user_token_from_user_uuid(uuid) do
+  defp get_user_token_from_user_id(id) do
     query =
       Accounts.UserToken
-      |> where([t], t.user_uuid == ^uuid)
+      |> where([t], t.user_id == ^id)
       |> select([t], t.token)
 
     Repo.all(query)
@@ -57,7 +57,7 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
     ####################### WHAT VISITORS CANNOT DO ? ##########################
 
     @tag :user_controller
-    test "visitors cannot fetch the current user uuid", %{conn: conn} do
+    test "visitors cannot fetch the current user id", %{conn: conn} do
       assert conn
              |> get(~p"/api/v1/users")
              |> json_response(401)
@@ -84,7 +84,7 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
 
   ########################### WHAT USERS CAN DO ? ############################
 
-  # Fetch the current_user uuid (tested below).
+  # Fetch the current_user id (tested below).
   # Udpate their password (tested below).
   # Update their email (tested below).
 
@@ -100,12 +100,12 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
     setup [:register_and_log_in_user]
 
     @tag :user_controller
-    test "fetch the current user uuid",
+    test "fetch the current user id",
          %{conn: conn, user: user} do
       conn =
         get(conn, ~p"/api/v1/users")
 
-      assert json_response(conn, 200) == %{"data" => %{"uuid" => user.uuid}}
+      assert json_response(conn, 200) == %{"data" => %{"id" => user.id}}
     end
   end
 
@@ -129,14 +129,14 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
       conn =
         post(conn, ~p"/api/v1/users/register", %{registration: registration})
 
-      assert %{"user_uuid" => user_uuid} = json_response(conn, 200)["data"]
+      assert %{"user_id" => user_id} = json_response(conn, 200)["data"]
 
-      user = Accounts.get_user!(user_uuid)
-      token = get_user_token_from_user_uuid(user_uuid)
+      user = Accounts.get_user!(user_id)
+      token = get_user_token_from_user_id(user_id)
 
       assert json_response(conn, 200)["data"] == %{
                "token" => token,
-               "user_uuid" => user.uuid
+               "user_id" => user.id
              }
     end
 
@@ -346,11 +346,11 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
           }
         })
 
-      assert %{"uuid" => uuid} = json_response(conn, 200)["data"]
+      assert %{"id" => id} = json_response(conn, 200)["data"]
 
       user = Accounts.get_user_by_email_and_password(user.email, new_password)
 
-      assert user.uuid == uuid
+      assert user.id == id
     end
 
     @tag :user_controller
@@ -450,11 +450,11 @@ defmodule PrepairWeb.Api.Accounts.UserControllerTest do
           }
         })
 
-      assert %{"uuid" => uuid} = json_response(conn, 200)["data"]
+      assert %{"id" => id} = json_response(conn, 200)["data"]
 
       user = Accounts.get_user_by_email_and_password(new_email, user_password)
 
-      assert user.uuid == uuid
+      assert user.id == id
     end
 
     @tag :user_controller

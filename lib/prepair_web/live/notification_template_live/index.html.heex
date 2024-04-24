@@ -27,10 +27,10 @@
     <.link patch={~p"/notification_templates/#{notification_template}/edit"}><%= gettext "Edit" %></.link>
     <% end %>
   </:action>
-  <:action :let={{uuid, notification_template}}>
+  <:action :let={{id, notification_template}}>
   <%= if @current_user.role == :admin do %>
     <.link
-      phx-click={JS.push("delete", value: %{uuid: notification_template.uuid}) |> hide("##{uuid}")}
+      phx-click={JS.push("delete", value: %{id: notification_template.id}) |> hide("##{id}")}
       data-confirm={gettext "Are you sure?"}
     >
       <%= gettext "Delete" %>
@@ -42,7 +42,7 @@
 <.modal :if={@live_action in [:new, :edit]} id="notification_template-modal" show on_cancel={JS.patch(~p"/notification_templates")}>
   <.live_component
     module={PrepairWeb.NotificationTemplateLive.FormComponent}
-    id={@notification_template.uuid || :new}
+    id={@notification_template.id || :new}
     title={@page_title}
     action={@live_action}
     notification_template={@notification_template}

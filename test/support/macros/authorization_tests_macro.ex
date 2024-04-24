@@ -62,7 +62,7 @@ defmodule PrepairWeb.AuthorizationTestsMacro do
                |> get(
                  u_path(
                    conn,
-                   "/api/v1/#{@group_name}/#{@context_name}/#{object.uuid}"
+                   "/api/v1/#{@group_name}/#{@context_name}/#{object.id}"
                  )
                )
                |> json_response(401)
@@ -96,7 +96,7 @@ defmodule PrepairWeb.AuthorizationTestsMacro do
                |> put(
                  u_path(
                    conn,
-                   "/api/v1/#{@group_name}/#{@context_name}/#{object.uuid}"
+                   "/api/v1/#{@group_name}/#{@context_name}/#{object.id}"
                  )
                )
                |> json_response(401)
@@ -105,7 +105,7 @@ defmodule PrepairWeb.AuthorizationTestsMacro do
                |> patch(
                  u_path(
                    conn,
-                   "/api/v1/#{@group_name}/#{@context_name}/#{object.uuid}"
+                   "/api/v1/#{@group_name}/#{@context_name}/#{object.id}"
                  )
                )
                |> json_response(401)
@@ -126,7 +126,7 @@ defmodule PrepairWeb.AuthorizationTestsMacro do
                |> delete(
                  u_path(
                    conn,
-                   "/api/v1/#{@group_name}/#{@context_name}/#{object.uuid}"
+                   "/api/v1/#{@group_name}/#{@context_name}/#{object.id}"
                  )
                )
                |> json_response(401)
@@ -164,7 +164,7 @@ defmodule PrepairWeb.AuthorizationTestsMacro do
                |> get(
                  u_path(
                    conn,
-                   "/api/v1/#{@group_name}/#{@context_name}/#{object.uuid}"
+                   "/api/v1/#{@group_name}/#{@context_name}/#{object.id}"
                  )
                )
                |> json_response(200)
@@ -216,7 +216,7 @@ defmodule PrepairWeb.AuthorizationTestsMacro do
                |> get(
                  u_path(
                    conn,
-                   "/api/v1/#{@group_name}/#{@context_name}/#{object.uuid}"
+                   "/api/v1/#{@group_name}/#{@context_name}/#{object.id}"
                  )
                )
                |> json_response(403)
@@ -255,7 +255,7 @@ defmodule PrepairWeb.AuthorizationTestsMacro do
                |> put(
                  u_path(
                    conn,
-                   "/api/v1/#{@group_name}/#{@context_name}/#{object.uuid}"
+                   "/api/v1/#{@group_name}/#{@context_name}/#{object.id}"
                  ),
                  %{@object_name => @update_attrs}
                )
@@ -265,7 +265,7 @@ defmodule PrepairWeb.AuthorizationTestsMacro do
                |> patch(
                  u_path(
                    conn,
-                   "/api/v1/#{@group_name}/#{@context_name}/#{object.uuid}"
+                   "/api/v1/#{@group_name}/#{@context_name}/#{object.id}"
                  ),
                  %{@object_name => @update_attrs}
                )
@@ -288,7 +288,7 @@ defmodule PrepairWeb.AuthorizationTestsMacro do
                |> delete(
                  u_path(
                    conn,
-                   "/api/v1/#{@group_name}/#{@context_name}/#{object.uuid}"
+                   "/api/v1/#{@group_name}/#{@context_name}/#{object.id}"
                  )
                )
                |> json_response(403)
@@ -300,7 +300,7 @@ defmodule PrepairWeb.AuthorizationTestsMacro do
                |> get(
                  u_path(
                    conn,
-                   "/api/v1/#{@group_name}/#{@context_name}/#{object.uuid}"
+                   "/api/v1/#{@group_name}/#{@context_name}/#{object.id}"
                  )
                )
                |> json_response(200)
@@ -325,7 +325,7 @@ defmodule PrepairWeb.AuthorizationTestsMacro do
                |> get(
                  u_path(
                    conn,
-                   "/api/v1/#{@group_name}/#{@context_name}/#{object.uuid}"
+                   "/api/v1/#{@group_name}/#{@context_name}/#{object.id}"
                  )
                )
                |> json_response(200)
@@ -346,7 +346,7 @@ defmodule PrepairWeb.AuthorizationTestsMacro do
                |> put(
                  u_path(
                    conn,
-                   "/api/v1/#{@group_name}/#{@context_name}/#{object.uuid}"
+                   "/api/v1/#{@group_name}/#{@context_name}/#{object.id}"
                  ),
                  %{@object_name => @update_attrs}
                )
@@ -356,7 +356,7 @@ defmodule PrepairWeb.AuthorizationTestsMacro do
                |> patch(
                  u_path(
                    conn,
-                   "/api/v1/#{@group_name}/#{@context_name}/#{object.uuid}"
+                   "/api/v1/#{@group_name}/#{@context_name}/#{object.id}"
                  ),
                  %{@object_name => @update_attrs}
                )
@@ -376,7 +376,7 @@ defmodule PrepairWeb.AuthorizationTestsMacro do
                |> delete(
                  u_path(
                    conn,
-                   "/api/v1/#{@group_name}/#{@context_name}/#{object.uuid}"
+                   "/api/v1/#{@group_name}/#{@context_name}/#{object.id}"
                  )
                )
                |> response(204)
@@ -386,7 +386,7 @@ defmodule PrepairWeb.AuthorizationTestsMacro do
             conn,
             u_path(
               conn,
-              "/api/v1/#{@group_name}/#{@context_name}/#{object.uuid}"
+              "/api/v1/#{@group_name}/#{@context_name}/#{object.id}"
             )
           )
         end
@@ -462,7 +462,7 @@ defmodule PrepairWeb.AuthorizationTestsMacro do
                |> delete(
                  u_path(
                    conn,
-                   "/api/v1/#{@group_name}/#{@context_name}/#{object.uuid}"
+                   "/api/v1/#{@group_name}/#{@context_name}/#{object.id}"
                  )
                )
                |> response(404)

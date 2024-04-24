@@ -21,10 +21,10 @@ defmodule PrepairWeb.OwnershipLiveTest do
   }
 
   defp create_public_ownership(_) do
-    profile_uuid = profile_fixture().uuid
+    profile_id = profile_fixture().id
 
     public_ownership =
-      ownership_fixture(profile_uuid, ownership_valid_attrs())
+      ownership_fixture(profile_id, ownership_valid_attrs())
       |> Repo.preload([:product, :profile])
 
     %{public_ownership: public_ownership}
@@ -59,7 +59,7 @@ defmodule PrepairWeb.OwnershipLiveTest do
     @tag :ownership_liveview
     test "visitors CANNOT see or edit an ownership",
          %{conn: conn, public_ownership: public_ownership} do
-      {:error, detail} = live(conn, ~p"/ownerships/#{public_ownership.uuid}")
+      {:error, detail} = live(conn, ~p"/ownerships/#{public_ownership.id}")
 
       assert detail ==
                {:redirect,
@@ -93,8 +93,8 @@ defmodule PrepairWeb.OwnershipLiveTest do
     @tag :ownership_liveview
     test "users CAN see their SELF ownerships",
          %{conn: conn, user: user} do
-      ownership = ownership_fixture(user.uuid)
-      {:ok, _index_live, html} = live(conn, ~p"/ownerships/#{ownership.uuid}")
+      ownership = ownership_fixture(user.id)
+      {:ok, _index_live, html} = live(conn, ~p"/ownerships/#{ownership.id}")
 
       assert html =~ "#{ownership.warranty_duration_m}"
     end
@@ -108,8 +108,8 @@ defmodule PrepairWeb.OwnershipLiveTest do
       index_live
       |> form("#ownership-form",
         ownership: %{
-          category_uuid: product.category_uuid,
-          manufacturer_uuid: product.manufacturer_uuid
+          category_id: product.category_id,
+          manufacturer_id: product.manufacturer_id
         }
       )
       |> render_change()
@@ -117,7 +117,7 @@ defmodule PrepairWeb.OwnershipLiveTest do
       assert index_live
              |> form("#ownership-form",
                ownership: %{
-                 product_uuid: product.uuid,
+                 product_id: product.id,
                  date_of_purchase: ~D[2023-10-02],
                  warranty_duration_m: 36,
                  price_of_purchase: 500,
@@ -134,15 +134,15 @@ defmodule PrepairWeb.OwnershipLiveTest do
 
     @tag :ownership_liveview
     test "users CAN update their ownerships", %{conn: conn, user: user} do
-      ownership = ownership_fixture(user.uuid)
+      ownership = ownership_fixture(user.id)
 
       {:ok, _index_live, html} =
-        live(conn, ~p"/ownerships/#{ownership.uuid}/edit")
+        live(conn, ~p"/ownerships/#{ownership.id}/edit")
 
       assert html =~ "Edit Ownership"
 
       {:ok, _index_live, html} =
-        live(conn, ~p"/ownerships/#{ownership.uuid}/show/edit")
+        live(conn, ~p"/ownerships/#{ownership.id}/show/edit")
 
       assert html =~ "Edit Ownership"
     end
@@ -162,14 +162,14 @@ defmodule PrepairWeb.OwnershipLiveTest do
     @tag :ownership_liveview
     test "users CANNOT update another profile's ownership",
          %{conn: conn, public_ownership: public_ownership} do
-      conn = get(conn, ~p"/ownerships/#{public_ownership.uuid}/edit")
+      conn = get(conn, ~p"/ownerships/#{public_ownership.id}/edit")
 
       assert conn.status == 302
 
       assert response(conn, 302) =~
                "You are being <a href=\"/\">redirected</a>."
 
-      conn = get(conn, ~p"/ownerships/#{public_ownership.uuid}/show/edit")
+      conn = get(conn, ~p"/ownerships/#{public_ownership.id}/show/edit")
 
       assert conn.status == 302
 
@@ -247,8 +247,8 @@ defmodule PrepairWeb.OwnershipLiveTest do
       index_live
       |> form("#ownership-form",
         ownership: %{
-          category_uuid: product.category_uuid,
-          manufacturer_uuid: product.manufacturer_uuid
+          category_id: product.category_id,
+          manufacturer_id: product.manufacturer_id
         }
       )
       |> render_change()
@@ -256,7 +256,7 @@ defmodule PrepairWeb.OwnershipLiveTest do
       assert index_live
              |> form("#ownership-form",
                ownership: %{
-                 product_uuid: product.uuid,
+                 product_id: product.id,
                  date_of_purchase: ~D[2023-10-02],
                  warranty_duration_m: 36,
                  price_of_purchase: 500,
@@ -279,7 +279,7 @@ defmodule PrepairWeb.OwnershipLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/ownerships")
 
       assert index_live
-             |> element("#ownerships-#{public_ownership.uuid} a", "Edit")
+             |> element("#ownerships-#{public_ownership.id} a", "Edit")
              |> render_click() =~
                "Edit Ownership"
 
@@ -307,10 +307,10 @@ defmodule PrepairWeb.OwnershipLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/ownerships")
 
       assert index_live
-             |> element("#ownerships-#{public_ownership.uuid} a", "Delete")
+             |> element("#ownerships-#{public_ownership.id} a", "Delete")
              |> render_click()
 
-      refute has_element?(index_live, "#ownerships-#{public_ownership.uuid}")
+      refute has_element?(index_live, "#ownerships-#{public_ownership.id}")
     end
   end
 

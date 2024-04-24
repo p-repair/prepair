@@ -7,8 +7,8 @@ defmodule Prepair.Profiles.Ownership do
   import Ecto.Changeset
 
   @required_fields [
-    :product_uuid,
-    :product_uuid,
+    :product_id,
+    :product_id,
     :public,
     :date_of_purchase
   ]
@@ -19,17 +19,17 @@ defmodule Prepair.Profiles.Ownership do
               :price_of_purchase
             ]
 
-  @derive {Phoenix.Param, key: :uuid}
-  @primary_key {:uuid, Ecto.UUID, autogenerate: false}
+  @derive {Phoenix.Param, key: :id}
+  @primary_key {:id, Ecto.UUID, autogenerate: false}
   schema "ownerships" do
     belongs_to :product, Product,
-      foreign_key: :product_uuid,
-      references: :uuid,
+      foreign_key: :product_id,
+      references: :id,
       type: Ecto.UUID
 
     belongs_to :profile, Profile,
-      foreign_key: :profile_uuid,
-      references: :uuid,
+      foreign_key: :profile_id,
+      references: :id,
       type: Ecto.UUID
 
     field :public, :boolean, default: false

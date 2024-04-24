@@ -15,7 +15,7 @@ defmodule PrepairWeb.NotificationTemplateLive.Index do
     socket =
       socket
       |> stream_configure(:notification_templates,
-        dom_id: &"notification_templates-#{&1.uuid}"
+        dom_id: &"notification_templates-#{&1.id}"
       )
       |> stream(
         :notification_templates,
@@ -30,14 +30,14 @@ defmodule PrepairWeb.NotificationTemplateLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"uuid" => uuid}) do
+  defp apply_action(socket, :edit, %{"id" => id}) do
     page_title = gettext("Edit Notification template")
 
     socket
     |> assign(:page_title, page_title)
     |> assign(
       :notification_template,
-      Notifications.get_notification_template!(uuid)
+      Notifications.get_notification_template!(id)
     )
   end
 
@@ -68,9 +68,9 @@ defmodule PrepairWeb.NotificationTemplateLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"uuid" => uuid}, socket) do
+  def handle_event("delete", %{"id" => id}, socket) do
     UserAuth.require_admin_and_do(socket, fn ->
-      notification_template = Notifications.get_notification_template!(uuid)
+      notification_template = Notifications.get_notification_template!(id)
 
       {:ok, _} =
         Notifications.delete_notification_template(notification_template)

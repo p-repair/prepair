@@ -10,7 +10,7 @@ defmodule PrepairWeb.ManufacturerLive.Index do
     socket =
       socket
       |> stream_configure(:manufacturers,
-        dom_id: &"manufacturers-#{&1.uuid}"
+        dom_id: &"manufacturers-#{&1.id}"
       )
       |> stream(:manufacturers, Products.list_manufacturers())
 
@@ -22,12 +22,12 @@ defmodule PrepairWeb.ManufacturerLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"uuid" => uuid}) do
+  defp apply_action(socket, :edit, %{"id" => id}) do
     page_title = gettext("Edit Manufacturer")
 
     socket
     |> assign(:page_title, page_title)
-    |> assign(:manufacturer, Products.get_manufacturer!(uuid))
+    |> assign(:manufacturer, Products.get_manufacturer!(id))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -55,9 +55,9 @@ defmodule PrepairWeb.ManufacturerLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"uuid" => uuid}, socket) do
+  def handle_event("delete", %{"id" => id}, socket) do
     UserAuth.require_admin_and_do(socket, fn ->
-      manufacturer = Products.get_manufacturer!(uuid)
+      manufacturer = Products.get_manufacturer!(id)
       {:ok, _} = Products.delete_manufacturer(manufacturer)
 
       {:noreply, stream_delete(socket, :manufacturers, manufacturer)}

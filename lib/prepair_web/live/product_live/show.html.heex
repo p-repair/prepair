@@ -1,5 +1,5 @@
 <.header>
-  <%= gettext "Product" %><%= @product.uuid %>
+  <%= gettext "Product" %><%= @product.id %>
   <:subtitle><%= gettext "This is a product record from your database." %></:subtitle>
   <:actions>
   <%= if @current_user.role == :admin do %>
@@ -26,7 +26,7 @@
 <.modal :if={@live_action == :edit} id="product-modal" show on_cancel={JS.patch(~p"/products/#{@product}")}>
   <.live_component
     module={PrepairWeb.ProductLive.FormComponent}
-    id={@product.uuid}
+    id={@product.id}
     title={@page_title}
     action={@live_action}
     product={@product}

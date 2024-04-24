@@ -14,17 +14,17 @@ defmodule Prepair.Profiles.Profile do
 
   @fields @required_fields
 
-  @derive {Phoenix.Param, key: :uuid}
-  @primary_key {:uuid, Ecto.UUID, autogenerate: false}
+  @derive {Phoenix.Param, key: :id}
+  @primary_key {:id, Ecto.UUID, autogenerate: false}
   schema "profiles" do
     belongs_to :user, User,
-      foreign_key: :uuid,
-      references: :uuid,
+      foreign_key: :id,
+      references: :id,
       define_field: false
 
     has_many :ownerships, Ownership,
-      foreign_key: :profile_uuid,
-      references: :uuid
+      foreign_key: :profile_id,
+      references: :id
 
     field :username, :string
     field :newsletter, :boolean

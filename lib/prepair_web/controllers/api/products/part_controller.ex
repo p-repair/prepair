@@ -29,14 +29,14 @@ defmodule PrepairWeb.Api.Products.PartController do
     end
   end
 
-  def show(conn, %{"uuid" => uuid}) do
-    part = Products.get_part!(uuid)
+  def show(conn, %{"id" => id}) do
+    part = Products.get_part!(id)
     render(conn, :show, part: part)
   end
 
-  def update(conn, %{"uuid" => uuid, "part" => part_params}) do
+  def update(conn, %{"id" => id, "part" => part_params}) do
     params = part_params |> normalise_params()
-    part = Products.get_part!(uuid)
+    part = Products.get_part!(id)
 
     # Trick to avoid empty fields returned by FlutterFlow when value isn't changed.
     params =
@@ -48,8 +48,8 @@ defmodule PrepairWeb.Api.Products.PartController do
     end
   end
 
-  def delete(conn, %{"uuid" => uuid}) do
-    part = Products.get_part!(uuid)
+  def delete(conn, %{"id" => id}) do
+    part = Products.get_part!(id)
 
     with {:ok, %Part{}} <-
            Products.delete_part(part) do

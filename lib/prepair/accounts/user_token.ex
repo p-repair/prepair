@@ -13,16 +13,16 @@ defmodule Prepair.Accounts.UserToken do
   @change_email_validity_in_days 7
   @session_validity_in_days 60
 
-  @derive {Phoenix.Param, key: :uuid}
-  @primary_key {:uuid, Ecto.UUID, autogenerate: false}
+  @derive {Phoenix.Param, key: :id}
+  @primary_key {:id, Ecto.UUID, autogenerate: false}
   schema "users_tokens" do
     field :token, :binary
     field :context, :string
     field :sent_to, :string
 
     belongs_to :user, Prepair.Accounts.User,
-      foreign_key: :user_uuid,
-      references: :uuid,
+      foreign_key: :user_id,
+      references: :id,
       type: Ecto.UUID
 
     timestamps(updated_at: false)
@@ -49,7 +49,7 @@ defmodule Prepair.Accounts.UserToken do
   """
   def build_session_token(user) do
     token = :crypto.strong_rand_bytes(@rand_size)
-    {token, %UserToken{token: token, context: "session", user_uuid: user.uuid}}
+    {token, %UserToken{token: token, context: "session", user_id: user.id}}
   end
 
   @doc """
@@ -96,7 +96,7 @@ defmodule Prepair.Accounts.UserToken do
        token: hashed_token,
        context: context,
        sent_to: sent_to,
-       user_uuid: user.uuid
+       user_id: user.id
      }}
   end
 
@@ -179,11 +179,11 @@ defmodule Prepair.Accounts.UserToken do
   Gets all tokens for the given user for the given contexts.
   """
   def user_and_contexts_query(user, :all) do
-    from t in UserToken, where: t.user_uuid == ^user.uuid
+    from t in UserToken, where: t.user_id == ^user.id
   end
 
   def user_and_contexts_query(user, [_ | _] = contexts) do
     from t in UserToken,
-      where: t.user_uuid == ^user.uuid and t.context in ^contexts
+      where: t.user_id == ^user.id and t.context in ^contexts
   end
 end

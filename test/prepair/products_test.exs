@@ -7,9 +7,9 @@ defmodule Prepair.ProductsTest do
   import Prepair.NotificationsFixtures
   import Prepair.ProductsFixtures
 
-  @random_uuid_1 Ecto.UUID.generate()
-  @random_uuid_2 Ecto.UUID.generate()
-  @random_uuid_3 Ecto.UUID.generate()
+  @random_id_1 Ecto.UUID.generate()
+  @random_id_2 Ecto.UUID.generate()
+  @random_id_3 Ecto.UUID.generate()
 
   describe "manufacturers" do
     alias Prepair.Products.Manufacturer
@@ -21,9 +21,9 @@ defmodule Prepair.ProductsTest do
       assert Products.list_manufacturers() == [manufacturer]
     end
 
-    test "get_manufacturer!/1 returns the manufacturer with given uuid" do
+    test "get_manufacturer!/1 returns the manufacturer with given id" do
       manufacturer = manufacturer_fixture()
-      assert Products.get_manufacturer!(manufacturer.uuid) == manufacturer
+      assert Products.get_manufacturer!(manufacturer.id) == manufacturer
     end
 
     test "create_manufacturer/1 with valid data creates a manufacturer" do
@@ -65,7 +65,7 @@ defmodule Prepair.ProductsTest do
       assert {:error, %Ecto.Changeset{}} =
                Products.update_manufacturer(manufacturer, @invalid_attrs)
 
-      assert manufacturer == Products.get_manufacturer!(manufacturer.uuid)
+      assert manufacturer == Products.get_manufacturer!(manufacturer.id)
     end
 
     test "delete_manufacturer/1 deletes the manufacturer" do
@@ -73,7 +73,7 @@ defmodule Prepair.ProductsTest do
       assert {:ok, %Manufacturer{}} = Products.delete_manufacturer(manufacturer)
 
       assert_raise Ecto.NoResultsError, fn ->
-        Products.get_manufacturer!(manufacturer.uuid)
+        Products.get_manufacturer!(manufacturer.id)
       end
     end
 
@@ -98,20 +98,20 @@ defmodule Prepair.ProductsTest do
       assert Products.list_categories() == [category]
     end
 
-    test "get_category!/1 returns the category with given uuid" do
+    test "get_category!/1 returns the category with given id" do
       category = category_fixture()
-      assert Products.get_category!(category.uuid) == category
+      assert Products.get_category!(category.id) == category
     end
 
     test "create_category/1 with valid data creates a category" do
       notification_templates = create_notification_templates()
 
-      notification_template_uuids =
-        create_notification_template_uuids(notification_templates)
+      notification_template_ids =
+        create_notification_template_ids(notification_templates)
 
       valid_attrs =
         category_valid_attrs()
-        |> Map.put(:notification_template_uuids, notification_template_uuids)
+        |> Map.put(:notification_template_ids, notification_template_ids)
 
       assert {:ok, %Category{} = category} =
                Products.create_category(valid_attrs)
@@ -131,21 +131,21 @@ defmodule Prepair.ProductsTest do
     test "update_category/2 with valid data updates the category" do
       notification_templates = create_notification_templates()
 
-      notification_template_uuids =
-        create_notification_template_uuids(notification_templates)
+      notification_template_ids =
+        create_notification_template_ids(notification_templates)
 
       category =
         category_fixture(%{
-          notification_template_uuids: notification_template_uuids
+          notification_template_ids: notification_template_ids
         })
 
       new_notification_templates = create_notification_templates()
 
-      new_notification_template_uuids =
-        create_notification_template_uuids(new_notification_templates)
+      new_notification_template_ids =
+        create_notification_template_ids(new_notification_templates)
 
       update_attrs = %{
-        notification_template_uuids: new_notification_template_uuids,
+        notification_template_ids: new_notification_template_ids,
         average_lifetime_m: 43,
         description: "some updated description",
         image: "some updated image",
@@ -168,7 +168,7 @@ defmodule Prepair.ProductsTest do
       assert {:error, %Ecto.Changeset{}} =
                Products.update_category(category, @invalid_attrs)
 
-      assert category == Products.get_category!(category.uuid)
+      assert category == Products.get_category!(category.id)
     end
 
     test "delete_category/1 deletes the category" do
@@ -176,7 +176,7 @@ defmodule Prepair.ProductsTest do
       assert {:ok, %Category{}} = Products.delete_category(category)
 
       assert_raise Ecto.NoResultsError, fn ->
-        Products.get_category!(category.uuid)
+        Products.get_category!(category.id)
       end
     end
 
@@ -219,12 +219,12 @@ defmodule Prepair.ProductsTest do
     end
 
     test "list_products/1 returns a list of products matching with
-    :product_uuids value" do
+    :product_ids value" do
       product_1 = product_fixture()
       product_2 = product_fixture()
 
       assert Products.list_products(
-               product_uuids: [product_1.uuid, product_2.uuid]
+               product_ids: [product_1.id, product_2.id]
              ) ==
                [
                  product_1,
@@ -232,139 +232,139 @@ defmodule Prepair.ProductsTest do
                ]
     end
 
-    test "list_products/1 returns an empty list when :product_uuids value is a
-    list of uuids that does not exists in the database
+    test "list_products/1 returns an empty list when :product_ids value is a
+    list of ids that does not exists in the database
     exists" do
       assert Products.list_products(
-               product_uuids: [@random_uuid_1, @random_uuid_2, @random_uuid_3]
+               product_ids: [@random_id_1, @random_id_2, @random_id_3]
              ) == []
     end
 
     test "list_products/1 returns a list of products matching with
-    :category_uuid value" do
+    :category_id value" do
       product = product_fixture()
       _product_2 = product_fixture()
 
-      assert Products.list_products(category_uuid: [product.category_uuid]) == [
+      assert Products.list_products(category_id: [product.category_id]) == [
                product
              ]
     end
 
-    test "list_products/1 returns an empty list when :category_uuid value is a
-    list of uuids that does not exists in the database" do
-      assert Products.list_products(category_uuid: [@random_uuid_1]) == []
+    test "list_products/1 returns an empty list when :category_id value is a
+    list of ids that does not exists in the database" do
+      assert Products.list_products(category_id: [@random_id_1]) == []
     end
 
     test "list_products/1 returns a list of products matching witch
-    :manufacturer_uuid value" do
+    :manufacturer_id value" do
       product = product_fixture()
       _product_2 = product_fixture()
 
       assert Products.list_products(
-               manufacturer_uuid: [product.manufacturer_uuid]
+               manufacturer_id: [product.manufacturer_id]
              ) ==
                [
                  product
                ]
     end
 
-    test "list_products/1 returns an empty list when :manufacturer_uuid value is a
-    list of uuids that does not exists in the database" do
-      assert Products.list_products(manufacturer_uuid: [@random_uuid_1]) == []
+    test "list_products/1 returns an empty list when :manufacturer_id value is a
+    list of ids that does not exists in the database" do
+      assert Products.list_products(manufacturer_id: [@random_id_1]) == []
     end
 
-    test "list_products/1 returns all products if the value of both :category_uuid
-    and :manufacturer_uuid is ['']" do
+    test "list_products/1 returns all products if the value of both :category_id
+    and :manufacturer_id is ['']" do
       product_1 = product_fixture()
       product_2 = product_fixture()
 
       assert Products.list_products(
-               category_uuid: [""],
-               manufacturer_uuid: [""]
+               category_id: [""],
+               manufacturer_id: [""]
              ) ==
                [product_1, product_2]
     end
 
     test "list_products/1 filters can be combined: returns an empty list if
-    :category_uuid value is a list of uuids which don’t exist in the database" do
+    :category_id value is a list of ids which don’t exist in the database" do
       product = product_fixture()
 
       assert Products.list_products(
-               category_uuid: [@random_uuid_1],
-               manufacturer_uuid: [product.manufacturer_uuid]
+               category_id: [@random_id_1],
+               manufacturer_id: [product.manufacturer_id]
              ) == []
     end
 
     test "list_products/1 filters can be combined: returns an empty list if
-    :manufacturer_uuid value is a list of uuids which don’t exist in the database" do
+    :manufacturer_id value is a list of ids which don’t exist in the database" do
       product = product_fixture()
 
       assert Products.list_products(
-               category_uuid: [product.category_uuid],
-               manufacturer_uuid: [@random_uuid_1]
+               category_id: [product.category_id],
+               manufacturer_id: [@random_id_1]
              ) == []
     end
 
     test "list_products/1 filters can be combined: returns an empty list if
-    :category_uuid and :manufacturer_uuid values are lists of uuids which don’t
+    :category_id and :manufacturer_id values are lists of ids which don’t
     exist in the database" do
       _product = product_fixture()
 
       assert Products.list_products(
-               category_uuid: [@random_uuid_1],
-               manufacturer_uuid: [@random_uuid_2]
+               category_id: [@random_id_1],
+               manufacturer_id: [@random_id_2]
              ) ==
                []
     end
 
-    test "list_products/1 returns matching product with :category_uuid value
-    when :manufacturer_uuid is set to ['']" do
-      category_uuid = category_fixture().uuid
+    test "list_products/1 returns matching product with :category_id value
+    when :manufacturer_id is set to ['']" do
+      category_id = category_fixture().id
       _product_1 = product_fixture()
 
       product_2 =
-        product_fixture(%{category_uuid: category_uuid})
+        product_fixture(%{category_id: category_id})
 
       assert Products.list_products(
-               category_uuid: [category_uuid],
-               manufacturer_uuid: [""]
+               category_id: [category_id],
+               manufacturer_id: [""]
              ) == [product_2]
     end
 
-    test "list_products/1 returns matching product with :manufacturer_uuid value
-    when :category_uuid is set to ['']" do
-      manufacturer_uuid = manufacturer_fixture().uuid
+    test "list_products/1 returns matching product with :manufacturer_id value
+    when :category_id is set to ['']" do
+      manufacturer_id = manufacturer_fixture().id
       _product_1 = product_fixture()
 
       product_2 =
-        product_fixture(%{manufacturer_uuid: manufacturer_uuid})
+        product_fixture(%{manufacturer_id: manufacturer_id})
 
       assert Products.list_products(
-               category_uuid: [""],
-               manufacturer_uuid: [manufacturer_uuid]
+               category_id: [""],
+               manufacturer_id: [manufacturer_id]
              ) == [product_2]
     end
 
     test "list_products/1 filters can be combined: returns matching product with
-    :category_uuid and :manufacturer_uuid when both are set" do
-      category_uuid = category_fixture().uuid
-      manufacturer_uuid = manufacturer_fixture().uuid
+    :category_id and :manufacturer_id when both are set" do
+      category_id = category_fixture().id
+      manufacturer_id = manufacturer_fixture().id
 
       _product_1 =
-        product_fixture(%{category_uuid: category_uuid})
+        product_fixture(%{category_id: category_id})
 
       _product_2 =
-        product_fixture(%{manufacturer_uuid: manufacturer_uuid})
+        product_fixture(%{manufacturer_id: manufacturer_id})
 
       product_3 =
         product_fixture(%{
-          category_uuid: category_uuid,
-          manufacturer_uuid: manufacturer_uuid
+          category_id: category_id,
+          manufacturer_id: manufacturer_id
         })
 
       assert Products.list_products(
-               category_uuid: [category_uuid],
-               manufacturer_uuid: [manufacturer_uuid]
+               category_id: [category_id],
+               manufacturer_id: [manufacturer_id]
              ) == [product_3]
     end
 
@@ -375,61 +375,61 @@ defmodule Prepair.ProductsTest do
       end
     end
 
-    test "list_products_by_uuid/1 returns an empty list when none of [uuids] exist" do
-      assert Products.list_products_by_uuid([
-               @random_uuid_1,
-               @random_uuid_2,
-               @random_uuid_3
+    test "list_products_by_id/1 returns an empty list when none of [ids] exist" do
+      assert Products.list_products_by_id([
+               @random_id_1,
+               @random_id_2,
+               @random_id_3
              ]) == []
     end
 
-    test "list_products_by_uuid/1 returns a list of products matching witch [uuids]" do
+    test "list_products_by_id/1 returns a list of products matching witch [ids]" do
       product_1 = product_fixture()
       product_2 = product_fixture()
 
-      assert Products.list_products_by_uuid([product_1.uuid, product_2.uuid]) ==
+      assert Products.list_products_by_id([product_1.id, product_2.id]) ==
                [
                  product_1,
                  product_2
                ]
     end
 
-    test "list_products_by_uuid/1 returns products only for valid [uuids] when a mix
-    of valid and invalid uuids are passed to the list" do
+    test "list_products_by_id/1 returns products only for valid [ids] when a mix
+    of valid and invalid ids are passed to the list" do
       product_1 = product_fixture()
       product_2 = product_fixture()
 
-      assert Products.list_products_by_uuid([product_1.uuid, product_2.uuid]) ==
+      assert Products.list_products_by_id([product_1.id, product_2.id]) ==
                [
                  product_1,
                  product_2
                ]
     end
 
-    test "get_product!/1 returns the product with given uuid" do
+    test "get_product!/1 returns the product with given id" do
       product = product_fixture() |> preload_product_relations()
-      assert Products.get_product!(product.uuid) == product
+      assert Products.get_product!(product.id) == product
     end
 
     test "create_product/1 with valid data creates a product" do
       parts = create_parts()
-      part_uuids = create_part_uuids(parts)
+      part_ids = create_part_ids(parts)
       notification_templates = create_notification_templates()
 
-      notification_template_uuids =
-        create_notification_template_uuids(notification_templates)
+      notification_template_ids =
+        create_notification_template_ids(notification_templates)
 
       valid_attrs =
         product_valid_attrs()
-        |> Map.put(:part_uuids, part_uuids)
-        |> Map.put(:notification_template_uuids, notification_template_uuids)
+        |> Map.put(:part_ids, part_ids)
+        |> Map.put(:notification_template_ids, notification_template_ids)
 
       assert {:ok, %Product{} = product} = Products.create_product(valid_attrs)
 
       assert product.notification_templates == notification_templates
       assert product.parts == parts
-      assert product.category_uuid == valid_attrs.category_uuid
-      assert product.manufacturer_uuid == valid_attrs.manufacturer_uuid
+      assert product.category_id == valid_attrs.category_id
+      assert product.manufacturer_id == valid_attrs.manufacturer_id
       assert product.average_lifetime_m == valid_attrs.average_lifetime_m
       assert product.country_of_origin == valid_attrs.country_of_origin
       assert product.description == valid_attrs.description
@@ -447,29 +447,29 @@ defmodule Prepair.ProductsTest do
 
     test "update_product/2 with valid data updates the product" do
       parts = create_parts()
-      part_uuids = create_part_uuids(parts)
+      part_ids = create_part_ids(parts)
       notification_templates = create_notification_templates()
 
-      notification_template_uuids =
-        create_notification_template_uuids(notification_templates)
+      notification_template_ids =
+        create_notification_template_ids(notification_templates)
 
       product =
         product_fixture(%{
-          notification_template_uuids: notification_template_uuids,
-          part_uuids: part_uuids
+          notification_template_ids: notification_template_ids,
+          part_ids: part_ids
         })
         |> preload_product_relations()
 
       new_parts = create_parts()
-      new_part_uuids = create_part_uuids(new_parts)
+      new_part_ids = create_part_ids(new_parts)
       new_notification_templates = create_notification_templates()
 
-      new_notification_template_uuids =
-        create_notification_template_uuids(new_notification_templates)
+      new_notification_template_ids =
+        create_notification_template_ids(new_notification_templates)
 
       update_attrs = %{
-        notification_template_uuids: new_notification_template_uuids,
-        part_uuids: new_part_uuids,
+        notification_template_ids: new_notification_template_ids,
+        part_ids: new_part_ids,
         average_lifetime_m: 43,
         country_of_origin: "some updated country_of_origin",
         description: "some updated description",
@@ -501,7 +501,7 @@ defmodule Prepair.ProductsTest do
       assert {:error, %Ecto.Changeset{}} =
                Products.update_product(product, @invalid_attrs)
 
-      assert product == Products.get_product!(product.uuid)
+      assert product == Products.get_product!(product.id)
     end
 
     test "delete_product/1 deletes the product" do
@@ -509,7 +509,7 @@ defmodule Prepair.ProductsTest do
       assert {:ok, %Product{}} = Products.delete_product(product)
 
       assert_raise Ecto.NoResultsError, fn ->
-        Products.get_product!(product.uuid)
+        Products.get_product!(product.id)
       end
     end
 
@@ -541,29 +541,29 @@ defmodule Prepair.ProductsTest do
       assert Products.list_parts() == [part]
     end
 
-    test "get_part!/1 returns the part with given uuid" do
+    test "get_part!/1 returns the part with given id" do
       part = part_fixture()
-      assert Products.get_part!(part.uuid) == part
+      assert Products.get_part!(part.id) == part
     end
 
     test "create_part/1 with valid data creates a part" do
       products = create_products()
-      product_uuids = create_product_uuids(products)
+      product_ids = create_product_ids(products)
       notification_templates = create_notification_templates()
 
-      notification_template_uuids =
-        create_notification_template_uuids(notification_templates)
+      notification_template_ids =
+        create_notification_template_ids(notification_templates)
 
       valid_attrs =
         part_valid_attrs()
-        |> Map.put(:product_uuids, product_uuids)
-        |> Map.put(:notification_template_uuids, notification_template_uuids)
+        |> Map.put(:product_ids, product_ids)
+        |> Map.put(:notification_template_ids, notification_template_ids)
 
       assert {:ok, %Part{} = part} = Products.create_part(valid_attrs)
       assert part.notification_templates == notification_templates
       assert part.products == products
-      assert part.category_uuid == valid_attrs.category_uuid
-      assert part.manufacturer_uuid == valid_attrs.manufacturer_uuid
+      assert part.category_id == valid_attrs.category_id
+      assert part.manufacturer_id == valid_attrs.manufacturer_id
       assert part.average_lifetime_m == valid_attrs.average_lifetime_m
       assert part.country_of_origin == valid_attrs.country_of_origin
       assert part.description == valid_attrs.description
@@ -581,28 +581,28 @@ defmodule Prepair.ProductsTest do
 
     test "update_part/2 with valid data updates the part" do
       products = create_products()
-      product_uuids = create_product_uuids(products)
+      product_ids = create_product_ids(products)
       notification_templates = create_notification_templates()
 
-      notification_template_uuids =
-        create_notification_template_uuids(notification_templates)
+      notification_template_ids =
+        create_notification_template_ids(notification_templates)
 
       part =
         part_fixture(%{
-          notification_template_uuids: notification_template_uuids,
-          product_uuids: product_uuids
+          notification_template_ids: notification_template_ids,
+          product_ids: product_ids
         })
 
       new_products = create_products()
-      new_product_uuids = create_product_uuids(new_products)
+      new_product_ids = create_product_ids(new_products)
       new_notification_templates = create_notification_templates()
 
-      new_notification_template_uuids =
-        create_notification_template_uuids(new_notification_templates)
+      new_notification_template_ids =
+        create_notification_template_ids(new_notification_templates)
 
       update_attrs = %{
-        notification_template_uuids: new_notification_template_uuids,
-        product_uuids: new_product_uuids,
+        notification_template_ids: new_notification_template_ids,
+        product_ids: new_product_ids,
         average_lifetime_m: 43,
         country_of_origin: "some updated country_of_origin",
         description: "some updated description",
@@ -635,13 +635,13 @@ defmodule Prepair.ProductsTest do
       assert {:error, %Ecto.Changeset{}} =
                Products.update_part(part, @invalid_attrs)
 
-      assert part == Products.get_part!(part.uuid)
+      assert part == Products.get_part!(part.id)
     end
 
     test "delete_part/1 deletes the part" do
       part = part_fixture()
       assert {:ok, %Part{}} = Products.delete_part(part)
-      assert_raise Ecto.NoResultsError, fn -> Products.get_part!(part.uuid) end
+      assert_raise Ecto.NoResultsError, fn -> Products.get_part!(part.id) end
     end
 
     test "change_part/1 returns a part changeset" do

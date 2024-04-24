@@ -49,7 +49,7 @@ defmodule PrepairWeb.CategoryLiveTest do
     @tag :category_liveview
     test "visitors CANNOT see or edit a category",
          %{conn: conn, category: category} do
-      {:error, detail} = live(conn, ~p"/categories/#{category.uuid}")
+      {:error, detail} = live(conn, ~p"/categories/#{category.id}")
 
       assert detail ==
                {:redirect,
@@ -118,12 +118,12 @@ defmodule PrepairWeb.CategoryLiveTest do
     @tag :category_liveview
     test "users CANNOT update a category",
          %{conn: conn, category: category} do
-      conn = get(conn, ~p"/categories/#{category.uuid}/edit")
+      conn = get(conn, ~p"/categories/#{category.id}/edit")
 
       assert conn.status == 403
       assert response(conn, 403) =~ "Forbidden"
 
-      conn = get(conn, ~p"/categories/#{category.uuid}/show/edit")
+      conn = get(conn, ~p"/categories/#{category.id}/show/edit")
 
       assert conn.status == 403
       assert response(conn, 403) =~ "Forbidden"
@@ -136,7 +136,7 @@ defmodule PrepairWeb.CategoryLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/categories")
 
       refute index_live
-             |> element("#categories-#{category.uuid} a", "Edit")
+             |> element("#categories-#{category.id} a", "Edit")
              |> has_element?()
     end
 
@@ -144,10 +144,10 @@ defmodule PrepairWeb.CategoryLiveTest do
     test "there is no 'Edit' button in Category Show for users when they
     are not admin",
          %{conn: conn, category: category} do
-      {:ok, index_live, _html} = live(conn, ~p"/categories/#{category.uuid}")
+      {:ok, index_live, _html} = live(conn, ~p"/categories/#{category.id}")
 
       refute index_live
-             |> element("#category-#{category.uuid} a", "Edit")
+             |> element("#category-#{category.id} a", "Edit")
              |> has_element?()
     end
 
@@ -158,7 +158,7 @@ defmodule PrepairWeb.CategoryLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/categories")
 
       refute index_live
-             |> element("#categories-#{category.uuid} a", "Delete")
+             |> element("#categories-#{category.id} a", "Delete")
              |> has_element?()
     end
 
@@ -234,7 +234,7 @@ defmodule PrepairWeb.CategoryLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/categories")
 
       assert index_live
-             |> element("#categories-#{category.uuid} a", "Edit")
+             |> element("#categories-#{category.id} a", "Edit")
              |> render_click() =~
                "Edit Category"
 
@@ -260,10 +260,10 @@ defmodule PrepairWeb.CategoryLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/categories")
 
       assert index_live
-             |> element("#categories-#{category.uuid} a", "Delete")
+             |> element("#categories-#{category.id} a", "Delete")
              |> render_click()
 
-      refute has_element?(index_live, "#categories-#{category.uuid}")
+      refute has_element?(index_live, "#categories-#{category.id}")
     end
   end
 

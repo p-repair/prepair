@@ -24,7 +24,7 @@ defmodule PrepairWeb.Api.Profiles.ProfileControllerTest do
   end
 
   defp get_own_profile(%{user: user}) do
-    profile = Profiles.get_profile!(user.uuid)
+    profile = Profiles.get_profile!(user.id)
     %{profile: profile}
   end
 
@@ -147,43 +147,43 @@ defmodule PrepairWeb.Api.Profiles.ProfileControllerTest do
     end
   end
 
-  describe "GET /api/v1/profiles/profiles/{uuid}" do
+  describe "GET /api/v1/profiles/profiles/{id}" do
     setup [:register_and_log_in_user, :make_user_admin]
 
     @tag :profile_controller
-    test "get a profile from its uuid", %{conn: conn, user: user} do
+    test "get a profile from its id", %{conn: conn, user: user} do
       profile = user.profile |> Repo.preload(:user)
-      uuid = profile.uuid
-      conn = get(conn, ~p"/api/v1/profiles/profiles/#{uuid}")
+      id = profile.id
+      conn = get(conn, ~p"/api/v1/profiles/profiles/#{id}")
 
       assert json_response(conn, 200)["data"] ==
                profile |> to_normalised_json()
     end
   end
 
-  describe "PUT /api/v1/profiles/profiles/{uuid}" do
+  describe "PUT /api/v1/profiles/profiles/{id}" do
     setup [:register_and_log_in_user, :make_user_admin]
 
     @tag :profile_controller
-    test "update a profile from its uuid when attrs are valid", %{
+    test "update a profile from its id when attrs are valid", %{
       conn: conn,
       user: user
     } do
       profile = user.profile |> Repo.preload(:user)
-      uuid = profile.uuid
+      id = profile.id
 
       conn =
-        put(conn, ~p"/api/v1/profiles/profiles/#{uuid}", profile: @update_attrs)
+        put(conn, ~p"/api/v1/profiles/profiles/#{id}", profile: @update_attrs)
 
-      assert %{"uuid" => ^uuid} = json_response(conn, 200)["data"]
+      assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
       # Recycle the connection so we can reuse it for a request.
 
       conn = recycle(conn)
 
-      conn = get(conn, ~p"/api/v1/profiles/profiles/#{uuid}")
+      conn = get(conn, ~p"/api/v1/profiles/profiles/#{id}")
 
-      profile = Prepair.Profiles.get_profile!(uuid)
+      profile = Prepair.Profiles.get_profile!(id)
 
       assert json_response(conn, 200)["data"] ==
                profile |> to_normalised_json()
@@ -195,10 +195,10 @@ defmodule PrepairWeb.Api.Profiles.ProfileControllerTest do
       user: user
     } do
       profile = user.profile |> Repo.preload(:user)
-      uuid = profile.uuid
+      id = profile.id
 
       conn =
-        put(conn, ~p"/api/v1/profiles/profiles/#{uuid}",
+        put(conn, ~p"/api/v1/profiles/profiles/#{id}",
           profile: @invalid_attrs
         )
 

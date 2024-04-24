@@ -15,7 +15,7 @@ defmodule PrepairWeb.OwnershipLive.Index do
     socket =
       socket
       |> stream_configure(:ownerships,
-        dom_id: &"ownerships-#{&1.uuid}"
+        dom_id: &"ownerships-#{&1.id}"
       )
       |> stream(:ownerships, ownerships)
 
@@ -27,13 +27,13 @@ defmodule PrepairWeb.OwnershipLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"uuid" => uuid} = params) do
+  defp apply_action(socket, :edit, %{"id" => id} = params) do
     UserAuth.require_self_and_do(:ownership, socket, params, fn ->
       page_title = gettext("Edit Ownership")
 
       socket
       |> assign(:page_title, page_title)
-      |> assign(:ownership, Profiles.get_ownership!(uuid))
+      |> assign(:ownership, Profiles.get_ownership!(id))
     end)
   end
 
@@ -62,9 +62,9 @@ defmodule PrepairWeb.OwnershipLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"uuid" => uuid} = params, socket) do
+  def handle_event("delete", %{"id" => id} = params, socket) do
     UserAuth.require_self_and_do(:ownership, socket, params, fn ->
-      ownership = Profiles.get_ownership!(uuid)
+      ownership = Profiles.get_ownership!(id)
       {:ok, _} = Profiles.delete_ownership(ownership)
 
       {:noreply, stream_delete(socket, :ownerships, ownership)}

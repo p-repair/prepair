@@ -1,5 +1,5 @@
 <.header>
-  <%= gettext "Part" %><%= @part.uuid %>
+  <%= gettext "Part" %><%= @part.id %>
   <:subtitle><%= gettext "This is a part record from your database." %></:subtitle>
   <:actions>
   <%= if @current_user.role == :admin do %>
@@ -27,7 +27,7 @@
 <.modal :if={@live_action == :edit} id="part-modal" show on_cancel={JS.patch(~p"/parts/#{@part}")}>
   <.live_component
     module={PrepairWeb.PartLive.FormComponent}
-    id={@part.uuid}
+    id={@part.id}
     title={@page_title}
     action={@live_action}
     part={@part}

@@ -8,16 +8,16 @@ defmodule Prepair.Products.Manufacturer do
 
   @fields @required_fields ++ [:description, :image]
 
-  @derive {Phoenix.Param, key: :uuid}
-  @primary_key {:uuid, Ecto.UUID, autogenerate: false}
+  @derive {Phoenix.Param, key: :id}
+  @primary_key {:id, Ecto.UUID, autogenerate: false}
   schema "manufacturers" do
     has_many :products, Product,
-      foreign_key: :manufacturer_uuid,
-      references: :uuid
+      foreign_key: :manufacturer_id,
+      references: :id
 
     has_many :parts, Part,
-      foreign_key: :manufacturer_uuid,
-      references: :uuid
+      foreign_key: :manufacturer_id,
+      references: :id
 
     field :description, :string
     field :image, :string

@@ -51,7 +51,7 @@ Repo.insert!(
     name: "test",
     key: "dhHbRZx4sDE9QKecz+S/f8co4rIHbM4mqs3pM5kERKM="
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 ##
@@ -64,7 +64,7 @@ aspirateur_traineau =
       name: "Aspirateur traineau",
       average_lifetime_m: 108
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 _bouilloire =
@@ -73,7 +73,7 @@ _bouilloire =
       name: "Bouilloire",
       average_lifetime_m: 108
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 _cafetière =
@@ -81,7 +81,7 @@ _cafetière =
     %Category{
       name: "Catefière"
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 _centrale_vapeur =
@@ -90,7 +90,7 @@ _centrale_vapeur =
       name: "Centrale vapeur",
       average_lifetime_m: 96
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 _congélateur =
@@ -99,7 +99,7 @@ _congélateur =
       name: "Congélateur",
       average_lifetime_m: 144
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 _fer_à_repasser =
@@ -108,7 +108,7 @@ _fer_à_repasser =
       name: "Fer à repasser",
       average_lifetime_m: 96
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 four_encastrable =
@@ -117,7 +117,7 @@ four_encastrable =
       name: "Four (encastrable)",
       average_lifetime_m: 132
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 four_non_encastrable =
@@ -126,7 +126,7 @@ four_non_encastrable =
       name: "Four (non-encastrable)",
       average_lifetime_m: 132
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 _grille_pain =
@@ -135,7 +135,7 @@ _grille_pain =
       name: "Grille-pain",
       average_lifetime_m: 144
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 _hotte_visière =
@@ -144,7 +144,7 @@ _hotte_visière =
       name: "Hotte visière",
       average_lifetime_m: 144
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 lave_linge_hublot =
@@ -154,7 +154,7 @@ lave_linge_hublot =
       description: "Lave-linges qui ont un hublot.",
       average_lifetime_m: 120
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 lave_linge_top =
@@ -164,7 +164,7 @@ lave_linge_top =
       description: "Lave-linges qui s’ouvrent par le dessus.",
       average_lifetime_m: 120
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 _lave_vaisselle =
@@ -173,7 +173,7 @@ _lave_vaisselle =
       name: "Lave-vaisselle",
       average_lifetime_m: 132
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 machine_à_café =
@@ -182,7 +182,7 @@ machine_à_café =
       name: "Machine à café",
       average_lifetime_m: 84
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 _machine_à_coudre =
@@ -191,7 +191,7 @@ _machine_à_coudre =
       name: "Machine à coudre",
       average_lifetime_m: 240
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 _micro_ondes =
@@ -200,7 +200,7 @@ _micro_ondes =
       name: "Micro-ondes",
       average_lifetime_m: 132
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 plaques_électriques =
@@ -208,7 +208,7 @@ plaques_électriques =
     %Category{
       name: "Plaques de cuisson électriques"
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 _plaques_gaz =
@@ -216,7 +216,7 @@ _plaques_gaz =
     %Category{
       name: "Plaques de cuisson au gaz"
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 réfrigérateur =
@@ -225,7 +225,7 @@ réfrigérateur =
       name: "Réfrigérateur",
       average_lifetime_m: 144
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 sèche_linge_hublot =
@@ -235,7 +235,7 @@ sèche_linge_hublot =
       description: "Sèche-linges qui ont un hublot.",
       average_lifetime_m: 120
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 sèche_linge_top =
@@ -245,7 +245,7 @@ sèche_linge_top =
       description: "Sèche-linges qui s’ouvrent par le dessus",
       average_lifetime_m: 120
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 ##
@@ -260,7 +260,7 @@ inconnu =
         "À utiliser pour les pièces détachées, lorsque le fabricant est
     inconnu, ce qui est souvent le cas."
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 cooke_and_lewis =
@@ -270,7 +270,7 @@ cooke_and_lewis =
       description: "Marque appartenant au groupe Kingfisher (Brico Depot,
     Castorama…)."
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 _delonghi =
@@ -281,7 +281,7 @@ _delonghi =
     produisant des appareils électroménagers et notamment connue pour ses
     machines à café et climatiseurs."
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 electrolux =
@@ -292,7 +292,7 @@ electrolux =
       Entreprise suédoise d’électroménager.
       """
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 fagor =
@@ -302,7 +302,7 @@ fagor =
       description: "Entreprise espagnole de fabrication de biens d'équipements
     domiciliée à Arrasate au Pays basque."
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 lg =
@@ -311,7 +311,7 @@ lg =
       name: "LG",
       description: "Conglomérat industriel sud-coréen."
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 _moulinex =
@@ -321,7 +321,7 @@ _moulinex =
       description: "Marque française de petit électroménager appartenant
     actuellement au groupe SEB."
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 _panasonic =
@@ -332,7 +332,7 @@ _panasonic =
         "Groupe japonais spécialisé dans l’électronique grand public et
     professionnel."
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 _philips =
@@ -341,7 +341,7 @@ _philips =
       name: "Philips",
       description: "Société néerlandaise d'électronique, basée à Amsterdam."
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 _samsung =
@@ -350,7 +350,7 @@ _samsung =
       name: "Samsung",
       description: "Fabricant coréen"
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 _valberg =
@@ -359,7 +359,7 @@ _valberg =
       name: "Valberg",
       description: "Marque distributeur d’Electrodépot pour équiper la cuisine."
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 whirlpool =
@@ -369,7 +369,7 @@ whirlpool =
       description: "Entreprise américaine spécialisée dans la conception, la
     fabrication et la distribution d'appareils électroménagers"
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 ##
@@ -379,80 +379,80 @@ whirlpool =
 four_encastrable_pyrolyse =
   Repo.insert!(
     %Product{
-      category_uuid: four_encastrable.uuid,
-      manufacturer_uuid: fagor.uuid,
+      category_id: four_encastrable.id,
+      manufacturer_id: fagor.id,
       name: "Four encastrable pyrolyse",
       reference: "5H-741N3"
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 lave_linge_lg =
   Repo.insert!(
     %Product{
-      category_uuid: lave_linge_hublot.uuid,
-      manufacturer_uuid: lg.uuid,
+      category_id: lave_linge_hublot.id,
+      manufacturer_id: lg.id,
       name: "Lave-linge 8 KG | 6 Motion Direct Drive",
       reference: "F84J60WH"
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 réfrigérateur_combiné =
   Repo.insert!(
     %Product{
-      category_uuid: réfrigérateur.uuid,
-      manufacturer_uuid: lg.uuid,
+      category_id: réfrigérateur.id,
+      manufacturer_id: lg.id,
       name: "Réfrigirateur combiné",
       reference: "GBB61DSJZN"
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 ultraperformer =
   Repo.insert!(
     %Product{
-      category_uuid: aspirateur_traineau.uuid,
-      manufacturer_uuid: electrolux.uuid,
+      category_id: aspirateur_traineau.id,
+      manufacturer_id: electrolux.id,
       name: "UltraPerformer",
       reference: "ZUP3820B"
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 plaques_de_cuisson =
   Repo.insert!(
     %Product{
-      category_uuid: plaques_électriques.uuid,
-      manufacturer_uuid: cooke_and_lewis.uuid,
+      category_id: plaques_électriques.id,
+      manufacturer_id: cooke_and_lewis.id,
       name: "Plaques de cuisson",
       reference: "CLCER30a",
       country_of_origin: "Chine"
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 lave_linge_eletrolux =
   Repo.insert!(
     %Product{
-      category_uuid: lave_linge_hublot.uuid,
-      manufacturer_uuid: electrolux.uuid,
+      category_id: lave_linge_hublot.id,
+      manufacturer_id: electrolux.id,
       name: "Lave-linge",
       reference: "EW2F7814FA – FLP544041",
       country_of_origin: "EU"
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 réfrigérateur_whirlpool =
   Repo.insert!(
     %Product{
-      category_uuid: réfrigérateur.uuid,
-      manufacturer_uuid: whirlpool.uuid,
+      category_id: réfrigérateur.id,
+      manufacturer_id: whirlpool.id,
       name: "Réfrigérateur encastrable",
       reference: "W11257981"
     },
-    returning: [:uuid]
+    returning: [:id]
   )
 
 ##
@@ -461,79 +461,79 @@ réfrigérateur_whirlpool =
 
 Repo.insert!(
   %Part{
-    manufacturer_uuid: inconnu.uuid,
+    manufacturer_id: inconnu.id,
     products: [lave_linge_eletrolux, lave_linge_lg],
     name: "Tuyau d'eau alimentation droit/coudé 1,5m f/f",
     reference: "484000001132",
     main_material: "Plastique"
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 Repo.insert!(
   %Part{
-    manufacturer_uuid: inconnu.uuid,
+    manufacturer_id: inconnu.id,
     products: [lave_linge_eletrolux],
     name: "Pressostat alternatif pour electrolux",
     reference: "3792216040",
     main_material: "Plastique"
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 Repo.insert!(
   %Part{
-    manufacturer_uuid: inconnu.uuid,
+    manufacturer_id: inconnu.id,
     products: [lave_linge_eletrolux],
     name: "Courroie d'entraînement pour lave-linge",
     reference: "1323531200",
     main_material: "Plastique"
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 Repo.insert!(
   %Part{
-    manufacturer_uuid: inconnu.uuid,
+    manufacturer_id: inconnu.id,
     products: [four_encastrable_pyrolyse],
     name: "Ampoule e14 28w",
     reference: "484000008834",
     main_material: "Métal"
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 Repo.insert!(
   %Part{
-    manufacturer_uuid: inconnu.uuid,
+    manufacturer_id: inconnu.id,
     products: [four_encastrable_pyrolyse],
     name: "Moteur de ventilateur (sans hélice)",
     reference: "74x1146",
     main_material: "Métal"
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 Repo.insert!(
   %Part{
-    manufacturer_uuid: inconnu.uuid,
+    manufacturer_id: inconnu.id,
     products: [four_encastrable_pyrolyse],
     name: "Hélice de ventilation de chaleur tournante",
     reference: "74x6900",
     main_material: "Métal"
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 Repo.insert!(
   %Part{
-    manufacturer_uuid: inconnu.uuid,
+    manufacturer_id: inconnu.id,
     products: [four_encastrable_pyrolyse],
     name: "Résistance de voute de grille (2100w l360x320mm)",
     reference: "74x2310",
     main_material: "Métal"
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 ##
@@ -542,85 +542,85 @@ Repo.insert!(
 
 Repo.insert!(
   %Ownership{
-    product_uuid: four_encastrable_pyrolyse.uuid,
-    profile_uuid: user_1.profile.uuid,
+    product_id: four_encastrable_pyrolyse.id,
+    profile_id: user_1.profile.id,
     date_of_purchase: ~D[2018-03-01],
     warranty_duration_m: 24,
     price_of_purchase: 429,
     public: false
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 Repo.insert!(
   %Ownership{
-    product_uuid: lave_linge_lg.uuid,
-    profile_uuid: user_1.profile.uuid,
+    product_id: lave_linge_lg.id,
+    profile_id: user_1.profile.id,
     date_of_purchase: ~D[2020-01-15],
     warranty_duration_m: 60,
     price_of_purchase: 549,
     public: true
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 Repo.insert!(
   %Ownership{
-    product_uuid: réfrigérateur_combiné.uuid,
-    profile_uuid: user_2.profile.uuid,
+    product_id: réfrigérateur_combiné.id,
+    profile_id: user_2.profile.id,
     date_of_purchase: ~D[2021-02-14],
     warranty_duration_m: 120,
     price_of_purchase: 690,
     public: true
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 Repo.insert!(
   %Ownership{
-    product_uuid: ultraperformer.uuid,
-    profile_uuid: user_2.profile.uuid,
+    product_id: ultraperformer.id,
+    profile_id: user_2.profile.id,
     date_of_purchase: ~D[2018-03-01],
     warranty_duration_m: 24,
     price_of_purchase: 190,
     public: true
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 Repo.insert!(
   %Ownership{
-    product_uuid: plaques_de_cuisson.uuid,
-    profile_uuid: user_2.profile.uuid,
+    product_id: plaques_de_cuisson.id,
+    profile_id: user_2.profile.id,
     date_of_purchase: ~D[2023-01-01],
     warranty_duration_m: 0,
     public: false
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 Repo.insert!(
   %Ownership{
-    product_uuid: lave_linge_eletrolux.uuid,
-    profile_uuid: user_2.profile.uuid,
+    product_id: lave_linge_eletrolux.id,
+    profile_id: user_2.profile.id,
     date_of_purchase: ~D[2023-12-12],
     warranty_duration_m: 120,
     price_of_purchase: 499,
     public: true
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 Repo.insert!(
   %Ownership{
-    product_uuid: réfrigérateur_whirlpool.uuid,
-    profile_uuid: user_2.profile.uuid,
+    product_id: réfrigérateur_whirlpool.id,
+    profile_id: user_2.profile.id,
     date_of_purchase: ~D[2023-07-01],
     warranty_duration_m: 60,
     price_of_purchase: 550,
     public: false
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 ##
@@ -638,7 +638,7 @@ Repo.insert!(
     need_action: false,
     categories: [lave_linge_hublot, lave_linge_top]
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 Repo.insert!(
@@ -651,7 +651,7 @@ Repo.insert!(
     need_action: false,
     categories: [lave_linge_hublot, lave_linge_top]
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 Repo.insert!(
@@ -664,7 +664,7 @@ Repo.insert!(
     need_action: false,
     categories: [sèche_linge_hublot, sèche_linge_top]
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 Repo.insert!(
@@ -677,7 +677,7 @@ Repo.insert!(
     need_action: false,
     categories: [machine_à_café]
   },
-  returning: [:uuid]
+  returning: [:id]
 )
 
 Repo.insert!(
@@ -690,5 +690,5 @@ Repo.insert!(
     need_action: false,
     categories: [four_encastrable, four_non_encastrable]
   },
-  returning: [:uuid]
+  returning: [:id]
 )

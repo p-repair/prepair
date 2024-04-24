@@ -10,7 +10,7 @@ defmodule PrepairWeb.ProductLive.Index do
     socket =
       socket
       |> stream_configure(:products,
-        dom_id: &"products-#{&1.uuid}"
+        dom_id: &"products-#{&1.id}"
       )
       |> stream(:products, Products.list_products())
 
@@ -22,12 +22,12 @@ defmodule PrepairWeb.ProductLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"uuid" => uuid}) do
+  defp apply_action(socket, :edit, %{"id" => id}) do
     page_title = gettext("Edit Product")
 
     socket
     |> assign(:page_title, page_title)
-    |> assign(:product, Products.get_product!(uuid))
+    |> assign(:product, Products.get_product!(id))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -55,9 +55,9 @@ defmodule PrepairWeb.ProductLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"uuid" => uuid}, socket) do
+  def handle_event("delete", %{"id" => id}, socket) do
     UserAuth.require_admin_and_do(socket, fn ->
-      product = Products.get_product!(uuid)
+      product = Products.get_product!(id)
       {:ok, _} = Products.delete_product(product)
 
       {:noreply, stream_delete(socket, :products, product)}

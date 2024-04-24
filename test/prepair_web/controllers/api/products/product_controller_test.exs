@@ -38,16 +38,16 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
 
   defp create_product(_) do
     parts = create_parts()
-    part_uuids = create_part_uuids(parts)
+    part_ids = create_part_ids(parts)
     notification_templates = create_notification_templates()
 
-    notification_template_uuids =
-      create_notification_template_uuids(notification_templates)
+    notification_template_ids =
+      create_notification_template_ids(notification_templates)
 
     product =
       product_fixture(%{
-        part_uuids: part_uuids,
-        notification_template_uuids: notification_template_uuids
+        part_ids: part_ids,
+        notification_template_ids: notification_template_ids
       })
 
     %{product: product}
@@ -139,12 +139,12 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
     end
 
     @tag :product_controller
-    test "filter by product_uuids when :product_uuids is set in query parameters",
+    test "filter by product_ids when :product_ids is set in query parameters",
          %{conn: conn, product: product} do
       _product_2 = product_fixture()
 
-      product_uuid = product.uuid
-      params = %{"product_uuids" => "#{product_uuid}"}
+      product_id = product.id
+      params = %{"product_ids" => "#{product_id}"}
 
       conn = get(conn, ~p"/api/v1/products/products", params)
 
@@ -154,12 +154,12 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
     end
 
     @tag :product_controller
-    test "filter by category_uuid when :category_uuid is set in query parameters",
+    test "filter by category_id when :category_id is set in query parameters",
          %{conn: conn, product: _product} do
-      category_uuid = category_fixture().uuid
-      product_2 = product_fixture(%{category_uuid: category_uuid})
+      category_id = category_fixture().id
+      product_2 = product_fixture(%{category_id: category_id})
 
-      params = %{"category_uuid" => "#{category_uuid}"}
+      params = %{"category_id" => "#{category_id}"}
 
       conn = get(conn, ~p"/api/v1/products/products", params)
 
@@ -169,13 +169,13 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
     end
 
     @tag :product_controller
-    test "filter by manufacturer_uuid when :manufacturer_uuid is set in query
+    test "filter by manufacturer_id when :manufacturer_id is set in query
     parameters",
          %{conn: conn, product: _product} do
-      manufacturer_uuid = manufacturer_fixture().uuid
-      product_2 = product_fixture(%{manufacturer_uuid: manufacturer_uuid})
+      manufacturer_id = manufacturer_fixture().id
+      product_2 = product_fixture(%{manufacturer_id: manufacturer_id})
 
-      params = %{"manufacturer_uuid" => "#{manufacturer_uuid}"}
+      params = %{"manufacturer_id" => "#{manufacturer_id}"}
 
       conn = get(conn, ~p"/api/v1/products/products", params)
 
@@ -199,20 +199,20 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
     @tag :product_controller
     test "allowed filters can be combined and return corresponding products",
          %{conn: conn, product: _product} do
-      category_uuid = category_fixture().uuid
-      manufacturer_uuid = manufacturer_fixture().uuid
-      product_2 = product_fixture(%{category_uuid: category_uuid})
+      category_id = category_fixture().id
+      manufacturer_id = manufacturer_fixture().id
+      product_2 = product_fixture(%{category_id: category_id})
 
       product_3 =
         product_fixture(%{
-          category_uuid: category_uuid,
-          manufacturer_uuid: manufacturer_uuid
+          category_id: category_id,
+          manufacturer_id: manufacturer_id
         })
 
       params = %{
-        "product_uuids" => "[#{product_2.uuid}, #{product_3.uuid}]",
-        "category_uuid" => "#{category_uuid}",
-        "manufacturer_uuid" => "#{manufacturer_uuid}"
+        "product_ids" => "[#{product_2.id}, #{product_3.id}]",
+        "category_id" => "#{category_id}",
+        "manufacturer_id" => "#{manufacturer_id}"
       }
 
       conn = get(conn, ~p"/api/v1/products/products", params)
@@ -231,14 +231,14 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
       product = product_valid_attrs()
       conn = post(conn, ~p"/api/v1/products/products", product: product)
 
-      assert %{"uuid" => uuid} = json_response(conn, 201)["data"]
+      assert %{"id" => id} = json_response(conn, 201)["data"]
 
       # Recycle the connection so we can reuse it for a request.
       conn = recycle(conn)
 
-      conn = get(conn, ~p"/api/v1/products/products/#{uuid}")
+      conn = get(conn, ~p"/api/v1/products/products/#{id}")
 
-      product = Prepair.Products.get_product!(uuid)
+      product = Prepair.Products.get_product!(id)
 
       assert json_response(conn, 200)["data"] ==
                product |> to_normalised_json()
@@ -249,21 +249,21 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
     not in the JSON render)",
          %{conn: conn} do
       parts = create_parts()
-      part_uuids = create_part_uuids(parts)
+      part_ids = create_part_ids(parts)
       notification_templates = create_notification_templates()
 
-      notification_template_uuids =
-        create_notification_template_uuids(notification_templates)
+      notification_template_ids =
+        create_notification_template_ids(notification_templates)
 
       product =
         product_valid_attrs()
-        |> Map.put(:part_uuids, part_uuids)
-        |> Map.put(:notification_template_uuids, notification_template_uuids)
+        |> Map.put(:part_ids, part_ids)
+        |> Map.put(:notification_template_ids, notification_template_ids)
 
       conn = post(conn, ~p"/api/v1/products/products", product: product)
-      assert %{"uuid" => uuid} = json_response(conn, 201)["data"]
+      assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      product = Products.get_product!(uuid)
+      product = Products.get_product!(id)
       assert product.parts == parts
       assert product.notification_templates == notification_templates
     end
@@ -282,21 +282,21 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
     @tag :product_controller
     test "renders product when data is valid", %{
       conn: conn,
-      product: %Product{uuid: uuid} = product
+      product: %Product{id: id} = product
     } do
       conn =
         put(conn, ~p"/api/v1/products/products/#{product}",
           product: @update_attrs
         )
 
-      assert %{"uuid" => ^uuid} = json_response(conn, 200)["data"]
+      assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
       # Recycle the connection so we can reuse it for a request.
       conn = recycle(conn)
 
-      conn = get(conn, ~p"/api/v1/products/products/#{uuid}")
+      conn = get(conn, ~p"/api/v1/products/products/#{id}")
 
-      product = Prepair.Products.get_product!(uuid)
+      product = Prepair.Products.get_product!(id)
 
       assert json_response(conn, 200)["data"] ==
                product |> to_normalised_json()
@@ -307,21 +307,21 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
     JSON render)",
          %{
            conn: conn,
-           product: %Product{uuid: uuid} = product
+           product: %Product{id: id} = product
          } do
       new_parts = create_parts()
-      new_part_uuids = create_part_uuids(new_parts)
+      new_part_ids = create_part_ids(new_parts)
       new_notification_templates = create_notification_templates()
 
-      new_notification_template_uuids =
-        create_notification_template_uuids(new_notification_templates)
+      new_notification_template_ids =
+        create_notification_template_ids(new_notification_templates)
 
       update_attrs =
         @update_attrs
-        |> Map.put(:part_uuids, new_part_uuids)
+        |> Map.put(:part_ids, new_part_ids)
         |> Map.put(
-          :notification_template_uuids,
-          new_notification_template_uuids
+          :notification_template_ids,
+          new_notification_template_ids
         )
 
       conn =
@@ -329,9 +329,9 @@ defmodule PrepairWeb.Api.Products.ProductControllerTest do
           product: update_attrs
         )
 
-      assert %{"uuid" => ^uuid} = json_response(conn, 200)["data"]
+      assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
-      product = Products.get_product!(uuid)
+      product = Products.get_product!(id)
       assert product.parts == new_parts
       assert product.notification_templates == new_notification_templates
     end

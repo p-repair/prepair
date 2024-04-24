@@ -9,27 +9,27 @@ defmodule PrepairWeb.Api.Profiles.OwnershipController do
 
   def index_by_profile(conn, params) do
     current_user = conn.assigns.current_user
-    profile_uuid = params["uuid"]
+    profile_id = params["id"]
 
-    if current_user.uuid == profile_uuid or current_user.role == :admin do
+    if current_user.id == profile_id or current_user.role == :admin do
       ownerships =
-        Profiles.list_ownerships_by_profile(profile_uuid, include_private: true)
+        Profiles.list_ownerships_by_profile(profile_id, include_private: true)
 
       render(conn, :index, ownerships: ownerships)
     else
       ownerships =
-        Profiles.list_ownerships_by_profile(profile_uuid)
+        Profiles.list_ownerships_by_profile(profile_id)
 
       render(conn, :index, ownerships: ownerships)
     end
   end
 
   def create(conn, %{
-        "profile_uuid" => profile_uuid,
+        "profile_id" => profile_id,
         "ownership" => ownership_params
       }) do
     with {:ok, %Ownership{} = ownership} <-
-           Profiles.create_ownership(profile_uuid, ownership_params),
+           Profiles.create_ownership(profile_id, ownership_params),
          ownership <- Repo.preload(ownership, [:profile, :product]) do
       conn
       |> put_status(:created)
@@ -41,13 +41,13 @@ defmodule PrepairWeb.Api.Profiles.OwnershipController do
     end
   end
 
-  def show(conn, %{"uuid" => uuid}) do
-    ownership = Profiles.get_ownership!(uuid)
+  def show(conn, %{"id" => id}) do
+    ownership = Profiles.get_ownership!(id)
     render(conn, :show, ownership: ownership)
   end
 
-  def update(conn, %{"uuid" => uuid, "ownership" => ownership_params}) do
-    ownership = Profiles.get_ownership!(uuid)
+  def update(conn, %{"id" => id, "ownership" => ownership_params}) do
+    ownership = Profiles.get_ownership!(id)
 
     # Trick to avoid empty fields returned by FlutterFlow when value isn't changed.
     ownership_params =
@@ -59,8 +59,8 @@ defmodule PrepairWeb.Api.Profiles.OwnershipController do
     end
   end
 
-  def delete(conn, %{"uuid" => uuid}) do
-    ownership = Profiles.get_ownership!(uuid)
+  def delete(conn, %{"id" => id}) do
+    ownership = Profiles.get_ownership!(id)
 
     with {:ok, %Ownership{}} <-
            Profiles.delete_ownership(ownership) do

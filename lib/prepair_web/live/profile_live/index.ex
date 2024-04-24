@@ -14,7 +14,7 @@ defmodule PrepairWeb.ProfileLive.Index do
     socket =
       socket
       |> stream_configure(:profiles,
-        dom_id: &"profiles-#{&1.uuid}"
+        dom_id: &"profiles-#{&1.id}"
       )
       |> stream(:profiles, profiles)
 
@@ -26,12 +26,12 @@ defmodule PrepairWeb.ProfileLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"uuid" => uuid}) do
+  defp apply_action(socket, :edit, %{"id" => id}) do
     page_title = gettext("Edit Profile")
 
     socket
     |> assign(:page_title, page_title)
-    |> assign(:profile, uuid |> Profiles.get_profile!() |> Repo.preload(:user))
+    |> assign(:profile, id |> Profiles.get_profile!() |> Repo.preload(:user))
   end
 
   defp apply_action(socket, :index, _params) do

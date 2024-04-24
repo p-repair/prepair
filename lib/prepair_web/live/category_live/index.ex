@@ -10,7 +10,7 @@ defmodule PrepairWeb.CategoryLive.Index do
     socket =
       socket
       |> stream_configure(:categories,
-        dom_id: &"categories-#{&1.uuid}"
+        dom_id: &"categories-#{&1.id}"
       )
       |> stream(:categories, Products.list_categories())
 
@@ -22,12 +22,12 @@ defmodule PrepairWeb.CategoryLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"uuid" => uuid}) do
+  defp apply_action(socket, :edit, %{"id" => id}) do
     page_title = gettext("Edit Category")
 
     socket
     |> assign(:page_title, page_title)
-    |> assign(:category, Products.get_category!(uuid))
+    |> assign(:category, Products.get_category!(id))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -55,9 +55,9 @@ defmodule PrepairWeb.CategoryLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"uuid" => uuid}, socket) do
+  def handle_event("delete", %{"id" => id}, socket) do
     UserAuth.require_admin_and_do(socket, fn ->
-      category = Products.get_category!(uuid)
+      category = Products.get_category!(id)
       {:ok, _} = Products.delete_category(category)
 
       {:noreply, stream_delete(socket, :categories, category)}

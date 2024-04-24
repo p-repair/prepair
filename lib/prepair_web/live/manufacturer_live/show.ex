@@ -9,11 +9,11 @@ defmodule PrepairWeb.ManufacturerLive.Show do
   end
 
   @impl true
-  def handle_params(%{"uuid" => uuid}, _, socket) do
+  def handle_params(%{"id" => id}, _, socket) do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:manufacturer, Products.get_manufacturer!(uuid))}
+     |> assign(:manufacturer, Products.get_manufacturer!(id))}
   end
 
   defp page_title(:show), do: gettext("Show Manufacturer")

@@ -1,5 +1,5 @@
 <.header>
-  <%= gettext "Notification template" %><%= @notification_template.uuid %>
+  <%= gettext "Notification template" %><%= @notification_template.id %>
   <:subtitle><%= gettext "This is a notification_template record from your database." %></:subtitle>
   <:actions>
   <%= if @current_user.role == :admin do %>
@@ -28,7 +28,7 @@
 <.modal :if={@live_action == :edit} id="notification_template-modal" show on_cancel={JS.patch(~p"/notification_templates/#{@notification_template}")}>
   <.live_component
     module={PrepairWeb.NotificationTemplateLive.FormComponent}
-    id={@notification_template.uuid}
+    id={@notification_template.id}
     title={@page_title}
     action={@live_action}
     notification_template={@notification_template}

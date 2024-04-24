@@ -35,7 +35,7 @@ defmodule Prepair.Products do
       ** (Ecto.NoResultsError)
 
   """
-  def get_manufacturer!(uuid), do: Repo.get!(Manufacturer, uuid)
+  def get_manufacturer!(id), do: Repo.get!(Manufacturer, id)
 
   @doc """
   Creates a manufacturer.
@@ -52,7 +52,7 @@ defmodule Prepair.Products do
   def create_manufacturer(attrs \\ %{}) do
     %Manufacturer{}
     |> Manufacturer.changeset(attrs)
-    |> Repo.insert(returning: [:uuid])
+    |> Repo.insert(returning: [:id])
   end
 
   @doc """
@@ -118,23 +118,23 @@ defmodule Prepair.Products do
   end
 
   @doc """
-  Returns a list of categories based on the provided list of uuids.
+  Returns a list of categories based on the provided list of ids.
 
   ## Examples
 
-      iex> list_catgories_by_uuid()
+      iex> list_catgories_by_id()
       []
 
-      iex> list_categories_by_uuid(["4a50cd21-1181-47d5-831a-113c430abeeb", …])
-      [%Category{uuid: "4a50cd21-1181-47d5-831a-113c430abeeb", name: …},
-      %Category{uuid: …, name: …}, ...]
+      iex> list_categories_by_id(["4a50cd21-1181-47d5-831a-113c430abeeb", …])
+      [%Category{id: "4a50cd21-1181-47d5-831a-113c430abeeb", name: …},
+      %Category{id: …, name: …}, ...]
 
   """
-  def list_categories_by_uuid(nil), do: []
+  def list_categories_by_id(nil), do: []
 
-  def list_categories_by_uuid(category_uuids)
-      when is_list(category_uuids) and category_uuids != [] do
-    Repo.all(from c in Category, where: c.uuid in ^category_uuids)
+  def list_categories_by_id(category_ids)
+      when is_list(category_ids) and category_ids != [] do
+    Repo.all(from c in Category, where: c.id in ^category_ids)
   end
 
   @doc """
@@ -151,9 +151,9 @@ defmodule Prepair.Products do
       ** (Ecto.NoResultsError)
 
   """
-  def get_category!(uuid) do
+  def get_category!(id) do
     Category
-    |> Repo.get!(uuid)
+    |> Repo.get!(id)
     |> Repo.preload(:notification_templates)
   end
 
@@ -172,7 +172,7 @@ defmodule Prepair.Products do
   def create_category(attrs \\ %{}) do
     %Category{}
     |> change_category(attrs)
-    |> Repo.insert(returning: [:uuid])
+    |> Repo.insert(returning: [:id])
   end
 
   @doc """
@@ -220,8 +220,8 @@ defmodule Prepair.Products do
   """
   def change_category(%Category{} = category, attrs \\ %{}) do
     notification_templates =
-      Notifications.list_notification_templates_by_uuid(
-        attrs[:notification_template_uuids]
+      Notifications.list_notification_templates_by_id(
+        attrs[:notification_template_ids]
       )
 
     category
@@ -236,14 +236,14 @@ defmodule Prepair.Products do
 
   ## Options
 
-  *`:product_uuids` - Takes a list of product uuids, and returns products matching
-  on these uuids.
+  *`:product_ids` - Takes a list of product ids, and returns products matching
+  on these ids.
 
-  *`:category_uuid` - Takes a list of category uuids, and returns products matching
-  on these uuids.
+  *`:category_id` - Takes a list of category ids, and returns products matching
+  on these ids.
 
-  *`:manufacturer_uuid` - Takes a list of manufacturer uuids, and returns products
-  matching on these uuids.
+  *`:manufacturer_id` - Takes a list of manufacturer ids, and returns products
+  matching on these ids.
 
   **Note:** Several options can be combined to filter results.
 
@@ -258,35 +258,35 @@ defmodule Prepair.Products do
 
       iex> list_products()
       [
-        %Product{uuid: "4a50cd21-1181-47d5-831a-113c430abeeb", name: …},
-        %Product{uuid: "0b012a6c-89a7-416c-b1ec-4e9a71252b0f", name: …},
+        %Product{id: "4a50cd21-1181-47d5-831a-113c430abeeb", name: …},
+        %Product{id: "0b012a6c-89a7-416c-b1ec-4e9a71252b0f", name: …},
         ...
       ]
 
-      iex> list_products(product_uuids: ["4a50cd21-1181-47d5-831a-113c430abeeb"])
-      [%Product{uuid: "4a50cd21-1181-47d5-831a-113c430abeeb", name: …}]
+      iex> list_products(product_ids: ["4a50cd21-1181-47d5-831a-113c430abeeb"])
+      [%Product{id: "4a50cd21-1181-47d5-831a-113c430abeeb", name: …}]
 
-      iex> list_products(category_uuid: ["aa6e10c2-a3a0-41c5-8cee-3597e165cd4e"])
-      [%Product{uuid: …, category_uuid: "aa6e10c2-a3a0-41c5-8cee-3597e165cd4e", …}]
+      iex> list_products(category_id: ["aa6e10c2-a3a0-41c5-8cee-3597e165cd4e"])
+      [%Product{id: …, category_id: "aa6e10c2-a3a0-41c5-8cee-3597e165cd4e", …}]
 
-      iex> list_products(manufacturer_uuid: ["04811971-da44-4d7d-a805-74422166fdbe"])
-      [%Product{uuid: …, manufacturer_uuid: "04811971-da44-4d7d-a805-74422166fdbe", …}]
+      iex> list_products(manufacturer_id: ["04811971-da44-4d7d-a805-74422166fdbe"])
+      [%Product{id: …, manufacturer_id: "04811971-da44-4d7d-a805-74422166fdbe", …}]
 
       iex> list_products(
-        category_uuid: ["aa6e10c2-a3a0-41c5-8cee-3597e165cd4e"],
-        manufacturer_uuid: ["04811971-da44-4d7d-a805-74422166fdbe"]
+        category_id: ["aa6e10c2-a3a0-41c5-8cee-3597e165cd4e"],
+        manufacturer_id: ["04811971-da44-4d7d-a805-74422166fdbe"]
             )
       [%Product{
-        uuid: …,
+        id: …,
         name: …,
-        category_uuid: "aa6e10c2-a3a0-41c5-8cee-3597e165cd4e",
-        manufacturer_uuid: "04811971-da44-4d7d-a805-74422166fdbe"
+        category_id: "aa6e10c2-a3a0-41c5-8cee-3597e165cd4e",
+        manufacturer_id: "04811971-da44-4d7d-a805-74422166fdbe"
           }]
 
       iex> list_products(
-        product_uuids: ["4a50cd21-1181-47d5-831a-113c430abeeb"],
-        category_uuid: ["aa6e10c2-a3a0-41c5-8cee-3597e165cd4e"],
-        manufacturer_uuid: ["04811971-da44-4d7d-a805-74422166fdbe"]
+        product_ids: ["4a50cd21-1181-47d5-831a-113c430abeeb"],
+        category_id: ["aa6e10c2-a3a0-41c5-8cee-3597e165cd4e"],
+        manufacturer_id: ["04811971-da44-4d7d-a805-74422166fdbe"]
             )
       []
 
@@ -304,9 +304,9 @@ defmodule Prepair.Products do
     query
   end
 
-  defp filter({:product_uuids, product_uuids}, query)
-       when is_list(product_uuids) do
-    query |> where([p], p.uuid in ^product_uuids)
+  defp filter({:product_ids, product_ids}, query)
+       when is_list(product_ids) do
+    query |> where([p], p.id in ^product_ids)
   end
 
   defp filter({_k, []}, query) do
@@ -318,24 +318,24 @@ defmodule Prepair.Products do
   end
 
   @doc """
-  Returns a list of products based on the provided list of uuids.
+  Returns a list of products based on the provided list of ids.
 
   ## Examples
 
-      iex> list_products_by_uuids()
+      iex> list_products_by_ids()
       []
 
-      iex> list_products_by_uuids(
-        product_uuids: ["4a50cd21-1181-47d5-831a-113c430abeeb"]
+      iex> list_products_by_ids(
+        product_ids: ["4a50cd21-1181-47d5-831a-113c430abeeb"]
             )
-      [%Product{uuid: "4a50cd21-1181-47d5-831a-113c430abeeb", name: …}]
+      [%Product{id: "4a50cd21-1181-47d5-831a-113c430abeeb", name: …}]
 
   """
-  def list_products_by_uuid(nil), do: []
+  def list_products_by_id(nil), do: []
 
-  def list_products_by_uuid(product_uuids)
-      when is_list(product_uuids) and product_uuids != [] do
-    Repo.all(from p in Product, where: p.uuid in ^product_uuids)
+  def list_products_by_id(product_ids)
+      when is_list(product_ids) and product_ids != [] do
+    Repo.all(from p in Product, where: p.id in ^product_ids)
   end
 
   @doc """
@@ -352,9 +352,9 @@ defmodule Prepair.Products do
       ** (Ecto.NoResultsError)
 
   """
-  def get_product!(uuid) do
+  def get_product!(id) do
     Product
-    |> Repo.get!(uuid)
+    |> Repo.get!(id)
     |> Repo.preload([:category, :manufacturer, :parts, :notification_templates])
   end
 
@@ -373,7 +373,7 @@ defmodule Prepair.Products do
   def create_product(attrs \\ %{}) do
     %Product{}
     |> change_product(attrs)
-    |> Repo.insert(returning: [:uuid])
+    |> Repo.insert(returning: [:id])
   end
 
   @doc """
@@ -420,11 +420,11 @@ defmodule Prepair.Products do
 
   """
   def change_product(%Product{} = product, attrs \\ %{}) do
-    parts = list_parts_by_uuid(attrs[:part_uuids])
+    parts = list_parts_by_id(attrs[:part_ids])
 
     notification_templates =
-      Notifications.list_notification_templates_by_uuid(
-        attrs[:notification_template_uuids]
+      Notifications.list_notification_templates_by_id(
+        attrs[:notification_template_ids]
       )
 
     product
@@ -449,24 +449,24 @@ defmodule Prepair.Products do
   end
 
   @doc """
-  Returns a list of parts based on the provided list of uuids.
+  Returns a list of parts based on the provided list of ids.
 
   ## Examples
 
-      iex> list_parts_by_uuid()
+      iex> list_parts_by_id()
       []
 
-      iex> list_parts_by_uuid(
-        part_uuids: ["4a50cd21-1181-47d5-831a-113c430abeeb"]
+      iex> list_parts_by_id(
+        part_ids: ["4a50cd21-1181-47d5-831a-113c430abeeb"]
             )
-      [%Part{uuid: "4a50cd21-1181-47d5-831a-113c430abeeb", name: …}]
+      [%Part{id: "4a50cd21-1181-47d5-831a-113c430abeeb", name: …}]
 
   """
-  def list_parts_by_uuid(nil), do: []
+  def list_parts_by_id(nil), do: []
 
-  def list_parts_by_uuid(part_uuids)
-      when is_list(part_uuids) and part_uuids != [] do
-    Repo.all(from p in Part, where: p.uuid in ^part_uuids)
+  def list_parts_by_id(part_ids)
+      when is_list(part_ids) and part_ids != [] do
+    Repo.all(from p in Part, where: p.id in ^part_ids)
   end
 
   @doc """
@@ -483,9 +483,9 @@ defmodule Prepair.Products do
       ** (Ecto.NoResultsError)
 
   """
-  def get_part!(uuid) do
+  def get_part!(id) do
     Part
-    |> Repo.get!(uuid)
+    |> Repo.get!(id)
     |> Repo.preload([
       :category,
       :manufacturer,
@@ -509,7 +509,7 @@ defmodule Prepair.Products do
   def create_part(attrs \\ %{}) do
     %Part{}
     |> change_part(attrs)
-    |> Repo.insert(returning: [:uuid])
+    |> Repo.insert(returning: [:id])
   end
 
   @doc """
@@ -556,11 +556,11 @@ defmodule Prepair.Products do
 
   """
   def change_part(%Part{} = part, attrs \\ %{}) do
-    products = list_products_by_uuid(attrs[:product_uuids])
+    products = list_products_by_id(attrs[:product_ids])
 
     notification_templates =
-      Notifications.list_notification_templates_by_uuid(
-        attrs[:notification_template_uuids]
+      Notifications.list_notification_templates_by_id(
+        attrs[:notification_template_ids]
       )
 
     part

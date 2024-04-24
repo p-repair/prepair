@@ -30,7 +30,7 @@ defmodule PrepairWeb.Api.Accounts.SessionControllerTest do
 
       response = json_response(conn, :ok)
 
-      assert %{"data" => %{"token" => _token, "user_uuid" => _user_uuid}} =
+      assert %{"data" => %{"token" => _token, "user_id" => _user_id}} =
                response
     end
 

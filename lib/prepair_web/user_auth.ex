@@ -169,7 +169,7 @@ defmodule PrepairWeb.UserAuth do
   def on_mount(:ensure_current_user_access_self_data, params, session, socket) do
     socket = mount_current_user(socket, session)
 
-    if socket.assigns.current_user.uuid == params["uuid"] do
+    if socket.assigns.current_user.id == params["id"] do
       {:cont, socket}
     else
       socket =
@@ -283,12 +283,12 @@ defmodule PrepairWeb.UserAuth do
   end
 
   # TODO: to make this function universal, we should add an 'or' clause to the
-  # if statement, get the object from "uuid" in params, and search for an
-  # equality between current_user.uuid and object.profile_uuid (that would be
+  # if statement, get the object from "id" in params, and search for an
+  # equality between current_user.id and object.profile_id (that would be
   # necessary for ownerships, for instance). Just like it has been done on
   # the ApiUserAuth module.
   defp is_self_user?(conn) do
-    if conn.assigns.current_user.uuid == conn.path_params["uuid"] do
+    if conn.assigns.current_user.id == conn.path_params["id"] do
       conn
     else
       conn
@@ -341,12 +341,12 @@ defmodule PrepairWeb.UserAuth do
     data_owner =
       case scope do
         :ownership ->
-          Prepair.Profiles.get_ownership!(params["uuid"]).profile_uuid
+          Prepair.Profiles.get_ownership!(params["id"]).profile_id
       end
 
     current_user = socket.assigns.current_user
 
-    if current_user.uuid == data_owner or
+    if current_user.id == data_owner or
          is_admin?(current_user) do
       action.()
     else

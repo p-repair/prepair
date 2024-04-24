@@ -53,38 +53,38 @@ defmodule PrepairWeb.Router do
       live "/manufacturers", ManufacturerLive.Index, :index
       live "/manufacturers/new", ManufacturerLive.Index, :new
 
-      live "/manufacturers/:uuid", ManufacturerLive.Show, :show
+      live "/manufacturers/:id", ManufacturerLive.Show, :show
 
       live "/categories", CategoryLive.Index, :index
       live "/categories/new", CategoryLive.Index, :new
 
-      live "/categories/:uuid", CategoryLive.Show, :show
+      live "/categories/:id", CategoryLive.Show, :show
 
       live "/products", ProductLive.Index, :index
       live "/products/new", ProductLive.Index, :new
 
-      live "/products/:uuid", ProductLive.Show, :show
+      live "/products/:id", ProductLive.Show, :show
 
       live "/parts", PartLive.Index, :index
       live "/parts/new", PartLive.Index, :new
 
-      live "/parts/:uuid", PartLive.Show, :show
+      live "/parts/:id", PartLive.Show, :show
 
-      live "/profiles/ownerships/by_profile/:uuid",
+      live "/profiles/ownerships/by_profile/:id",
            ProfileLive.OwnershipIndex,
            :index
 
       live "/ownerships/new", OwnershipLive.Index, :new
 
       ## NOTE: Self only for *ownerships* below (managed at liveview level).
-      live "/ownerships/:uuid", OwnershipLive.Show, :show
-      live "/ownerships/:uuid/edit", OwnershipLive.Index, :edit
-      live "/ownerships/:uuid/show/edit", OwnershipLive.Show, :edit
+      live "/ownerships/:id", OwnershipLive.Show, :show
+      live "/ownerships/:id/edit", OwnershipLive.Index, :edit
+      live "/ownerships/:id/show/edit", OwnershipLive.Show, :edit
 
       live "/notification_templates", NotificationTemplateLive.Index, :index
       live "/notification_templates/new", NotificationTemplateLive.Index, :new
 
-      live "/notification_templates/:uuid", NotificationTemplateLive.Show, :show
+      live "/notification_templates/:id", NotificationTemplateLive.Show, :show
     end
   end
 
@@ -97,10 +97,10 @@ defmodule PrepairWeb.Router do
 
     live_session :require_self_or_admin,
       on_mount: [{PrepairWeb.UserAuth, :ensure_current_user_access_self_data}] do
-      live "/profiles/:uuid", ProfileLive.Show, :show
-      live "/profiles/:uuid/edit", ProfileLive.Index, :edit
+      live "/profiles/:id", ProfileLive.Show, :show
+      live "/profiles/:id/edit", ProfileLive.Index, :edit
 
-      live "/profiles/:uuid/show/edit", ProfileLive.Show, :edit
+      live "/profiles/:id/show/edit", ProfileLive.Show, :edit
     end
   end
 
@@ -113,27 +113,27 @@ defmodule PrepairWeb.Router do
 
     live_session :require_admin,
       on_mount: [{PrepairWeb.UserAuth, :ensure_is_admin}] do
-      live "/manufacturers/:uuid/edit", ManufacturerLive.Index, :edit
-      live "/manufacturers/:uuid/show/edit", ManufacturerLive.Show, :edit
+      live "/manufacturers/:id/edit", ManufacturerLive.Index, :edit
+      live "/manufacturers/:id/show/edit", ManufacturerLive.Show, :edit
 
-      live "/categories/:uuid/edit", CategoryLive.Index, :edit
-      live "/categories/:uuid/show/edit", CategoryLive.Show, :edit
+      live "/categories/:id/edit", CategoryLive.Index, :edit
+      live "/categories/:id/show/edit", CategoryLive.Show, :edit
 
-      live "/products/:uuid/edit", ProductLive.Index, :edit
-      live "/products/:uuid/show/edit", ProductLive.Show, :edit
+      live "/products/:id/edit", ProductLive.Index, :edit
+      live "/products/:id/show/edit", ProductLive.Show, :edit
 
-      live "/parts/:uuid/edit", PartLive.Index, :edit
-      live "/parts/:uuid/show/edit", PartLive.Show, :edit
+      live "/parts/:id/edit", PartLive.Index, :edit
+      live "/parts/:id/show/edit", PartLive.Show, :edit
 
       live "/profiles", ProfileLive.Index, :index
 
       live "/ownerships", OwnershipLive.Index, :index
 
-      live "/notification_templates/:uuid/edit",
+      live "/notification_templates/:id/edit",
            NotificationTemplateLive.Index,
            :edit
 
-      live "/notification_templates/:uuid/show/edit",
+      live "/notification_templates/:id/show/edit",
            NotificationTemplateLive.Show,
            :edit
     end
@@ -194,22 +194,22 @@ defmodule PrepairWeb.Router do
 
     resources "/products/categories", Api.Products.CategoryController,
       only: [:index, :show, :create],
-      param: "uuid"
+      param: "id"
 
     resources "/products/manufacturers", Api.Products.ManufacturerController,
       only: [:index, :show, :create],
-      param: "uuid"
+      param: "id"
 
     resources "/products/products", Api.Products.ProductController,
       only: [:index, :show, :create],
-      param: "uuid"
+      param: "id"
 
     resources "/products/parts", Api.Products.PartController,
       only: [:index, :show, :create],
-      param: "uuid"
+      param: "id"
 
     # Access is filtered by :public | :private data attribute.
-    get "/profiles/ownerships/by_profile/:uuid",
+    get "/profiles/ownerships/by_profile/:id",
         Api.Profiles.OwnershipController,
         :index_by_profile
   end
@@ -221,11 +221,11 @@ defmodule PrepairWeb.Router do
 
     resources "/profiles/profiles", Api.Profiles.ProfileController,
       only: [:show, :update],
-      param: "uuid"
+      param: "id"
 
     resources "/profiles/ownerships", Api.Profiles.OwnershipController,
       only: [:show, :create, :update, :delete],
-      param: "uuid"
+      param: "id"
   end
 
   ################################ Admins only #################################
@@ -235,23 +235,23 @@ defmodule PrepairWeb.Router do
 
     resources "/products/categories", Api.Products.CategoryController,
       only: [:update, :delete],
-      param: "uuid"
+      param: "id"
 
     resources "/products/manufacturers", Api.Products.ManufacturerController,
       only: [:update, :delete],
-      param: "uuid"
+      param: "id"
 
     resources "/products/products", Api.Products.ProductController,
       only: [:update, :delete],
-      param: "uuid"
+      param: "id"
 
     resources "/products/parts", Api.Products.PartController,
       only: [:update, :delete],
-      param: "uuid"
+      param: "id"
 
     resources "/profiles/profiles", Api.Profiles.ProfileController,
       only: [:index],
-      param: "uuid"
+      param: "id"
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

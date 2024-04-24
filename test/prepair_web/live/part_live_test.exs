@@ -59,7 +59,7 @@ defmodule PrepairWeb.PartLiveTest do
     @tag :part_liveview
     test "visitors CANNOT see or edit a part",
          %{conn: conn, part: part} do
-      {:error, detail} = live(conn, ~p"/parts/#{part.uuid}")
+      {:error, detail} = live(conn, ~p"/parts/#{part.id}")
 
       assert detail ==
                {:redirect,
@@ -129,12 +129,12 @@ defmodule PrepairWeb.PartLiveTest do
     @tag :part_liveview
     test "users CANNOT update a part",
          %{conn: conn, part: part} do
-      conn = get(conn, ~p"/parts/#{part.uuid}/edit")
+      conn = get(conn, ~p"/parts/#{part.id}/edit")
 
       assert conn.status == 403
       assert response(conn, 403) =~ "Forbidden"
 
-      conn = get(conn, ~p"/parts/#{part.uuid}/show/edit")
+      conn = get(conn, ~p"/parts/#{part.id}/show/edit")
 
       assert conn.status == 403
       assert response(conn, 403) =~ "Forbidden"
@@ -147,7 +147,7 @@ defmodule PrepairWeb.PartLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/parts")
 
       refute index_live
-             |> element("#parts-#{part.uuid} a", "Edit")
+             |> element("#parts-#{part.id} a", "Edit")
              |> has_element?()
     end
 
@@ -155,10 +155,10 @@ defmodule PrepairWeb.PartLiveTest do
     test "there is no 'Edit' button in Part Show for users when they
     are not admin",
          %{conn: conn, part: part} do
-      {:ok, index_live, _html} = live(conn, ~p"/parts/#{part.uuid}")
+      {:ok, index_live, _html} = live(conn, ~p"/parts/#{part.id}")
 
       refute index_live
-             |> element("#parts-#{part.uuid} a", "Edit")
+             |> element("#parts-#{part.id} a", "Edit")
              |> has_element?()
     end
 
@@ -169,7 +169,7 @@ defmodule PrepairWeb.PartLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/parts")
 
       refute index_live
-             |> element("#parts-#{part.uuid} a", "Delete")
+             |> element("#parts-#{part.id} a", "Delete")
              |> has_element?()
     end
 
@@ -248,7 +248,7 @@ defmodule PrepairWeb.PartLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/parts")
 
       assert index_live
-             |> element("#parts-#{part.uuid} a", "Edit")
+             |> element("#parts-#{part.id} a", "Edit")
              |> render_click() =~
                "Edit Part"
 
@@ -274,10 +274,10 @@ defmodule PrepairWeb.PartLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/parts")
 
       assert index_live
-             |> element("#parts-#{part.uuid} a", "Delete")
+             |> element("#parts-#{part.id} a", "Delete")
              |> render_click()
 
-      refute has_element?(index_live, "#parts-#{part.uuid}")
+      refute has_element?(index_live, "#parts-#{part.id}")
     end
   end
 

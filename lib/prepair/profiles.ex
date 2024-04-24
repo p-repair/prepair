@@ -35,22 +35,22 @@ defmodule Prepair.Profiles do
       ** (Ecto.NoResultsError)
 
   """
-  def get_profile!(uuid), do: Repo.get!(Profile, uuid)
+  def get_profile!(id), do: Repo.get!(Profile, id)
 
   @doc """
   Creates a profile.
 
   ## Examples
 
-      iex> create_profile(uuid, %{field: value})
+      iex> create_profile(id, %{field: value})
       {:ok, %Profile{}}
 
-      iex> create_profile(uuid, %{field: bad_value})
+      iex> create_profile(id, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_profile(uuid, attrs \\ %{}) do
-    %Profile{uuid: uuid}
+  def create_profile(id, attrs \\ %{}) do
+    %Profile{id: id}
     |> Profile.registration_changeset(attrs)
     |> Repo.insert()
   end
@@ -100,7 +100,7 @@ defmodule Prepair.Profiles do
   end
 
   @doc """
-  Returns the list of ownerships for a given profile / user uuid.
+  Returns the list of ownerships for a given profile / user id.
 
   ## Options:
 
@@ -118,9 +118,9 @@ defmodule Prepair.Profiles do
       [%Ownership{public: true, …}, ...]
 
   """
-  def list_ownerships_by_profile(profile_uuid, opts \\ []) do
+  def list_ownerships_by_profile(profile_id, opts \\ []) do
     filters =
-      [profile_uuid: profile_uuid] ++
+      [profile_id: profile_id] ++
         if opts[:include_private] == true, do: [], else: [public: true]
 
     query =
@@ -132,7 +132,7 @@ defmodule Prepair.Profiles do
   end
 
   @doc """
-  Returns the list of ownerships for a given product uuid.
+  Returns the list of ownerships for a given product id.
 
   ## Options:
 
@@ -150,9 +150,9 @@ defmodule Prepair.Profiles do
       [%Ownership{public: true, …}, ...]
 
   """
-  def list_ownerships_by_product(product_uuid, opts \\ []) do
+  def list_ownerships_by_product(product_id, opts \\ []) do
     filters =
-      [product_uuid: product_uuid] ++
+      [product_id: product_id] ++
         if opts[:include_private] == true, do: [], else: [public: true]
 
     query =
@@ -164,7 +164,7 @@ defmodule Prepair.Profiles do
   end
 
   @doc """
-  Returns the ownership count for the given product uuid.
+  Returns the ownership count for the given product id.
 
   ## Examples
 
@@ -172,10 +172,10 @@ defmodule Prepair.Profiles do
       2
 
   """
-  def count_ownerships_by_product(product_uuid) do
+  def count_ownerships_by_product(product_id) do
     query =
       from o in Ownership,
-        where: o.product_uuid == ^product_uuid,
+        where: o.product_id == ^product_id,
         select: count()
 
     Repo.all(query)
@@ -196,7 +196,7 @@ defmodule Prepair.Profiles do
       ** (Ecto.NoResultsError)
 
   """
-  def get_ownership!(uuid), do: Repo.get!(Ownership, uuid)
+  def get_ownership!(id), do: Repo.get!(Ownership, id)
 
   @doc """
   Creates an ownership.
@@ -210,10 +210,10 @@ defmodule Prepair.Profiles do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_ownership(profile_uuid, attrs \\ %{}) do
-    %Ownership{profile_uuid: profile_uuid}
+  def create_ownership(profile_id, attrs \\ %{}) do
+    %Ownership{profile_id: profile_id}
     |> Ownership.changeset(attrs)
-    |> Repo.insert(returning: [:uuid])
+    |> Repo.insert(returning: [:id])
   end
 
   @doc """

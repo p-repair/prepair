@@ -7,7 +7,7 @@ defmodule Prepair.AccountsTest do
   import Prepair.AccountsFixtures
   import Prepair.ProfilesFixtures
 
-  @random_uuid Ecto.UUID.generate()
+  @random_id Ecto.UUID.generate()
 
   defp create_user(_) do
     user_password = valid_user_password()
@@ -22,8 +22,8 @@ defmodule Prepair.AccountsTest do
     end
 
     test "returns the user if the email exists" do
-      %{uuid: uuid} = user = user_fixture()
-      assert %User{uuid: ^uuid} = Accounts.get_user_by_email(user.email)
+      %{id: id} = user = user_fixture()
+      assert %User{id: ^id} = Accounts.get_user_by_email(user.email)
     end
   end
 
@@ -46,9 +46,9 @@ defmodule Prepair.AccountsTest do
       user: user,
       user_password: user_password
     } do
-      %{uuid: uuid} = user
+      %{id: id} = user
 
-      assert %User{uuid: ^uuid} =
+      assert %User{id: ^id} =
                Accounts.get_user_by_email_and_password(
                  user.email,
                  user_password
@@ -57,15 +57,15 @@ defmodule Prepair.AccountsTest do
   end
 
   describe "get_user!/1" do
-    test "raises if uuid is invalid" do
+    test "raises if id is invalid" do
       assert_raise Ecto.NoResultsError, fn ->
-        Accounts.get_user!(@random_uuid)
+        Accounts.get_user!(@random_id)
       end
     end
 
-    test "returns the user with the given uuid" do
-      %{uuid: uuid} = user = user_fixture()
-      assert %User{uuid: ^uuid} = Accounts.get_user!(user.uuid)
+    test "returns the user with the given id" do
+      %{id: id} = user = user_fixture()
+      assert %User{id: ^id} = Accounts.get_user!(user.id)
     end
   end
 
@@ -272,7 +272,7 @@ defmodule Prepair.AccountsTest do
         Accounts.apply_user_email(user, user_password, %{email: email})
 
       assert user.email == email
-      assert Accounts.get_user!(user.uuid).email != email
+      assert Accounts.get_user!(user.id).email != email
     end
   end
 
@@ -296,7 +296,7 @@ defmodule Prepair.AccountsTest do
       assert user_token =
                Repo.get_by(UserToken, token: :crypto.hash(:sha256, token))
 
-      assert user_token.user_uuid == user.uuid
+      assert user_token.user_id == user.id
       assert user_token.sent_to == user.email
       assert user_token.context == "change:current@example.com"
     end
@@ -325,18 +325,18 @@ defmodule Prepair.AccountsTest do
       email: email
     } do
       assert Accounts.update_user_email(user, token) == :ok
-      changed_user = Repo.get!(User, user.uuid)
+      changed_user = Repo.get!(User, user.id)
       assert changed_user.email != user.email
       assert changed_user.email == email
       assert changed_user.confirmed_at
       assert changed_user.confirmed_at != user.confirmed_at
-      refute Repo.get_by(UserToken, user_uuid: user.uuid)
+      refute Repo.get_by(UserToken, user_id: user.id)
     end
 
     test "does not update email with invalid token", %{user: user} do
       assert Accounts.update_user_email(user, "oops") == :error
-      assert Repo.get!(User, user.uuid).email == user.email
-      assert Repo.get_by(UserToken, user_uuid: user.uuid)
+      assert Repo.get!(User, user.id).email == user.email
+      assert Repo.get_by(UserToken, user_id: user.id)
     end
 
     test "does not update email if user email changed", %{
@@ -348,8 +348,8 @@ defmodule Prepair.AccountsTest do
                token
              ) == :error
 
-      assert Repo.get!(User, user.uuid).email == user.email
-      assert Repo.get_by(UserToken, user_uuid: user.uuid)
+      assert Repo.get!(User, user.id).email == user.email
+      assert Repo.get_by(UserToken, user_id: user.id)
     end
 
     test "does not update email if token expired", %{user: user, token: token} do
@@ -357,8 +357,8 @@ defmodule Prepair.AccountsTest do
         Repo.update_all(UserToken, set: [inserted_at: ~N[2020-01-01 00:00:00]])
 
       assert Accounts.update_user_email(user, token) == :error
-      assert Repo.get!(User, user.uuid).email == user.email
-      assert Repo.get_by(UserToken, user_uuid: user.uuid)
+      assert Repo.get!(User, user.id).email == user.email
+      assert Repo.get_by(UserToken, user_id: user.id)
     end
   end
 
@@ -451,7 +451,7 @@ defmodule Prepair.AccountsTest do
           password: valid_user_password()
         })
 
-      refute Repo.get_by(UserToken, user_uuid: user.uuid)
+      refute Repo.get_by(UserToken, user_id: user.id)
     end
   end
 
@@ -487,7 +487,7 @@ defmodule Prepair.AccountsTest do
       assert_raise Ecto.ConstraintError, fn ->
         Repo.insert!(%UserToken{
           token: user_token.token,
-          user_uuid: user_fixture().uuid,
+          user_id: user_fixture().id,
           context: "session"
         })
       end
@@ -503,7 +503,7 @@ defmodule Prepair.AccountsTest do
 
     test "returns user by token", %{user: user, token: token} do
       assert session_user = Accounts.get_user_by_session_token(token)
-      assert session_user.uuid == user.uuid
+      assert session_user.id == user.id
     end
 
     test "does not return user for invalid token" do
@@ -543,7 +543,7 @@ defmodule Prepair.AccountsTest do
       assert user_token =
                Repo.get_by(UserToken, token: :crypto.hash(:sha256, token))
 
-      assert user_token.user_uuid == user.uuid
+      assert user_token.user_id == user.id
       assert user_token.sent_to == user.email
       assert user_token.context == "confirm"
     end
@@ -565,14 +565,14 @@ defmodule Prepair.AccountsTest do
       assert {:ok, confirmed_user} = Accounts.confirm_user(token)
       assert confirmed_user.confirmed_at
       assert confirmed_user.confirmed_at != user.confirmed_at
-      assert Repo.get!(User, user.uuid).confirmed_at
-      refute Repo.get_by(UserToken, user_uuid: user.uuid)
+      assert Repo.get!(User, user.id).confirmed_at
+      refute Repo.get_by(UserToken, user_id: user.id)
     end
 
     test "does not confirm with invalid token", %{user: user} do
       assert Accounts.confirm_user("oops") == :error
-      refute Repo.get!(User, user.uuid).confirmed_at
-      assert Repo.get_by(UserToken, user_uuid: user.uuid)
+      refute Repo.get!(User, user.id).confirmed_at
+      assert Repo.get_by(UserToken, user_id: user.id)
     end
 
     test "does not confirm email if token expired", %{user: user, token: token} do
@@ -580,8 +580,8 @@ defmodule Prepair.AccountsTest do
         Repo.update_all(UserToken, set: [inserted_at: ~N[2020-01-01 00:00:00]])
 
       assert Accounts.confirm_user(token) == :error
-      refute Repo.get!(User, user.uuid).confirmed_at
-      assert Repo.get_by(UserToken, user_uuid: user.uuid)
+      refute Repo.get!(User, user.id).confirmed_at
+      assert Repo.get_by(UserToken, user_id: user.id)
     end
   end
 
@@ -601,7 +601,7 @@ defmodule Prepair.AccountsTest do
       assert user_token =
                Repo.get_by(UserToken, token: :crypto.hash(:sha256, token))
 
-      assert user_token.user_uuid == user.uuid
+      assert user_token.user_id == user.id
       assert user_token.sent_to == user.email
       assert user_token.context == "reset_password"
     end
@@ -620,18 +620,18 @@ defmodule Prepair.AccountsTest do
     end
 
     test "returns the user with valid token", %{
-      user: %{uuid: uuid},
+      user: %{id: id},
       token: token
     } do
-      assert %User{uuid: ^uuid} =
+      assert %User{id: ^id} =
                Accounts.get_user_by_reset_password_token(token)
 
-      assert Repo.get_by(UserToken, user_uuid: uuid)
+      assert Repo.get_by(UserToken, user_id: id)
     end
 
     test "does not return the user with invalid token", %{user: user} do
       refute Accounts.get_user_by_reset_password_token("oops")
-      assert Repo.get_by(UserToken, user_uuid: user.uuid)
+      assert Repo.get_by(UserToken, user_id: user.id)
     end
 
     test "does not return the user if token expired", %{
@@ -642,7 +642,7 @@ defmodule Prepair.AccountsTest do
         Repo.update_all(UserToken, set: [inserted_at: ~N[2020-01-01 00:00:00]])
 
       refute Accounts.get_user_by_reset_password_token(token)
-      assert Repo.get_by(UserToken, user_uuid: user.uuid)
+      assert Repo.get_by(UserToken, user_id: user.id)
     end
   end
 
@@ -697,7 +697,7 @@ defmodule Prepair.AccountsTest do
       {:ok, _} =
         Accounts.reset_user_password(user, %{password: valid_user_password()})
 
-      refute Repo.get_by(UserToken, user_uuid: user.uuid)
+      refute Repo.get_by(UserToken, user_id: user.id)
     end
   end
 

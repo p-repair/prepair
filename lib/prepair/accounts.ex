@@ -76,9 +76,9 @@ defmodule Prepair.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(uuid) do
+  def get_user!(id) do
     User
-    |> Repo.get!(uuid)
+    |> Repo.get!(id)
     |> Repo.preload(:profile)
   end
 
@@ -101,7 +101,7 @@ defmodule Prepair.Accounts do
     Repo.transaction(fn ->
       with {:ok, user} <- do_register_user(user_attrs),
            {:ok, _profile} <-
-             Profiles.create_profile(user.uuid, profile_attrs) do
+             Profiles.create_profile(user.id, profile_attrs) do
         user |> Repo.preload(:profile)
       else
         {:error, value} -> Repo.rollback(value)
@@ -118,7 +118,7 @@ defmodule Prepair.Accounts do
       Repo.transaction(fn ->
         with {:ok, user} <- do_register_user(registration_attrs),
              {:ok, _profile} <-
-               Profiles.create_profile(user.uuid, registration_attrs) do
+               Profiles.create_profile(user.id, registration_attrs) do
           user |> Repo.preload(:profile)
         else
           {:error, value} -> Repo.rollback(value)
@@ -134,7 +134,7 @@ defmodule Prepair.Accounts do
   defp do_register_user(attrs) do
     %User{}
     |> User.registration_changeset(attrs)
-    |> Repo.insert(returning: [:uuid])
+    |> Repo.insert(returning: [:id])
   end
 
   @doc """

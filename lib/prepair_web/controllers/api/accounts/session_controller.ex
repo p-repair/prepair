@@ -10,7 +10,7 @@ defmodule PrepairWeb.Api.SessionController do
     with {:ok, token} <- ApiUserAuth.create_user_token(email, password),
          user <- Accounts.get_user_by_email_and_password(email, password) do
       conn
-      |> json(%{data: %{token: Base.encode64(token), user_uuid: user.uuid}})
+      |> json(%{data: %{token: Base.encode64(token), user_id: user.id}})
     end
   end
 

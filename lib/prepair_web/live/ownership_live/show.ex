@@ -16,9 +16,9 @@ defmodule PrepairWeb.OwnershipLive.Show do
   end
 
   @impl true
-  def handle_params(%{"uuid" => uuid}, _, socket) do
+  def handle_params(%{"id" => id}, _, socket) do
     ownership =
-      Profiles.get_ownership!(uuid)
+      Profiles.get_ownership!(id)
       |> Repo.preload([:product, :profile])
 
     {:noreply,

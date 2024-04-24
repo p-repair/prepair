@@ -22,21 +22,21 @@ defmodule PrepairWeb.OwnershipLive.FormComponent do
         phx-submit="save"
       >
         <.input
-          field={@form[:category_uuid]}
+          field={@form[:category_id]}
           label={gettext "Category"}
           type="select"
           prompt={gettext "Please select a category"}
           options={category_opts(@changeset)}
         />
         <.input
-          field={@form[:manufacturer_uuid]}
+          field={@form[:manufacturer_id]}
           label={gettext "Manufacturer"}
           type="select"
           prompt={gettext "Please select a manufacturer"}
           options={manufacturer_opts(@changeset)}
         />
         <.input
-          field={@form[:product_uuid]}
+          field={@form[:product_id]}
           label={gettext "Product name"}
           type="select"
           prompt={gettext "Please select a product (filter by category and manufacturer)"}
@@ -81,54 +81,54 @@ defmodule PrepairWeb.OwnershipLive.FormComponent do
   end
 
   defp category_opts(changeset) do
-    existing_uuids =
+    existing_ids =
       changeset
       |> Ecto.Changeset.get_change(:categories, [])
-      |> Enum.map(& &1.data.uuid)
+      |> Enum.map(& &1.data.id)
 
     opts =
       for cat <- Products.list_categories(),
           do: [
             key: cat.name,
-            value: cat.uuid,
-            selected: cat.uuid in existing_uuids
+            value: cat.id,
+            selected: cat.id in existing_ids
           ]
 
     opts
   end
 
   defp manufacturer_opts(changeset) do
-    existing_uuids =
+    existing_ids =
       changeset
       |> Ecto.Changeset.get_change(:manufacturers, [])
-      |> Enum.map(& &1.data.uuid)
+      |> Enum.map(& &1.data.id)
 
     opts =
       for man <- Products.list_manufacturers(),
           do: [
             key: man.name,
-            value: man.uuid,
-            selected: man.uuid in existing_uuids
+            value: man.id,
+            selected: man.id in existing_ids
           ]
 
     opts
   end
 
   defp product_opts(params, changeset) do
-    existing_uuids =
+    existing_ids =
       changeset
       |> Ecto.Changeset.get_change(:products, [])
-      |> Enum.map(& &1.data.uuid)
+      |> Enum.map(& &1.data.id)
 
-    with {:ok, category_uuid} <- Map.fetch(params, "category_uuid"),
-         {:ok, manufacturer_uuid} <- Map.fetch(params, "manufacturer_uuid") do
+    with {:ok, category_id} <- Map.fetch(params, "category_id"),
+         {:ok, manufacturer_id} <- Map.fetch(params, "manufacturer_id") do
       opts =
         for p <-
               Products.list_products(
-                category_uuid: [category_uuid],
-                manufacturer_uuid: [manufacturer_uuid]
+                category_id: [category_id],
+                manufacturer_id: [manufacturer_id]
               ),
-            do: [key: p.name, value: p.uuid, selected: p.uuid in existing_uuids]
+            do: [key: p.name, value: p.id, selected: p.id in existing_ids]
 
       opts
     else
@@ -137,8 +137,8 @@ defmodule PrepairWeb.OwnershipLive.FormComponent do
           for p <- Products.list_products(),
               do: [
                 key: p.name,
-                value: p.uuid,
-                selected: p.uuid in existing_uuids
+                value: p.id,
+                selected: p.id in existing_ids
               ]
 
         opts
@@ -168,7 +168,7 @@ defmodule PrepairWeb.OwnershipLive.FormComponent do
 
   defp save_ownership(socket, :new, ownership_params) do
     case Profiles.create_ownership(
-           socket.assigns.current_user.uuid,
+           socket.assigns.current_user.id,
            ownership_params
          ) do
       {:ok, ownership} ->

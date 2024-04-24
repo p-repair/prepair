@@ -29,10 +29,10 @@
       <.link patch={~p"/parts/#{part}/edit"}><%= gettext "Edit" %></.link>
     <% end %>
   </:action>
-  <:action :let={{uuid, part}}>
+  <:action :let={{id, part}}>
   <%= if @current_user.role == :admin do %>
     <.link
-      phx-click={JS.push("delete", value: %{uuid: part.uuid}) |> hide("##{uuid}")}
+      phx-click={JS.push("delete", value: %{id: part.id}) |> hide("##{id}")}
       data-confirm={gettext "Are you sure?"}
     >
       <%= gettext "Delete" %>
@@ -44,7 +44,7 @@
 <.modal :if={@live_action in [:new, :edit]} id="part-modal" show on_cancel={JS.patch(~p"/parts")}>
   <.live_component
     module={PrepairWeb.PartLive.FormComponent}
-    id={@part.uuid || :new}
+    id={@part.id || :new}
     title={@page_title}
     action={@live_action}
     part={@part}
