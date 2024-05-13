@@ -1,7 +1,7 @@
 defmodule PrepairWeb.ProfileLive.FormComponent do
   use PrepairWeb, :live_component
 
-  alias Prepair.Profiles
+  alias Prepair.LegacyContexts.Profiles
 
   @impl true
   def render(assigns) do

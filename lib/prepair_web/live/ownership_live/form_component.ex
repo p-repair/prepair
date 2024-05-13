@@ -1,8 +1,8 @@
 defmodule PrepairWeb.OwnershipLive.FormComponent do
   use PrepairWeb, :live_component
 
-  alias Prepair.Profiles
-  alias Prepair.Products
+  alias Prepair.LegacyContexts.Profiles
+  alias Prepair.LegacyContexts.Products
   alias Prepair.Repo
 
   @impl true

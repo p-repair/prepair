@@ -1,12 +1,12 @@
 defmodule PrepairWeb.Api.Accounts.UserControllerTest do
   use PrepairWeb.ConnCase, async: true
 
-  alias Prepair.Accounts
+  alias Prepair.LegacyContexts.Accounts
   alias Prepair.Repo
 
   import Ecto.Query
-  import Prepair.AccountsFixtures
-  import Prepair.ProfilesFixtures
+  import Prepair.LegacyContexts.AccountsFixtures
+  import Prepair.LegacyContexts.ProfilesFixtures
 
   defp get_user_token_from_user_id(id) do
     query =

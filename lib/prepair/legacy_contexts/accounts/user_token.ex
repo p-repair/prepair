@@ -1,7 +1,7 @@
-defmodule Prepair.Accounts.UserToken do
+defmodule Prepair.LegacyContexts.Accounts.UserToken do
   use Ecto.Schema
   import Ecto.Query
-  alias Prepair.Accounts.UserToken
+  alias Prepair.LegacyContexts.Accounts.UserToken
 
   @hash_algorithm :sha256
   @rand_size 32
@@ -20,7 +20,7 @@ defmodule Prepair.Accounts.UserToken do
     field :context, :string
     field :sent_to, :string
 
-    belongs_to :user, Prepair.Accounts.User,
+    belongs_to :user, Prepair.LegacyContexts.Accounts.User,
       foreign_key: :user_id,
       references: :id,
       type: Ecto.UUID

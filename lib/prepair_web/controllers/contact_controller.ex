@@ -1,8 +1,8 @@
 defmodule PrepairWeb.ContactController do
   use PrepairWeb, :controller
 
-  alias Prepair.Newsletter
-  alias Prepair.Newsletter.Contact
+  alias Prepair.LegacyContexts.Newsletter
+  alias Prepair.LegacyContexts.Newsletter.Contact
 
   def index(conn, _params) do
     contacts = Newsletter.list_contacts()

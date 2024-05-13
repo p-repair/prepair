@@ -1,10 +1,10 @@
 defmodule PrepairWeb.ProfileLiveTest do
   use PrepairWeb.ConnCase
 
-  alias Prepair.Profiles
+  alias Prepair.LegacyContexts.Profiles
 
   import Phoenix.LiveViewTest
-  import Prepair.ProfilesFixtures
+  import Prepair.LegacyContexts.ProfilesFixtures
 
   @update_attrs %{
     username: "some updated username",

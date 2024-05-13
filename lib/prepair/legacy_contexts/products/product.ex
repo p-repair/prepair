@@ -1,11 +1,14 @@
-defmodule Prepair.Products.Part do
+defmodule Prepair.LegacyContexts.Products.Product do
   use Ecto.Schema
+
+  alias Prepair.LegacyContexts.Notifications.NotificationTemplate
+  alias Prepair.LegacyContexts.Products.{Manufacturer, Category, Part}
+  alias Prepair.LegacyContexts.Profiles.Ownership
+
   import Ecto.Changeset
 
-  alias Prepair.Notifications.NotificationTemplate
-  alias Prepair.Products.{Category, Manufacturer, Product}
-
   @required_fields [
+    :category_id,
     :manufacturer_id,
     :name,
     :reference
@@ -13,21 +16,19 @@ defmodule Prepair.Products.Part do
 
   @fields @required_fields ++
             [
-              :category_id,
-              :product_ids,
+              :part_ids,
               :notification_template_ids,
               :description,
               :image,
               :average_lifetime_m,
               :country_of_origin,
               :start_of_production,
-              :end_of_production,
-              :main_material
+              :end_of_production
             ]
 
   @derive {Phoenix.Param, key: :id}
-  @primary_key {:id, Ecto.UUID, autogenerate: true}
-  schema "parts" do
+  @primary_key {:id, Ecto.UUID, autogenerate: false}
+  schema "products" do
     belongs_to :category, Category,
       foreign_key: :category_id,
       references: :id,
@@ -38,17 +39,21 @@ defmodule Prepair.Products.Part do
       references: :id,
       type: Ecto.UUID
 
-    many_to_many :products, Product,
+    many_to_many :parts, Part,
       join_through: "product_parts",
-      join_keys: [part_id: :id, product_id: :id],
+      join_keys: [product_id: :id, part_id: :id],
       on_replace: :delete
 
     many_to_many :notification_templates, NotificationTemplate,
-      join_through: "part_notification_templates",
-      join_keys: [part_id: :id, notification_template_id: :id],
+      join_through: "product_notification_templates",
+      join_keys: [product_id: :id, notification_template_id: :id],
       on_replace: :delete
 
-    field :product_ids, {:array, Ecto.UUID}, virtual: true, default: []
+    has_many :ownerships, Ownership,
+      foreign_key: :product_id,
+      references: :id
+
+    field :part_ids, {:array, Ecto.UUID}, virtual: true, default: []
 
     field :notification_template_ids, {:array, Ecto.UUID},
       virtual: true,
@@ -59,7 +64,6 @@ defmodule Prepair.Products.Part do
     field :description, :string
     field :end_of_production, :date
     field :image, :string
-    field :main_material, :string
     field :name, :string
     field :reference, :string
     field :start_of_production, :date
@@ -68,8 +72,8 @@ defmodule Prepair.Products.Part do
   end
 
   @doc false
-  def changeset(part, attrs) do
-    part
+  def changeset(product, attrs) do
+    product
     |> cast(attrs, @fields)
     |> validate_required(@required_fields)
     |> unique_constraint([:reference, :manufacturer_id])

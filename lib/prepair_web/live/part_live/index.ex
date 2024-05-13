@@ -1,8 +1,8 @@
 defmodule PrepairWeb.PartLive.Index do
   use PrepairWeb, :live_view
 
-  alias Prepair.Products
-  alias Prepair.Products.Part
+  alias Prepair.LegacyContexts.Products
+  alias Prepair.LegacyContexts.Products.Part
   alias PrepairWeb.UserAuth
 
   @impl true

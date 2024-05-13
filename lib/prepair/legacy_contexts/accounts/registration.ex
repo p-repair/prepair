@@ -1,8 +1,8 @@
-defmodule Prepair.Accounts.Registration do
+defmodule Prepair.LegacyContexts.Accounts.Registration do
   use Ecto.Schema
 
-  alias Prepair.Accounts.User
-  alias Prepair.Profiles.Profile
+  alias Prepair.LegacyContexts.Accounts.User
+  alias Prepair.LegacyContexts.Profiles.Profile
   alias Prepair.Repo
 
   import Ecto.Changeset

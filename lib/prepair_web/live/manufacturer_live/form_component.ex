@@ -1,7 +1,7 @@
 defmodule PrepairWeb.ManufacturerLive.FormComponent do
   use PrepairWeb, :live_component
 
-  alias Prepair.Products
+  alias Prepair.LegacyContexts.Products
 
   @impl true
   def render(assigns) do

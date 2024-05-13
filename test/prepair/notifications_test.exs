@@ -1,14 +1,14 @@
-defmodule Prepair.NotificationsTest do
+defmodule Prepair.LegacyContexts.NotificationsTest do
   use Prepair.DataCase
 
-  alias Prepair.Notifications
+  alias Prepair.LegacyContexts.Notifications
   alias Prepair.Repo
 
   describe "notification_templates" do
-    alias Prepair.Notifications.NotificationTemplate
+    alias Prepair.LegacyContexts.Notifications.NotificationTemplate
 
-    import Prepair.NotificationsFixtures
-    import Prepair.ProductsFixtures
+    import Prepair.LegacyContexts.NotificationsFixtures
+    import Prepair.LegacyContexts.ProductsFixtures
 
     @invalid_attrs %{
       name: nil,

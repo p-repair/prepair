@@ -1,12 +1,12 @@
-defmodule Prepair.ProfilesTest do
+defmodule Prepair.LegacyContexts.ProfilesTest do
   use Prepair.DataCase
 
-  alias Prepair.Profiles
+  alias Prepair.LegacyContexts.Profiles
 
   describe "profiles" do
-    alias Prepair.Profiles.Profile
+    alias Prepair.LegacyContexts.Profiles.Profile
 
-    import Prepair.ProfilesFixtures
+    import Prepair.LegacyContexts.ProfilesFixtures
 
     @invalid_attrs %{
       username: nil,
@@ -86,10 +86,10 @@ defmodule Prepair.ProfilesTest do
   end
 
   describe "ownerships" do
-    alias Prepair.Profiles.Ownership
+    alias Prepair.LegacyContexts.Profiles.Ownership
 
-    import Prepair.ProfilesFixtures
-    import Prepair.ProductsFixtures
+    import Prepair.LegacyContexts.ProfilesFixtures
+    import Prepair.LegacyContexts.ProductsFixtures
 
     @invalid_attrs %{
       product_id: nil,

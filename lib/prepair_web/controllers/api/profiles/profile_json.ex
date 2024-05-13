@@ -1,5 +1,5 @@
 defmodule PrepairWeb.Api.Profiles.ProfileJSON do
-  alias Prepair.Profiles.Profile
+  alias Prepair.LegacyContexts.Profiles.Profile
   alias Prepair.Repo
 
   @doc """

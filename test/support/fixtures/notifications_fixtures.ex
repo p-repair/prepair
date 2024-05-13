@@ -1,7 +1,7 @@
-defmodule Prepair.NotificationsFixtures do
+defmodule Prepair.LegacyContexts.NotificationsFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `Prepair.Notifications` context.
+  entities via the `Prepair.LegacyContexts.Notifications` context.
   """
 
   @doc """
@@ -17,7 +17,7 @@ defmodule Prepair.NotificationsFixtures do
     {:ok, notification_template} =
       attrs
       |> Enum.into(notification_template_valid_attrs())
-      |> Prepair.Notifications.create_notification_template()
+      |> Prepair.LegacyContexts.Notifications.create_notification_template()
 
     notification_template
     |> unload_notification_template_relations()

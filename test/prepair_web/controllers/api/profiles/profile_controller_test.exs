@@ -1,11 +1,11 @@
 defmodule PrepairWeb.Api.Profiles.ProfileControllerTest do
   use PrepairWeb.ConnCase
 
-  import Prepair.ProfilesFixtures
+  import Prepair.LegacyContexts.ProfilesFixtures
   import PrepairWeb.AuthorizationTestsMacro
 
   alias Prepair.Repo
-  alias Prepair.Profiles
+  alias Prepair.LegacyContexts.Profiles
   alias PrepairWeb.Api.Profiles.ProfileJSON
 
   # NOTE: params needed for authorization tests macros
@@ -183,7 +183,7 @@ defmodule PrepairWeb.Api.Profiles.ProfileControllerTest do
 
       conn = get(conn, ~p"/api/v1/profiles/profiles/#{id}")
 
-      profile = Prepair.Profiles.get_profile!(id)
+      profile = Prepair.LegacyContexts.Profiles.get_profile!(id)
 
       assert json_response(conn, 200)["data"] ==
                profile |> to_normalised_json()

@@ -2,8 +2,8 @@ defmodule PrepairWeb.UserRegistrationLive do
   alias Ecto.Changeset
   use PrepairWeb, :live_view
 
-  alias Prepair.Accounts
-  alias Prepair.Accounts.Registration
+  alias Prepair.LegacyContexts.Accounts
+  alias Prepair.LegacyContexts.Accounts.Registration
 
   import Phoenix.HTML.Form
 

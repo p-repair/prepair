@@ -4,7 +4,7 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
   alias Prepair.Repo
   alias PrepairWeb.Api.Profiles.OwnershipJSON
 
-  import Prepair.ProfilesFixtures
+  import Prepair.LegacyContexts.ProfilesFixtures
   import PrepairWeb.AuthorizationTestsMacro
 
   # NOTE: params needed for authorization tests macros
@@ -279,7 +279,7 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
       conn = get(conn, ~p"/api/v1/profiles/ownerships/#{id}")
 
       ownership =
-        Prepair.Profiles.get_ownership!(id)
+        Prepair.LegacyContexts.Profiles.get_ownership!(id)
         |> Repo.preload([:profile, :product, product: :manufacturer])
 
       assert json_response(conn, 200)["data"] ==
@@ -327,7 +327,7 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
       conn = get(conn, ~p"/api/v1/profiles/ownerships/#{id}")
 
       ownership =
-        Prepair.Profiles.get_ownership!(id)
+        Prepair.LegacyContexts.Profiles.get_ownership!(id)
         |> Repo.preload([[:profile, :product, product: :manufacturer]])
 
       assert json_response(conn, 200)["data"] ==

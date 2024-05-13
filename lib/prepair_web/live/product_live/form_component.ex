@@ -1,7 +1,7 @@
 defmodule PrepairWeb.ProductLive.FormComponent do
   use PrepairWeb, :live_component
 
-  alias Prepair.Products
+  alias Prepair.LegacyContexts.Products
 
   @impl true
   def render(assigns) do
@@ -102,7 +102,7 @@ defmodule PrepairWeb.ProductLive.FormComponent do
       |> Ecto.Changeset.get_change(:categories, [])
       |> Enum.map(& &1.data.id)
 
-    for cat <- Prepair.Products.list_categories(),
+    for cat <- Prepair.LegacyContexts.Products.list_categories(),
         do: [
           key: cat.name,
           value: cat.id,
@@ -116,7 +116,7 @@ defmodule PrepairWeb.ProductLive.FormComponent do
       |> Ecto.Changeset.get_change(:manufacturers, [])
       |> Enum.map(& &1.data.id)
 
-    for man <- Prepair.Products.list_manufacturers(),
+    for man <- Prepair.LegacyContexts.Products.list_manufacturers(),
         do: [
           key: man.name,
           value: man.id,

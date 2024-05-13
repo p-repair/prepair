@@ -1,11 +1,11 @@
-defmodule Prepair.Products do
+defmodule Prepair.LegacyContexts.Products do
   @moduledoc """
   The Products context.
   """
 
   import Ecto.Query, warn: false
-  alias Prepair.Notifications
-  alias Prepair.Products.{Manufacturer, Category, Part, Product}
+  alias Prepair.LegacyContexts.Notifications
+  alias Prepair.LegacyContexts.Products.{Manufacturer, Category, Part, Product}
   alias Prepair.Repo
 
   @doc """
@@ -102,7 +102,7 @@ defmodule Prepair.Products do
     Manufacturer.changeset(manufacturer, attrs)
   end
 
-  alias Prepair.Products.Category
+  alias Prepair.LegacyContexts.Products.Category
 
   @doc """
   Returns the list of categories.
@@ -229,7 +229,7 @@ defmodule Prepair.Products do
     |> Ecto.Changeset.put_assoc(:notification_templates, notification_templates)
   end
 
-  alias Prepair.Products.Product
+  alias Prepair.LegacyContexts.Products.Product
 
   @doc """
   Returns the list of products.
@@ -292,7 +292,7 @@ defmodule Prepair.Products do
 
       iex> list_products(random_filter: ["random value"])
       ** (Ecto.QueryError) lib/prepair/products.ex:304: field `random_filter` in
-      `where` does not exist in schema Prepair.Products.Product in query:
+      `where` does not exist in schema Prepair.LegacyContexts.Products.Product in query:
       ...
   """
   def list_products(filters \\ []) do
@@ -433,7 +433,7 @@ defmodule Prepair.Products do
     |> Ecto.Changeset.put_assoc(:notification_templates, notification_templates)
   end
 
-  alias Prepair.Products.Part
+  alias Prepair.LegacyContexts.Products.Part
 
   @doc """
   Returns the list of parts.

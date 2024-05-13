@@ -2,8 +2,8 @@ defmodule PrepairWeb.UserRegisterLiveTest do
   use PrepairWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import Prepair.AccountsFixtures
-  import Prepair.ProfilesFixtures
+  import Prepair.LegacyContexts.AccountsFixtures
+  import Prepair.LegacyContexts.ProfilesFixtures
 
   describe "Register user page" do
     @tag :register_user_live

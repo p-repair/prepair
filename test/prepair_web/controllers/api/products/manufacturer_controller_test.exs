@@ -1,9 +1,9 @@
 defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
   use PrepairWeb.ConnCase
 
-  import Prepair.ProductsFixtures
+  import Prepair.LegacyContexts.ProductsFixtures
   import PrepairWeb.AuthorizationTestsMacro
-  alias Prepair.Products.Manufacturer
+  alias Prepair.LegacyContexts.Products.Manufacturer
   alias PrepairWeb.Api.Products.ManufacturerJSON
 
   # NOTE: params needed for authorization tests macros
@@ -127,7 +127,7 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
 
       conn = get(conn, ~p"/api/v1/products/manufacturers/#{id}")
 
-      manufacturer = Prepair.Products.get_manufacturer!(id)
+      manufacturer = Prepair.LegacyContexts.Products.get_manufacturer!(id)
 
       assert json_response(conn, 200)["data"] ==
                manufacturer |> to_normalised_json()
@@ -164,7 +164,7 @@ defmodule PrepairWeb.Api.Products.ManufacturerControllerTest do
 
       conn = get(conn, ~p"/api/v1/products/manufacturers/#{id}")
 
-      manufacturer = Prepair.Products.get_manufacturer!(id)
+      manufacturer = Prepair.LegacyContexts.Products.get_manufacturer!(id)
 
       assert json_response(conn, 200)["data"] ==
                manufacturer |> to_normalised_json()

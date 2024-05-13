@@ -5,7 +5,7 @@ defmodule PrepairWeb.UserAuth do
   import Phoenix.Controller
   import PrepairWeb.Gettext
 
-  alias Prepair.Accounts
+  alias Prepair.LegacyContexts.Accounts
 
   # Make the remember me cookie valid for 60 days.
   # If you want bump or reduce this value, also change
@@ -341,7 +341,7 @@ defmodule PrepairWeb.UserAuth do
     data_owner =
       case scope do
         :ownership ->
-          Prepair.Profiles.get_ownership!(params["id"]).profile_id
+          Prepair.LegacyContexts.Profiles.get_ownership!(params["id"]).profile_id
       end
 
     current_user = socket.assigns.current_user

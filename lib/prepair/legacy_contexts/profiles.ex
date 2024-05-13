@@ -1,4 +1,4 @@
-defmodule Prepair.Profiles do
+defmodule Prepair.LegacyContexts.Profiles do
   @moduledoc """
   The Profiles context.
   """
@@ -6,7 +6,7 @@ defmodule Prepair.Profiles do
   import Ecto.Query, warn: false
   alias Prepair.Repo
 
-  alias Prepair.Profiles.{Profile, Ownership}
+  alias Prepair.LegacyContexts.Profiles.{Profile, Ownership}
 
   @doc """
   Returns the list of profiles.

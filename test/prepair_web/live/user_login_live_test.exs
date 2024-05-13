@@ -2,7 +2,7 @@ defmodule PrepairWeb.UserLoginLiveTest do
   use PrepairWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import Prepair.AccountsFixtures
+  import Prepair.LegacyContexts.AccountsFixtures
 
   describe "Log in page" do
     test "renders log in page", %{conn: conn} do

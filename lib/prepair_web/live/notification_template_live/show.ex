@@ -1,7 +1,7 @@
 defmodule PrepairWeb.NotificationTemplateLive.Show do
   use PrepairWeb, :live_view
 
-  alias Prepair.Notifications
+  alias Prepair.LegacyContexts.Notifications
 
   @impl true
   def mount(_params, _session, socket) do

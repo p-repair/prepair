@@ -1,7 +1,7 @@
-defmodule Prepair.ProductsFixtures do
+defmodule Prepair.LegacyContexts.ProductsFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `Prepair.Products` context.
+  entities via the `Prepair.LegacyContexts.Products` context.
   """
 
   alias Prepair.Repo
@@ -19,7 +19,7 @@ defmodule Prepair.ProductsFixtures do
     {:ok, manufacturer} =
       attrs
       |> Enum.into(manufacturer_valid_attrs())
-      |> Prepair.Products.create_manufacturer()
+      |> Prepair.LegacyContexts.Products.create_manufacturer()
 
     manufacturer
   end
@@ -44,7 +44,7 @@ defmodule Prepair.ProductsFixtures do
     {:ok, category} =
       attrs
       |> Enum.into(category_valid_attrs())
-      |> Prepair.Products.create_category()
+      |> Prepair.LegacyContexts.Products.create_category()
 
     category
   end
@@ -87,7 +87,7 @@ defmodule Prepair.ProductsFixtures do
     {:ok, product} =
       attrs
       |> Enum.into(product_valid_attrs())
-      |> Prepair.Products.create_product()
+      |> Prepair.LegacyContexts.Products.create_product()
 
     product
     |> unload_product_relations()
@@ -143,7 +143,7 @@ defmodule Prepair.ProductsFixtures do
     {:ok, part} =
       attrs
       |> Enum.into(part_valid_attrs())
-      |> Prepair.Products.create_part()
+      |> Prepair.LegacyContexts.Products.create_part()
 
     part
     |> Repo.preload([

@@ -3,14 +3,14 @@
 ######################################
 
 alias Prepair.Repo
-alias Prepair.Accounts
-alias Prepair.Auth.ApiKey
-alias Prepair.Notifications.NotificationTemplate
-alias Prepair.Products.Category
-alias Prepair.Products.Manufacturer
-alias Prepair.Products.Product
-alias Prepair.Products.Part
-alias Prepair.Profiles.Ownership
+alias Prepair.LegacyContexts.Accounts
+alias Prepair.LegacyContexts.Auth.ApiKey
+alias Prepair.LegacyContexts.Notifications.NotificationTemplate
+alias Prepair.LegacyContexts.Products.Category
+alias Prepair.LegacyContexts.Products.Manufacturer
+alias Prepair.LegacyContexts.Products.Product
+alias Prepair.LegacyContexts.Products.Part
+alias Prepair.LegacyContexts.Profiles.Ownership
 
 ##
 ## Create users

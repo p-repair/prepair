@@ -1,8 +1,8 @@
-defmodule Prepair.Profiles.Ownership do
+defmodule Prepair.LegacyContexts.Profiles.Ownership do
   use Ecto.Schema
 
-  alias Prepair.Products.Product
-  alias Prepair.Profiles.Profile
+  alias Prepair.LegacyContexts.Products.Product
+  alias Prepair.LegacyContexts.Profiles.Profile
 
   import Ecto.Changeset
 

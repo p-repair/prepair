@@ -1,4 +1,4 @@
-defmodule Prepair.Newsletter do
+defmodule Prepair.LegacyContexts.Newsletter do
   @moduledoc """
   The Newsletter context.
   """
@@ -9,7 +9,7 @@ defmodule Prepair.Newsletter do
   alias Prepair.Mailer
   alias Prepair.Repo
 
-  alias Prepair.Newsletter.Contact
+  alias Prepair.LegacyContexts.Newsletter.Contact
 
   @mailerlite_group 85_000_079_548_614_620
 

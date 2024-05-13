@@ -1,8 +1,8 @@
 defmodule PrepairWeb.CategoryLive.Index do
   use PrepairWeb, :live_view
 
-  alias Prepair.Products
-  alias Prepair.Products.Category
+  alias Prepair.LegacyContexts.Products
+  alias Prepair.LegacyContexts.Products.Category
   alias PrepairWeb.UserAuth
 
   @impl true

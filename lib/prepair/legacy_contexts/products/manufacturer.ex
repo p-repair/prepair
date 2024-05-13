@@ -1,8 +1,8 @@
-defmodule Prepair.Products.Manufacturer do
+defmodule Prepair.LegacyContexts.Products.Manufacturer do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Prepair.Products.{Product, Part}
+  alias Prepair.LegacyContexts.Products.{Product, Part}
 
   @required_fields [:name]
 

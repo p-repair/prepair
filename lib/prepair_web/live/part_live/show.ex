@@ -1,7 +1,7 @@
 defmodule PrepairWeb.PartLive.Show do
   use PrepairWeb, :live_view
 
-  alias Prepair.Products
+  alias Prepair.LegacyContexts.Products
 
   @impl true
   def mount(_params, _session, socket) do

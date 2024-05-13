@@ -1,7 +1,7 @@
 defmodule PrepairWeb.UserSessionControllerTest do
   use PrepairWeb.ConnCase, async: true
 
-  import Prepair.AccountsFixtures
+  import Prepair.LegacyContexts.AccountsFixtures
 
   defp create_user(_) do
     user_password = valid_user_password()

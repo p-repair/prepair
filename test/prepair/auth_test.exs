@@ -1,14 +1,14 @@
-defmodule Prepair.AuthTest do
+defmodule Prepair.LegacyContexts.AuthTest do
   alias Ecto.Changeset
   use Prepair.DataCase
 
-  alias Prepair.Auth
+  alias Prepair.LegacyContexts.Auth
 
   @name "Some API key"
   @unknown_key "SRICPND46x6YHN5Qs9hxEnoSoSvPZF/gggjvPRWzEnw="
 
   describe "api_keys" do
-    alias Prepair.Auth.ApiKey
+    alias Prepair.LegacyContexts.Auth.ApiKey
 
     test "list_api_keys/0 returns the name of existing API keys" do
       {:ok, api_key} = Auth.create_api_key(@name)

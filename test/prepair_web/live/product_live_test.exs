@@ -2,7 +2,7 @@ defmodule PrepairWeb.ProductLiveTest do
   use PrepairWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import Prepair.ProductsFixtures
+  import Prepair.LegacyContexts.ProductsFixtures
 
   @update_attrs %{
     average_lifetime_m: 43,

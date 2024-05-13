@@ -1,9 +1,9 @@
-defmodule Prepair.Products.Category do
+defmodule Prepair.LegacyContexts.Products.Category do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias Prepair.Notifications.NotificationTemplate
-  alias Prepair.Products.{Product, Part}
+  alias Prepair.LegacyContexts.Notifications.NotificationTemplate
+  alias Prepair.LegacyContexts.Products.{Product, Part}
 
   @required_fields [:name]
 

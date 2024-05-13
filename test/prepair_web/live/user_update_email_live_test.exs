@@ -1,10 +1,10 @@
 defmodule PrepairWeb.UserUpdateEmailLiveTest do
   use PrepairWeb.ConnCase
 
-  alias Prepair.Accounts
+  alias Prepair.LegacyContexts.Accounts
 
   import Phoenix.LiveViewTest
-  import Prepair.AccountsFixtures
+  import Prepair.LegacyContexts.AccountsFixtures
 
   describe "Update email page" do
     @tag :update_email_live

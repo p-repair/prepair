@@ -1,7 +1,7 @@
 defmodule PrepairWeb.Api.SessionController do
   use PrepairWeb, :controller
 
-  alias Prepair.Accounts
+  alias Prepair.LegacyContexts.Accounts
   alias PrepairWeb.ApiUserAuth
 
   action_fallback PrepairWeb.Api.FallbackController

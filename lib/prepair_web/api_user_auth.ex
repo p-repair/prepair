@@ -1,6 +1,6 @@
 defmodule PrepairWeb.ApiUserAuth do
-  alias Prepair.Accounts
-  alias Prepair.Profiles
+  alias Prepair.LegacyContexts.Accounts
+  alias Prepair.LegacyContexts.Profiles
 
   import Plug.Conn
   import Phoenix.Controller

@@ -1,7 +1,7 @@
-defmodule Prepair.Newsletter.Contact do
+defmodule Prepair.LegacyContexts.Newsletter.Contact do
   use TypedEctoSchema
 
-  alias Prepair.Newsletter.Contact
+  alias Prepair.LegacyContexts.Newsletter.Contact
   alias Ecto.Changeset
 
   import Ecto.Changeset

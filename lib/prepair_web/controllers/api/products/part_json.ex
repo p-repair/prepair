@@ -1,6 +1,6 @@
 defmodule PrepairWeb.Api.Products.PartJSON do
   alias PrepairWeb.Api.Products.{CategoryJSON, ManufacturerJSON}
-  alias Prepair.Products.Part
+  alias Prepair.LegacyContexts.Products.Part
   alias Prepair.Repo
 
   @doc """

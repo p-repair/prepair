@@ -1,7 +1,7 @@
 defmodule PrepairWeb.Api.Profiles.OwnershipJSON do
   alias PrepairWeb.Api.Products.ProductJSON
   alias PrepairWeb.Api.Profiles.ProfileJSON
-  alias Prepair.Profiles.Ownership
+  alias Prepair.LegacyContexts.Profiles.Ownership
   alias Prepair.Repo
 
   @doc """

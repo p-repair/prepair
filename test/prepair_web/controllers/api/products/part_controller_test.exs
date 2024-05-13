@@ -1,11 +1,11 @@
 defmodule PrepairWeb.Api.Products.PartControllerTest do
   use PrepairWeb.ConnCase
 
-  import Prepair.NotificationsFixtures
-  import Prepair.ProductsFixtures
+  import Prepair.LegacyContexts.NotificationsFixtures
+  import Prepair.LegacyContexts.ProductsFixtures
   import PrepairWeb.AuthorizationTestsMacro
-  alias Prepair.Products
-  alias Prepair.Products.Part
+  alias Prepair.LegacyContexts.Products
+  alias Prepair.LegacyContexts.Products.Part
   alias PrepairWeb.Api.Products.PartJSON
 
   # NOTE: params needed for authorization tests macros
@@ -152,7 +152,7 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
 
       conn = get(conn, ~p"/api/v1/products/parts/#{id}")
 
-      part = Prepair.Products.get_part!(id)
+      part = Prepair.LegacyContexts.Products.get_part!(id)
 
       assert json_response(conn, 200)["data"] == part |> to_normalised_json()
     end
@@ -206,7 +206,7 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
 
       conn = get(conn, ~p"/api/v1/products/parts/#{id}")
 
-      part = Prepair.Products.get_part!(id)
+      part = Prepair.LegacyContexts.Products.get_part!(id)
 
       assert json_response(conn, 200)["data"] == part |> to_normalised_json()
     end

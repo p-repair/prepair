@@ -1,7 +1,7 @@
 defmodule PrepairWeb.ProfileLive.OwnershipIndex do
   use PrepairWeb, :live_view
 
-  alias Prepair.Profiles
+  alias Prepair.LegacyContexts.Profiles
   alias Prepair.Repo
 
   @impl true

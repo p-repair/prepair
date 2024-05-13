@@ -4,8 +4,8 @@ defmodule PrepairWeb.OwnershipLiveTest do
   alias Prepair.Repo
 
   import Phoenix.LiveViewTest
-  import Prepair.ProfilesFixtures
-  import Prepair.ProductsFixtures
+  import Prepair.LegacyContexts.ProfilesFixtures
+  import Prepair.LegacyContexts.ProductsFixtures
 
   @update_attrs %{
     public: true,

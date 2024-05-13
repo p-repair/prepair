@@ -1,5 +1,5 @@
 defmodule PrepairWeb.Api.Accounts.UserJSON do
-  alias Prepair.Accounts.User
+  alias Prepair.LegacyContexts.Accounts.User
 
   @doc """
   Renders a single user.

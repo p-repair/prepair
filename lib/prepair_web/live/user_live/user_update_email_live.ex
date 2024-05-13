@@ -1,8 +1,8 @@
 defmodule PrepairWeb.UserUpdateEmailLive do
   use PrepairWeb, :live_view
 
-  alias Prepair.Accounts
-  alias Prepair.Accounts.User
+  alias Prepair.LegacyContexts.Accounts
+  alias Prepair.LegacyContexts.Accounts.User
 
   import Phoenix.HTML.Form
 

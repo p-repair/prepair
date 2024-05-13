@@ -1,7 +1,7 @@
-defmodule Prepair.Accounts.User do
+defmodule Prepair.LegacyContexts.Accounts.User do
   use Ecto.Schema
 
-  alias Prepair.Profiles.Profile
+  alias Prepair.LegacyContexts.Profiles.Profile
 
   import Ecto.Changeset
   import PrepairWeb.Gettext
@@ -164,7 +164,7 @@ defmodule Prepair.Accounts.User do
   `Bcrypt.no_user_verify/0` to avoid timing attacks.
   """
   def valid_password?(
-        %Prepair.Accounts.User{hashed_password: hashed_password},
+        %Prepair.LegacyContexts.Accounts.User{hashed_password: hashed_password},
         password
       )
       when is_binary(hashed_password) and byte_size(password) > 0 do

@@ -1,11 +1,11 @@
-defmodule Prepair.ProfilesFixtures do
+defmodule Prepair.LegacyContexts.ProfilesFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `Prepair.Profiles` context.
+  entities via the `Prepair.LegacyContexts.Profiles` context.
   """
 
-  alias Prepair.AccountsFixtures
-  alias Prepair.ProductsFixtures
+  alias Prepair.LegacyContexts.AccountsFixtures
+  alias Prepair.LegacyContexts.ProductsFixtures
 
   def unique_username, do: "User#{System.unique_integer()}"
 
@@ -50,7 +50,9 @@ defmodule Prepair.ProfilesFixtures do
   """
   def ownership_fixture(profile_id \\ profile_id(), attrs \\ %{}) do
     attrs = attrs |> Enum.into(ownership_valid_attrs())
-    {:ok, ownership} = Prepair.Profiles.create_ownership(profile_id, attrs)
+
+    {:ok, ownership} =
+      Prepair.LegacyContexts.Profiles.create_ownership(profile_id, attrs)
 
     ownership
   end

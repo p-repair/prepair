@@ -19,9 +19,9 @@ defmodule PrepairWeb.ConnCase do
 
   import Plug.Conn
 
-  alias Prepair.Accounts
-  alias Prepair.Auth
-  alias Prepair.Auth.ApiKey
+  alias Prepair.LegacyContexts.Accounts
+  alias Prepair.LegacyContexts.Auth
+  alias Prepair.LegacyContexts.Auth.ApiKey
 
   using do
     quote do
@@ -88,8 +88,13 @@ defmodule PrepairWeb.ConnCase do
   end
 
   defp create_user() do
-    user_password = Prepair.AccountsFixtures.valid_user_password()
-    user = Prepair.AccountsFixtures.user_fixture(%{password: user_password})
+    user_password =
+      Prepair.LegacyContexts.AccountsFixtures.valid_user_password()
+
+    user =
+      Prepair.LegacyContexts.AccountsFixtures.user_fixture(%{
+        password: user_password
+      })
 
     %{user: user, user_password: user_password}
   end
@@ -100,7 +105,7 @@ defmodule PrepairWeb.ConnCase do
   It returns an updated `conn`.
   """
   def log_in_user(conn, user) do
-    token = Prepair.Accounts.generate_user_session_token(user)
+    token = Prepair.LegacyContexts.Accounts.generate_user_session_token(user)
 
     conn
     |> Phoenix.ConnTest.init_test_session(%{})

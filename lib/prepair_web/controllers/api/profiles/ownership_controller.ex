@@ -1,8 +1,8 @@
 defmodule PrepairWeb.Api.Profiles.OwnershipController do
   use PrepairWeb, :controller
 
-  alias Prepair.Profiles
-  alias Prepair.Profiles.Ownership
+  alias Prepair.LegacyContexts.Profiles
+  alias Prepair.LegacyContexts.Profiles.Ownership
   alias Prepair.Repo
 
   action_fallback PrepairWeb.Api.FallbackController

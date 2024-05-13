@@ -7,7 +7,7 @@ defmodule PrepairWeb.ApiAuth do
   import Phoenix.Controller
   import PrepairWeb.Gettext
 
-  alias Prepair.Auth
+  alias Prepair.LegacyContexts.Auth
 
   @doc """
   Checks that a valid API key is present in the request.

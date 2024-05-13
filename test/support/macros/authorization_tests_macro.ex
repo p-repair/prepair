@@ -1,7 +1,7 @@
 defmodule PrepairWeb.AuthorizationTestsMacro do
   use PrepairWeb.ConnCase
-  import Prepair.ProductsFixtures
-  import Prepair.ProfilesFixtures
+  import Prepair.LegacyContexts.ProductsFixtures
+  import Prepair.LegacyContexts.ProfilesFixtures
 
   # -------------------------------------------------------------------------- #
   # ------------------------------ TEST MACROS ------------------------------- #

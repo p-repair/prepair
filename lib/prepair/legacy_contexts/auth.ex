@@ -1,4 +1,4 @@
-defmodule Prepair.Auth do
+defmodule Prepair.LegacyContexts.Auth do
   @moduledoc """
   Context for authentication-related data.
   """
@@ -7,7 +7,7 @@ defmodule Prepair.Auth do
 
   alias Ecto.Changeset
   alias Prepair.Repo
-  alias Prepair.Auth.ApiKey
+  alias Prepair.LegacyContexts.Auth.ApiKey
 
   @doc """
   Returns the list of API keys by their name.

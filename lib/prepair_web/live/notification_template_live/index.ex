@@ -1,8 +1,8 @@
 defmodule PrepairWeb.NotificationTemplateLive.Index do
   use PrepairWeb, :live_view
 
-  alias Prepair.Notifications
-  alias Prepair.Notifications.NotificationTemplate
+  alias Prepair.LegacyContexts.Notifications
+  alias Prepair.LegacyContexts.Notifications.NotificationTemplate
   alias Prepair.Repo
   alias PrepairWeb.UserAuth
 

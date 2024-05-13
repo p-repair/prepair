@@ -1,4 +1,4 @@
-defmodule Prepair.Accounts do
+defmodule Prepair.LegacyContexts.Accounts do
   @moduledoc """
   The Accounts context.
   """
@@ -6,8 +6,14 @@ defmodule Prepair.Accounts do
   import Ecto.Query, warn: false
   alias Prepair.Repo
 
-  alias Prepair.Accounts.{Registration, User, UserToken, UserNotifier}
-  alias Prepair.Profiles
+  alias Prepair.LegacyContexts.Accounts.{
+    Registration,
+    User,
+    UserToken,
+    UserNotifier
+  }
+
+  alias Prepair.LegacyContexts.Profiles
 
   ## Database getters
 

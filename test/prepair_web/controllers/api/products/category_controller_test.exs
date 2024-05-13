@@ -1,11 +1,11 @@
 defmodule PrepairWeb.Api.Products.CategoryControllerTest do
   use PrepairWeb.ConnCase
 
-  import Prepair.NotificationsFixtures
-  import Prepair.ProductsFixtures
+  import Prepair.LegacyContexts.NotificationsFixtures
+  import Prepair.LegacyContexts.ProductsFixtures
   import PrepairWeb.AuthorizationTestsMacro
-  alias Prepair.Products
-  alias Prepair.Products.Category
+  alias Prepair.LegacyContexts.Products
+  alias Prepair.LegacyContexts.Products.Category
   alias PrepairWeb.Api.Products.CategoryJSON
 
   # NOTE: params needed for authorization tests macros
@@ -140,7 +140,7 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
 
       conn = get(conn, ~p"/api/v1/products/categories/#{id}")
 
-      category = Prepair.Products.get_category!(id)
+      category = Prepair.LegacyContexts.Products.get_category!(id)
 
       assert json_response(conn, 200)["data"] ==
                category |> to_normalised_json()
@@ -195,7 +195,7 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
 
       conn = get(conn, ~p"/api/v1/products/categories/#{id}")
 
-      category = Prepair.Products.get_category!(id)
+      category = Prepair.LegacyContexts.Products.get_category!(id)
 
       assert json_response(conn, 200)["data"] ==
                category |> to_normalised_json()

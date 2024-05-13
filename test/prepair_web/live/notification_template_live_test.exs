@@ -2,7 +2,7 @@ defmodule PrepairWeb.NotificationTemplateLiveTest do
   use PrepairWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import Prepair.NotificationsFixtures
+  import Prepair.LegacyContexts.NotificationsFixtures
 
   @create_attrs %{
     name: "some name",

@@ -1,4 +1,4 @@
-defmodule Prepair.Auth.ApiKey do
+defmodule Prepair.LegacyContexts.Auth.ApiKey do
   use TypedEctoSchema
 
   import Ecto.Changeset

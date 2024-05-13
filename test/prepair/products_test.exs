@@ -1,18 +1,18 @@
-defmodule Prepair.ProductsTest do
+defmodule Prepair.LegacyContexts.ProductsTest do
   use Prepair.DataCase
 
-  alias Prepair.Products
+  alias Prepair.LegacyContexts.Products
   alias Prepair.Repo
 
-  import Prepair.NotificationsFixtures
-  import Prepair.ProductsFixtures
+  import Prepair.LegacyContexts.NotificationsFixtures
+  import Prepair.LegacyContexts.ProductsFixtures
 
   @random_id_1 Ecto.UUID.generate()
   @random_id_2 Ecto.UUID.generate()
   @random_id_3 Ecto.UUID.generate()
 
   describe "manufacturers" do
-    alias Prepair.Products.Manufacturer
+    alias Prepair.LegacyContexts.Products.Manufacturer
 
     @invalid_attrs %{description: nil, image: nil, name: nil}
 
@@ -84,7 +84,7 @@ defmodule Prepair.ProductsTest do
   end
 
   describe "categories" do
-    alias Prepair.Products.Category
+    alias Prepair.LegacyContexts.Products.Category
 
     @invalid_attrs %{
       average_lifetime_m: nil,
@@ -187,7 +187,7 @@ defmodule Prepair.ProductsTest do
   end
 
   describe "products" do
-    alias Prepair.Products.Product
+    alias Prepair.LegacyContexts.Products.Product
 
     @invalid_attrs %{
       average_lifetime_m: nil,
@@ -516,7 +516,7 @@ defmodule Prepair.ProductsTest do
   end
 
   describe "parts" do
-    alias Prepair.Products.Part
+    alias Prepair.LegacyContexts.Products.Part
 
     @invalid_attrs %{
       average_lifetime_m: nil,

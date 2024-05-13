@@ -1,5 +1,5 @@
 defmodule PrepairWeb.Api.Products.ManufacturerJSON do
-  alias Prepair.Products.Manufacturer
+  alias Prepair.LegacyContexts.Products.Manufacturer
 
   @doc """
   Renders a list of manufacturers.

@@ -1,5 +1,5 @@
 defmodule PrepairWeb.Api.Products.CategoryJSON do
-  alias Prepair.Products.Category
+  alias Prepair.LegacyContexts.Products.Category
 
   @doc """
   Renders a list of categories.

@@ -1,11 +1,11 @@
-defmodule Prepair.AccountsTest do
+defmodule Prepair.LegacyContexts.AccountsTest do
   use Prepair.DataCase
 
-  alias Prepair.Accounts
-  alias Prepair.Accounts.{User, UserToken}
+  alias Prepair.LegacyContexts.Accounts
+  alias Prepair.LegacyContexts.Accounts.{User, UserToken}
 
-  import Prepair.AccountsFixtures
-  import Prepair.ProfilesFixtures
+  import Prepair.LegacyContexts.AccountsFixtures
+  import Prepair.LegacyContexts.ProfilesFixtures
 
   @random_id Ecto.UUID.generate()
 

@@ -1,7 +1,7 @@
 defmodule PrepairWeb.UserUpdatePasswordLive do
   use PrepairWeb, :live_view
 
-  alias Prepair.Accounts
+  alias Prepair.LegacyContexts.Accounts
 
   import Phoenix.HTML.Form
 

@@ -1,8 +1,8 @@
 defmodule PrepairWeb.PageController do
   use PrepairWeb, :controller
 
-  alias Prepair.Newsletter
-  alias Prepair.Newsletter.Contact
+  alias Prepair.LegacyContexts.Newsletter
+  alias Prepair.LegacyContexts.Newsletter.Contact
   alias Ecto.Changeset
 
   def home(conn, _params) do

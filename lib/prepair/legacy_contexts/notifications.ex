@@ -1,4 +1,4 @@
-defmodule Prepair.Notifications do
+defmodule Prepair.LegacyContexts.Notifications do
   @moduledoc """
   The Notifications context.
   """
@@ -6,8 +6,8 @@ defmodule Prepair.Notifications do
   import Ecto.Query, warn: false
   alias Prepair.Repo
 
-  alias Prepair.Notifications.NotificationTemplate
-  alias Prepair.Products
+  alias Prepair.LegacyContexts.Notifications.NotificationTemplate
+  alias Prepair.LegacyContexts.Products
 
   @doc """
   Returns a list of notification templates.
@@ -64,7 +64,7 @@ defmodule Prepair.Notifications do
       iex> list_products(random_filter: ["random value"])
       ** (Ecto.QueryError) lib/prepair/notifications.ex:51: field `random_filter` in
       `where` does not exist in schema
-      Prepair.Notifications.NotificationTemplates in query:
+      Prepair.LegacyContexts.Notifications.NotificationTemplates in query:
       ...
   """
   def list_notification_templates(filters \\ []) do

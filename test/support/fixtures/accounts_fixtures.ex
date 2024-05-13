@@ -1,9 +1,9 @@
-defmodule Prepair.AccountsFixtures do
+defmodule Prepair.LegacyContexts.AccountsFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `Prepair.Accounts` context.
+  entities via the `Prepair.LegacyContexts.Accounts` context.
   """
-  alias Prepair.ProfilesFixtures
+  alias Prepair.LegacyContexts.ProfilesFixtures
 
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
   def valid_user_password, do: "Hello world!#{System.unique_integer()}"
@@ -19,7 +19,9 @@ defmodule Prepair.AccountsFixtures do
     user_attrs = user_valid_attrs(u_attrs)
     profile_attrs = ProfilesFixtures.profile_valid_attrs(p_attrs)
 
-    {:ok, user} = Prepair.Accounts.register_user(user_attrs, profile_attrs)
+    {:ok, user} =
+      Prepair.LegacyContexts.Accounts.register_user(user_attrs, profile_attrs)
+
     user
   end
 

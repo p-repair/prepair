@@ -1,10 +1,10 @@
 defmodule PrepairWeb.UserUpdatePasswordLiveTest do
   use PrepairWeb.ConnCase
 
-  alias Prepair.Accounts
+  alias Prepair.LegacyContexts.Accounts
 
   import Phoenix.LiveViewTest
-  import Prepair.AccountsFixtures
+  import Prepair.LegacyContexts.AccountsFixtures
 
   describe "Update password page" do
     @tag :update_password_live

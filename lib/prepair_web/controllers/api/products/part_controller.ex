@@ -1,8 +1,8 @@
 defmodule PrepairWeb.Api.Products.PartController do
   use PrepairWeb, :controller
 
-  alias Prepair.Products
-  alias Prepair.Products.Part
+  alias Prepair.LegacyContexts.Products
+  alias Prepair.LegacyContexts.Products.Part
   alias Prepair.Repo
 
   action_fallback PrepairWeb.Api.FallbackController

@@ -1,7 +1,7 @@
 defmodule PrepairWeb.UserSessionController do
   use PrepairWeb, :controller
 
-  alias Prepair.Accounts
+  alias Prepair.LegacyContexts.Accounts
   alias PrepairWeb.UserAuth
 
   def create(conn, %{"_action" => "registered"} = params) do

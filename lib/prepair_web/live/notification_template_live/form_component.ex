@@ -1,8 +1,8 @@
 defmodule PrepairWeb.NotificationTemplateLive.FormComponent do
   use PrepairWeb, :live_component
 
-  alias Prepair.Notifications
-  alias Prepair.Products
+  alias Prepair.LegacyContexts.Notifications
+  alias Prepair.LegacyContexts.Products
 
   @impl true
   def render(assigns) do

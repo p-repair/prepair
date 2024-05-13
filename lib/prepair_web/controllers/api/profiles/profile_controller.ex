@@ -1,8 +1,8 @@
 defmodule PrepairWeb.Api.Profiles.ProfileController do
   use PrepairWeb, :controller
 
-  alias Prepair.Profiles
-  alias Prepair.Profiles.Profile
+  alias Prepair.LegacyContexts.Profiles
+  alias Prepair.LegacyContexts.Profiles.Profile
   alias Prepair.Repo
 
   action_fallback PrepairWeb.Api.FallbackController

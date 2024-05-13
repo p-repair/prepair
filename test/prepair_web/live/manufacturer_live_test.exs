@@ -2,7 +2,7 @@ defmodule PrepairWeb.ManufacturerLiveTest do
   use PrepairWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import Prepair.ProductsFixtures
+  import Prepair.LegacyContexts.ProductsFixtures
 
   @update_attrs %{
     description: "some updated description",
