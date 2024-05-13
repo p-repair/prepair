@@ -10,7 +10,7 @@ defmodule PrepairWeb.ProductLive.FormComponent do
       <.header>
         <%= @title %>
         <:subtitle>
-          <%= gettext "Use this form to manage product records in your database." %>
+          <%= gettext("Use this form to manage product records in your database.") %>
         </:subtitle>
       </.header>
 
@@ -21,24 +21,50 @@ defmodule PrepairWeb.ProductLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:category_id]}
+        <.input
+          field={@form[:category_id]}
           type="select"
           options={category_opts(@changeset)}
-          label={gettext "Category"} />
-        <.input field={@form[:manufacturer_id]}
+          label={gettext("Category")}
+        />
+        <.input
+          field={@form[:manufacturer_id]}
           type="select"
           options={manufacturer_opts(@changeset)}
-          label={gettext "Manufacturer"} />
-        <.input field={@form[:name]} type="text" label={gettext "Name"} />
-        <.input field={@form[:reference]} type="text" label={gettext "Reference"} />
-        <.input field={@form[:description]} type="text" label={gettext "Description"} />
-        <.input field={@form[:image]} type="text" label={gettext "Image"} />
-        <.input field={@form[:average_lifetime_m]} type="number" label={gettext "Average lifetime m"} />
-        <.input field={@form[:country_of_origin]} type="text" label={gettext "Country of origin"} />
-        <.input field={@form[:start_of_production]} type="date" label={gettext "Start of production"} />
-        <.input field={@form[:end_of_production]} type="date" label={gettext "End of production"} />
+          label={gettext("Manufacturer")}
+        />
+        <.input field={@form[:name]} type="text" label={gettext("Name")} />
+        <.input field={@form[:reference]} type="text" label={gettext("Reference")} />
+        <.input
+          field={@form[:description]}
+          type="text"
+          label={gettext("Description")}
+        />
+        <.input field={@form[:image]} type="text" label={gettext("Image")} />
+        <.input
+          field={@form[:average_lifetime_m]}
+          type="number"
+          label={gettext("Average lifetime m")}
+        />
+        <.input
+          field={@form[:country_of_origin]}
+          type="text"
+          label={gettext("Country of origin")}
+        />
+        <.input
+          field={@form[:start_of_production]}
+          type="date"
+          label={gettext("Start of production")}
+        />
+        <.input
+          field={@form[:end_of_production]}
+          type="date"
+          label={gettext("End of production")}
+        />
         <:actions>
-          <.button phx-disable-with={gettext "Saving..."}><%= gettext "Save Product" %></.button>
+          <.button phx-disable-with={gettext("Saving...")}>
+            <%= gettext("Save Product") %>
+          </.button>
         </:actions>
       </.simple_form>
     </div>

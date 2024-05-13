@@ -9,7 +9,11 @@ defmodule PrepairWeb.ManufacturerLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle><%= gettext "Use this form to manage manufacturer records in your database."%></:subtitle>
+        <:subtitle>
+          <%= gettext(
+            "Use this form to manage manufacturer records in your database."
+          ) %>
+        </:subtitle>
       </.header>
 
       <.simple_form
@@ -19,11 +23,17 @@ defmodule PrepairWeb.ManufacturerLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label={gettext "Name"} />
-        <.input field={@form[:description]} type="text" label={gettext "Description"} />
-        <.input field={@form[:image]} type="text" label={gettext "Image"} />
+        <.input field={@form[:name]} type="text" label={gettext("Name")} />
+        <.input
+          field={@form[:description]}
+          type="text"
+          label={gettext("Description")}
+        />
+        <.input field={@form[:image]} type="text" label={gettext("Image")} />
         <:actions>
-          <.button phx-disable-with={gettext "Saving..."}><%= gettext "Save Manufacturer" %></.button>
+          <.button phx-disable-with={gettext("Saving...")}>
+            <%= gettext("Save Manufacturer") %>
+          </.button>
         </:actions>
       </.simple_form>
     </div>

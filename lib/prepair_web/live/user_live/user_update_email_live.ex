@@ -10,15 +10,14 @@ defmodule PrepairWeb.UserUpdateEmailLive do
     ~H"""
     <div class="mx-auto max-w-sm">
       <.header class="text-center">
-        <%= gettext "Update your email address" %>
+        <%= gettext("Update your email address") %>
 
         <:actions>
           <.link patch={~p"/"}>
-            <.button><%= gettext "Go Back Home" %></.button>
+            <.button><%= gettext("Go Back Home") %></.button>
           </.link>
         </:actions>
       </.header>
-
 
       <.simple_form
         for={@form}
@@ -27,39 +26,40 @@ defmodule PrepairWeb.UserUpdateEmailLive do
         phx-change="validate"
       >
         <.error :if={@check_errors}>
-          <%= gettext "Oops, something went wrong! Please check the errors below." %>
+          <%= gettext("Oops, something went wrong! Please check the errors below.") %>
         </.error>
 
-        <div class = "text-sm leading-7">
-          <b>Current email</b><br />
+        <div class="text-sm leading-7">
+          <b>Current email</b> <br />
           <%= @current_email %>
-          </div>
-
+        </div>
 
         <.input
           field={@form[:current_password]}
           type="password"
-          label={gettext "Password"}
+          label={gettext("Password")}
           required
         />
 
         <.input
           field={@form[:email]}
           type="email"
-          label={gettext "New email"}
+          label={gettext("New email")}
           required
         />
 
         <.input
           field={@form[:email_confirmation]}
           type="email"
-          label={gettext "New email confirmation"}
+          label={gettext("New email confirmation")}
           value={input_value(@form, :email_confirmation)}
           required
         />
 
         <:actions>
-          <.button phx-disable-with={gettext "Updating email..."} class="w-full"><%= gettext "Update email" %></.button>
+          <.button phx-disable-with={gettext("Updating email...")} class="w-full">
+            <%= gettext("Update email") %>
+          </.button>
         </:actions>
       </.simple_form>
     </div>

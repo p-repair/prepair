@@ -11,13 +11,16 @@ defmodule PrepairWeb.UserRegistrationLive do
     ~H"""
     <div class="mx-auto max-w-sm">
       <.header class="text-center">
-        <%= gettext "Register for an account" %>
+        <%= gettext("Register for an account") %>
         <:subtitle>
-          <%= gettext "Already registered?" %>
-          <.link navigate={~p"/users/log_in"} class="font-semibold text-brand hover:underline">
-            <%= gettext "Sign in" %>
+          <%= gettext("Already registered?") %>
+          <.link
+            navigate={~p"/users/log_in"}
+            class="font-semibold text-brand hover:underline"
+          >
+            <%= gettext("Sign in") %>
           </.link>
-          <%= gettext "to your account now." %>
+          <%= gettext("to your account now.") %>
         </:subtitle>
       </.header>
 
@@ -31,27 +34,27 @@ defmodule PrepairWeb.UserRegistrationLive do
         method="post"
       >
         <.error :if={@check_errors}>
-          <%= gettext "Oops, something went wrong! Please check the errors below." %>
+          <%= gettext("Oops, something went wrong! Please check the errors below.") %>
         </.error>
 
         <.input
           field={@form[:username]}
           type="text"
-          label={gettext "Username"}
+          label={gettext("Username")}
           required
         />
 
         <.input
           field={@form[:email]}
           type="email"
-          label={gettext "Email"}
+          label={gettext("Email")}
           required
         />
 
         <.input
           field={@form[:password]}
           type="password"
-          label={gettext "Password"}
+          label={gettext("Password")}
           value={input_value(@form, :password)}
           required
         />
@@ -59,14 +62,14 @@ defmodule PrepairWeb.UserRegistrationLive do
         <.input
           field={@form[:password_confirmation]}
           type="password"
-          label={gettext "Password confirmation"}
+          label={gettext("Password confirmation")}
           value={input_value(@form, :password_confirmation)}
           required
         />
 
         <.input
           field={@form[:people_in_household]}
-          label={gettext "People in household"}
+          label={gettext("People in household")}
           type="select"
           options={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
           required
@@ -75,11 +78,13 @@ defmodule PrepairWeb.UserRegistrationLive do
         <.input
           field={@form[:newsletter]}
           type="checkbox"
-          label={gettext "I want to subscribe to the newsletter"}
+          label={gettext("I want to subscribe to the newsletter")}
         />
 
         <:actions>
-          <.button phx-disable-with={gettext "Creating account..."} class="w-full"><%= gettext "Create an account" %></.button>
+          <.button phx-disable-with={gettext("Creating account...")} class="w-full">
+            <%= gettext("Create an account") %>
+          </.button>
         </:actions>
       </.simple_form>
     </div>

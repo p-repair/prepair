@@ -9,15 +9,14 @@ defmodule PrepairWeb.UserUpdatePasswordLive do
     ~H"""
     <div class="mx-auto max-w-sm">
       <.header class="text-center">
-        <%= gettext "Update your password" %>
+        <%= gettext("Update your password") %>
 
         <:actions>
           <.link patch={~p"/"}>
-            <.button><%= gettext "Go Back Home" %></.button>
+            <.button><%= gettext("Go Back Home") %></.button>
           </.link>
         </:actions>
       </.header>
-
 
       <.simple_form
         for={@form}
@@ -29,27 +28,27 @@ defmodule PrepairWeb.UserUpdatePasswordLive do
         phx-trigger-action={@trigger_submit}
       >
         <.error :if={@check_errors}>
-          <%= gettext "Oops, something went wrong! Please check the errors below." %>
+          <%= gettext("Oops, something went wrong! Please check the errors below.") %>
         </.error>
 
         <.input
-            field={@form[:email]}
-            type="hidden"
-            id="hidden_user_email"
-            value={@current_email}
-          />
+          field={@form[:email]}
+          type="hidden"
+          id="hidden_user_email"
+          value={@current_email}
+        />
 
         <.input
           field={@form[:current_password]}
           type="password"
-          label={gettext "Current password"}
+          label={gettext("Current password")}
           required
         />
 
         <.input
           field={@form[:password]}
           type="password"
-          label={gettext "New password"}
+          label={gettext("New password")}
           value={input_value(@form, :password)}
           required
         />
@@ -57,13 +56,15 @@ defmodule PrepairWeb.UserUpdatePasswordLive do
         <.input
           field={@form[:password_confirmation]}
           type="password"
-          label={gettext "New password confirmation"}
+          label={gettext("New password confirmation")}
           value={input_value(@form, :password_confirmation)}
           required
         />
 
         <:actions>
-          <.button phx-disable-with={gettext "Updating password..."} class="w-full"><%= gettext "Update password" %></.button>
+          <.button phx-disable-with={gettext("Updating password...")} class="w-full">
+            <%= gettext("Update password") %>
+          </.button>
         </:actions>
       </.simple_form>
     </div>

@@ -10,7 +10,7 @@ defmodule PrepairWeb.ProfileLive.FormComponent do
       <.header>
         <%= @title %>
         <:subtitle>
-          <%= gettext "Use this form to manage profile records in your database." %>
+          <%= gettext("Use this form to manage profile records in your database.") %>
         </:subtitle>
       </.header>
 
@@ -21,12 +21,24 @@ defmodule PrepairWeb.ProfileLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:username]} type="text" label={gettext "Username"} />
-        <.input field={@form[:people_in_household]} type="number" label={gettext "People in household"} />
-        <.input field={@form[:newsletter]} type="checkbox" label={gettext "Newsletter"} />
+        <.input field={@form[:username]} type="text" label={gettext("Username")} />
+        <.input
+          field={@form[:people_in_household]}
+          type="number"
+          label={gettext("People in household")}
+        />
+        <.input
+          field={@form[:newsletter]}
+          type="checkbox"
+          label={gettext("Newsletter")}
+        />
         <:actions>
-          <.button phx-disable-with={gettext "Saving..."}><%= gettext "Save Profile" %></.button>
-          <.back navigate={~p"/profiles/#{@profile}"}><%= gettext "Back to profile" %></.back>
+          <.button phx-disable-with={gettext("Saving...")}>
+            <%= gettext("Save Profile") %>
+          </.button>
+          <.back navigate={~p"/profiles/#{@profile}"}>
+            <%= gettext("Back to profile") %>
+          </.back>
         </:actions>
       </.simple_form>
     </div>

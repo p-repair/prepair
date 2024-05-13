@@ -1,8 +1,8 @@
 <.header>
-  <%= gettext "Listing Profiles" %>
+  <%= gettext("Listing Profiles") %>
   <:actions>
     <.link patch={~p"/"}>
-      <.button><%= gettext "Go Back Home" %></.button>
+      <.button><%= gettext("Go Back Home") %></.button>
     </.link>
   </:actions>
 </.header>
@@ -12,28 +12,43 @@
   rows={@streams.profiles}
   row_click={fn {_id, profile} -> JS.navigate(~p"/profiles/#{profile}") end}
 >
-  <:col :let={{_id, profile}} label={gettext "Username"}><%= profile.username %></:col>
-  <:col :let={{_id, profile}} label={gettext "User email"}><%= profile.user.email %></:col>
-  <:col :let={{_id, profile}} label={gettext "User role"}><%= profile.user.role %></:col>
-  <:col :let={{_id, profile}} label={gettext "Newsletter"}><%= profile.newsletter %></:col>
-  <:col :let={{_id, profile}} label={gettext "Created at"}><%= profile.inserted_at %></:col>
+  <:col :let={{_id, profile}} label={gettext("Username")}>
+    <%= profile.username %>
+  </:col>
+  <:col :let={{_id, profile}} label={gettext("User email")}>
+    <%= profile.user.email %>
+  </:col>
+  <:col :let={{_id, profile}} label={gettext("User role")}>
+    <%= profile.user.role %>
+  </:col>
+  <:col :let={{_id, profile}} label={gettext("Newsletter")}>
+    <%= profile.newsletter %>
+  </:col>
+  <:col :let={{_id, profile}} label={gettext("Created at")}>
+    <%= profile.inserted_at %>
+  </:col>
   <:action :let={{_id, profile}}>
     <div class="sr-only">
-      <.link navigate={~p"/profiles/#{profile}"}><%= gettext "Show" %></.link>
+      <.link navigate={~p"/profiles/#{profile}"}><%= gettext("Show") %></.link>
     </div>
-    <.link patch={~p"/profiles/#{profile}/edit"}><%= gettext "Edit" %></.link>
+    <.link patch={~p"/profiles/#{profile}/edit"}><%= gettext("Edit") %></.link>
   </:action>
   <:action :let={{id, profile}}>
     <.link
       phx-click={JS.push("delete", value: %{id: profile.id}) |> hide("##{id}")}
-      data-confirm={gettext "Are you sure?"}
+      data-confirm={gettext("Are you sure?")}
     >
-      <%= gettext "Delete" %>
+      <%= gettext("Delete") %>
     </.link>
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:edit]} id="profile-modal" show on_cancel={JS.patch(~p"/profiles")}>
+<.modal
+  :if={@live_action in [:edit]}
+  id="profile-modal"
+  show
+  on_cancel={JS.patch(~p"/profiles")}
+>
   <.live_component
     module={PrepairWeb.ProfileLive.FormComponent}
     id={@profile.id || :new}

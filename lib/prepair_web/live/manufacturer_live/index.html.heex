@@ -1,8 +1,8 @@
 <.header>
-  <%= gettext "Listing Manufacturers" %>
+  <%= gettext("Listing Manufacturers") %>
   <:actions>
     <.link patch={~p"/manufacturers/new"}>
-      <.button><%= gettext "New Manufacturer" %></.button>
+      <.button><%= gettext("New Manufacturer") %></.button>
     </.link>
   </:actions>
 </.header>
@@ -10,32 +10,53 @@
 <.table
   id="manufacturers"
   rows={@streams.manufacturers}
-  row_click={fn {_id, manufacturer} -> JS.navigate(~p"/manufacturers/#{manufacturer}") end}
+  row_click={
+    fn {_id, manufacturer} ->
+      JS.navigate(~p"/manufacturers/#{manufacturer}")
+    end
+  }
 >
-  <:col :let={{_id, manufacturer}} label={gettext "Name"}><%= manufacturer.name %></:col>
-  <:col :let={{_id, manufacturer}} label={gettext "Description"}><%= manufacturer.description %></:col>
-  <:col :let={{_id, manufacturer}} label={gettext "Image"}><%= manufacturer.image %></:col>
+  <:col :let={{_id, manufacturer}} label={gettext("Name")}>
+    <%= manufacturer.name %>
+  </:col>
+  <:col :let={{_id, manufacturer}} label={gettext("Description")}>
+    <%= manufacturer.description %>
+  </:col>
+  <:col :let={{_id, manufacturer}} label={gettext("Image")}>
+    <%= manufacturer.image %>
+  </:col>
   <:action :let={{_id, manufacturer}}>
     <div class="sr-only">
-      <.link navigate={~p"/manufacturers/#{manufacturer}"}><%= gettext "Show" %></.link>
+      <.link navigate={~p"/manufacturers/#{manufacturer}"}>
+        <%= gettext("Show") %>
+      </.link>
     </div>
     <%= if @current_user.role == :admin do %>
-      <.link patch={~p"/manufacturers/#{manufacturer}/edit"}><%= gettext "Edit" %></.link>
+      <.link patch={~p"/manufacturers/#{manufacturer}/edit"}>
+        <%= gettext("Edit") %>
+      </.link>
     <% end %>
   </:action>
   <:action :let={{id, manufacturer}}>
-  <%= if @current_user.role == :admin do %>
-    <.link
-      phx-click={JS.push("delete", value: %{id: manufacturer.id}) |> hide("##{id}")}
-      data-confirm={gettext "Are you sure?"}
-    >
-      <%= gettext "Delete" %>
-    </.link>
-  <% end %>
+    <%= if @current_user.role == :admin do %>
+      <.link
+        phx-click={
+          JS.push("delete", value: %{id: manufacturer.id}) |> hide("##{id}")
+        }
+        data-confirm={gettext("Are you sure?")}
+      >
+        <%= gettext("Delete") %>
+      </.link>
+    <% end %>
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="manufacturer-modal" show on_cancel={JS.patch(~p"/manufacturers")}>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="manufacturer-modal"
+  show
+  on_cancel={JS.patch(~p"/manufacturers")}
+>
   <.live_component
     module={PrepairWeb.ManufacturerLive.FormComponent}
     id={@manufacturer.id || :new}

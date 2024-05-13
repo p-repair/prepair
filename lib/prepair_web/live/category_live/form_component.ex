@@ -10,7 +10,7 @@ defmodule PrepairWeb.CategoryLive.FormComponent do
       <.header>
         <%= @title %>
         <:subtitle>
-          <%= gettext "Use this form to manage category records in your database."%>
+          <%= gettext("Use this form to manage category records in your database.") %>
         </:subtitle>
       </.header>
 
@@ -21,12 +21,22 @@ defmodule PrepairWeb.CategoryLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label={gettext "Name"} />
-        <.input field={@form[:description]} type="text" label={gettext "Description"} />
-        <.input field={@form[:image]} type="text" label={gettext "Image"} />
-        <.input field={@form[:average_lifetime_m]} type="number" label={gettext "Average lifetime m"} />
+        <.input field={@form[:name]} type="text" label={gettext("Name")} />
+        <.input
+          field={@form[:description]}
+          type="text"
+          label={gettext("Description")}
+        />
+        <.input field={@form[:image]} type="text" label={gettext("Image")} />
+        <.input
+          field={@form[:average_lifetime_m]}
+          type="number"
+          label={gettext("Average lifetime m")}
+        />
         <:actions>
-          <.button phx-disable-with={gettext "Saving..."}><%= gettext "Save Category" %></.button>
+          <.button phx-disable-with={gettext("Saving...")}>
+            <%= gettext("Save Category") %>
+          </.button>
         </:actions>
       </.simple_form>
     </div>

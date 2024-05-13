@@ -1,8 +1,8 @@
 <.header>
-  <%= gettext "Listing Public Ownerships" %>
+  <%= gettext("Listing Public Ownerships") %>
   <:actions>
     <.link patch={~p"/ownerships/new"}>
-      <.button><%= gettext "New Ownership" %></.button>
+      <.button><%= gettext("New Ownership") %></.button>
     </.link>
   </:actions>
 </.header>
@@ -10,31 +10,56 @@
 <.table
   id="ownerships"
   rows={@streams.ownerships}
-  row_click={fn {_id, ownership} -> JS.navigate(~p"/ownerships/#{ownership}") end}
+  row_click={
+    fn {_id, ownership} -> JS.navigate(~p"/ownerships/#{ownership}") end
+  }
 >
-  <:col :let={{_id, ownership}} label={gettext "Product name"}><%= ownership.product.name %></:col>
-  <:col :let={{_id, ownership}} label={gettext "Username"}><%= ownership.profile.username %></:col>
-  <:col :let={{_id, ownership}} label={gettext "Date of purchase"}><%= ownership.date_of_purchase %></:col>
-  <:col :let={{_id, ownership}} label={gettext "Warranty duration m"}><%= ownership.warranty_duration_m %></:col>
-  <:col :let={{_id, ownership}} label={gettext "Price of purchase"}><%= ownership.price_of_purchase %></:col>
-  <:col :let={{_id, ownership}} label={gettext "Public"}><%= ownership.public %></:col>
+  <:col :let={{_id, ownership}} label={gettext("Product name")}>
+    <%= ownership.product.name %>
+  </:col>
+  <:col :let={{_id, ownership}} label={gettext("Username")}>
+    <%= ownership.profile.username %>
+  </:col>
+  <:col :let={{_id, ownership}} label={gettext("Date of purchase")}>
+    <%= ownership.date_of_purchase %>
+  </:col>
+  <:col :let={{_id, ownership}} label={gettext("Warranty duration m")}>
+    <%= ownership.warranty_duration_m %>
+  </:col>
+  <:col :let={{_id, ownership}} label={gettext("Price of purchase")}>
+    <%= ownership.price_of_purchase %>
+  </:col>
+  <:col :let={{_id, ownership}} label={gettext("Public")}>
+    <%= ownership.public %>
+  </:col>
   <:action :let={{_id, ownership}}>
     <div class="sr-only">
-      <.link navigate={~p"/ownerships/#{ownership}"}><%= gettext "Show" %></.link>
+      <.link navigate={~p"/ownerships/#{ownership}"}>
+        <%= gettext("Show") %>
+      </.link>
     </div>
-    <.link patch={~p"/ownerships/#{ownership}/edit"}><%= gettext "Edit" %></.link>
+    <.link patch={~p"/ownerships/#{ownership}/edit"}>
+      <%= gettext("Edit") %>
+    </.link>
   </:action>
   <:action :let={{id, ownership}}>
     <.link
-      phx-click={JS.push("delete", value: %{id: ownership.id}) |> hide("##{id}")}
-      data-confirm={gettext "Are you sure?"}
+      phx-click={
+        JS.push("delete", value: %{id: ownership.id}) |> hide("##{id}")
+      }
+      data-confirm={gettext("Are you sure?")}
     >
-      <%= gettext "Delete" %>
+      <%= gettext("Delete") %>
     </.link>
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="ownership-modal" show on_cancel={JS.patch(~p"/ownerships")}>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="ownership-modal"
+  show
+  on_cancel={JS.patch(~p"/ownerships")}
+>
   <.live_component
     module={PrepairWeb.OwnershipLive.FormComponent}
     id={@ownership.id || :new}

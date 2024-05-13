@@ -7,7 +7,11 @@
   </:actions>
 </.header>
 
-<.table id="contacts" rows={@contacts} row_click={&JS.navigate(~p"/contacts/#{&1}")}>
+<.table
+  id="contacts"
+  rows={@contacts}
+  row_click={&JS.navigate(~p"/contacts/#{&1}")}
+>
   <:col :let={contact} label="Email"><%= contact.email %></:col>
   <:col :let={contact} label="Lang"><%= contact.lang %></:col>
   <:col :let={contact} label="Mailerlite ID"><%= contact.mailerlite_id %></:col>
@@ -18,7 +22,11 @@
     <.link navigate={~p"/contacts/#{contact}/edit"}>Edit</.link>
   </:action>
   <:action :let={contact}>
-    <.link href={~p"/contacts/#{contact}"} method="delete" data-confirm="Are you sure?">
+    <.link
+      href={~p"/contacts/#{contact}"}
+      method="delete"
+      data-confirm="Are you sure?"
+    >
       Delete
     </.link>
   </:action>

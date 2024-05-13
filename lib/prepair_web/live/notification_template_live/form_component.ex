@@ -11,7 +11,9 @@ defmodule PrepairWeb.NotificationTemplateLive.FormComponent do
       <.header>
         <%= @title %>
         <:subtitle>
-          <%= gettext "Use this form to manage notification_template records in your database." %>
+          <%= gettext(
+            "Use this form to manage notification_template records in your database."
+          ) %>
         </:subtitle>
       </.header>
 
@@ -22,36 +24,46 @@ defmodule PrepairWeb.NotificationTemplateLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label={gettext "Name"} />
-        <.input field={@form[:title]} type="text" label={gettext "Title"} />
-        <.input field={@form[:content]} type="text" label={gettext "Content"} />
-        <.input field={@form[:description]} type="text" label={gettext "Description"} />
+        <.input field={@form[:name]} type="text" label={gettext("Name")} />
+        <.input field={@form[:title]} type="text" label={gettext("Title")} />
+        <.input field={@form[:content]} type="text" label={gettext("Content")} />
+        <.input
+          field={@form[:description]}
+          type="text"
+          label={gettext("Description")}
+        />
         <.input
           field={@form[:category_ids]}
-          label={gettext "Categories"}
+          label={gettext("Categories")}
           type="select"
           multiple={true}
           options={categories_opts(@form)}
         />
         <.input
           field={@form[:product_ids]}
-          label={gettext "Products"}
+          label={gettext("Products")}
           type="select"
           multiple={true}
           options={products_opts(@form)}
         />
         <.input
           field={@form[:part_ids]}
-          label={gettext "Parts"}
+          label={gettext("Parts")}
           type="select"
           multiple={true}
           options={parts_opts(@form)}
         />
-        <.input field={@form[:condition]} type="text" label={gettext "Condition"} />
-        <.input field={@form[:need_action]} type="checkbox" label={gettext "User action needed"} />
-        <.input field={@form[:draft]} type="checkbox" label={gettext "Draft"} />
+        <.input field={@form[:condition]} type="text" label={gettext("Condition")} />
+        <.input
+          field={@form[:need_action]}
+          type="checkbox"
+          label={gettext("User action needed")}
+        />
+        <.input field={@form[:draft]} type="checkbox" label={gettext("Draft")} />
         <:actions>
-          <.button phx-disable-with={gettext "Saving..."}><%= gettext "Save Notification template" %></.button>
+          <.button phx-disable-with={gettext("Saving...")}>
+            <%= gettext("Save Notification template") %>
+          </.button>
         </:actions>
       </.simple_form>
     </div>

@@ -11,7 +11,9 @@ defmodule PrepairWeb.OwnershipLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle><%=gettext "Use this form to manage ownership records in your database." %></:subtitle>
+        <:subtitle>
+          <%= gettext("Use this form to manage ownership records in your database.") %>
+        </:subtitle>
       </.header>
 
       <.simple_form
@@ -23,31 +25,47 @@ defmodule PrepairWeb.OwnershipLive.FormComponent do
       >
         <.input
           field={@form[:category_id]}
-          label={gettext "Category"}
+          label={gettext("Category")}
           type="select"
-          prompt={gettext "Please select a category"}
+          prompt={gettext("Please select a category")}
           options={category_opts(@changeset)}
         />
         <.input
           field={@form[:manufacturer_id]}
-          label={gettext "Manufacturer"}
+          label={gettext("Manufacturer")}
           type="select"
-          prompt={gettext "Please select a manufacturer"}
+          prompt={gettext("Please select a manufacturer")}
           options={manufacturer_opts(@changeset)}
         />
         <.input
           field={@form[:product_id]}
-          label={gettext "Product name"}
+          label={gettext("Product name")}
           type="select"
-          prompt={gettext "Please select a product (filter by category and manufacturer)"}
+          prompt={
+            gettext("Please select a product (filter by category and manufacturer)")
+          }
           options={product_opts(@form.params, @changeset)}
         />
-        <.input field={@form[:date_of_purchase]} type="date" label={gettext "Date of purchase"} />
-        <.input field={@form[:warranty_duration_m]} type="number" label={gettext "Warranty duration (in months)"} />
-        <.input field={@form[:price_of_purchase]} type="number" label={gettext "Price of purchase"} />
-        <.input field={@form[:public]} type="checkbox" label={gettext "Public"} />
+        <.input
+          field={@form[:date_of_purchase]}
+          type="date"
+          label={gettext("Date of purchase")}
+        />
+        <.input
+          field={@form[:warranty_duration_m]}
+          type="number"
+          label={gettext("Warranty duration (in months)")}
+        />
+        <.input
+          field={@form[:price_of_purchase]}
+          type="number"
+          label={gettext("Price of purchase")}
+        />
+        <.input field={@form[:public]} type="checkbox" label={gettext("Public")} />
         <:actions>
-          <.button phx-disable-with={gettext "Saving..."}><%=gettext "Save Ownership" %></.button>
+          <.button phx-disable-with={gettext("Saving...")}>
+            <%= gettext("Save Ownership") %>
+          </.button>
         </:actions>
       </.simple_form>
     </div>

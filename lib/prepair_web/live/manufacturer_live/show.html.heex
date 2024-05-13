@@ -1,24 +1,36 @@
 <.header>
-  <%= gettext "Manufacturer" %><%= @manufacturer.id %>
-  <:subtitle><%= gettext "This is a manufacturer record from your database." %></:subtitle>
+  <%= gettext("Manufacturer") %><%= @manufacturer.id %>
+  <:subtitle>
+    <%= gettext("This is a manufacturer record from your database.") %>
+  </:subtitle>
   <:actions>
-  <%= if @current_user.role == :admin do %>
-    <.link patch={~p"/manufacturers/#{@manufacturer}/show/edit"} phx-click={JS.push_focus()}>
-      <.button><%= gettext "Edit manufacturer" %></.button>
-    </.link>
-  <% end %>
+    <%= if @current_user.role == :admin do %>
+      <.link
+        patch={~p"/manufacturers/#{@manufacturer}/show/edit"}
+        phx-click={JS.push_focus()}
+      >
+        <.button><%= gettext("Edit manufacturer") %></.button>
+      </.link>
+    <% end %>
   </:actions>
 </.header>
 
 <.list>
-  <:item title={gettext "Name"}><%= @manufacturer.name %></:item>
-  <:item title={gettext "Description"}><%= @manufacturer.description %></:item>
-  <:item title={gettext "Image"}><%= @manufacturer.image %></:item>
+  <:item title={gettext("Name")}><%= @manufacturer.name %></:item>
+  <:item title={gettext("Description")}><%= @manufacturer.description %></:item>
+  <:item title={gettext("Image")}><%= @manufacturer.image %></:item>
 </.list>
 
-<.back navigate={~p"/manufacturers"}><%= gettext "Back to manufacturers" %></.back>
+<.back navigate={~p"/manufacturers"}>
+  <%= gettext("Back to manufacturers") %>
+</.back>
 
-<.modal :if={@live_action == :edit} id="manufacturer-modal" show on_cancel={JS.patch(~p"/manufacturers/#{@manufacturer}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="manufacturer-modal"
+  show
+  on_cancel={JS.patch(~p"/manufacturers/#{@manufacturer}")}
+>
   <.live_component
     module={PrepairWeb.ManufacturerLive.FormComponent}
     id={@manufacturer.id}

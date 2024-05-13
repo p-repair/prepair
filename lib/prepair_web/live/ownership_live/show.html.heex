@@ -1,25 +1,41 @@
 <.header>
-  <%= gettext "Ownership" %><%= @ownership.id %>
-  <:subtitle><%= gettext "This is an ownership record from your database." %></:subtitle>
+  <%= gettext("Ownership") %><%= @ownership.id %>
+  <:subtitle>
+    <%= gettext("This is an ownership record from your database.") %>
+  </:subtitle>
   <:actions>
-    <.link patch={~p"/ownerships/#{@ownership}/show/edit"} phx-click={JS.push_focus()}>
-      <.button><%= gettext "Edit ownership" %></.button>
+    <.link
+      patch={~p"/ownerships/#{@ownership}/show/edit"}
+      phx-click={JS.push_focus()}
+    >
+      <.button><%= gettext("Edit ownership") %></.button>
     </.link>
   </:actions>
 </.header>
 
 <.list>
-  <:item title={gettext "Product name"}><%= @ownership.product.name %></:item>
-  <:item title={gettext "Username"}><%= @ownership.profile.username %></:item>
-  <:item title={gettext "Date of purchase"}><%= @ownership.date_of_purchase %></:item>
-  <:item title={gettext "Warranty duration m"}><%= @ownership.warranty_duration_m %></:item>
-  <:item title={gettext "Price of purchase"}><%= @ownership.price_of_purchase %></:item>
-  <:item title={gettext "Public"}><%= @ownership.public %></:item>
+  <:item title={gettext("Product name")}><%= @ownership.product.name %></:item>
+  <:item title={gettext("Username")}><%= @ownership.profile.username %></:item>
+  <:item title={gettext("Date of purchase")}>
+    <%= @ownership.date_of_purchase %>
+  </:item>
+  <:item title={gettext("Warranty duration m")}>
+    <%= @ownership.warranty_duration_m %>
+  </:item>
+  <:item title={gettext("Price of purchase")}>
+    <%= @ownership.price_of_purchase %>
+  </:item>
+  <:item title={gettext("Public")}><%= @ownership.public %></:item>
 </.list>
 
-<.back navigate={~p"/ownerships"}><%= gettext "Back to ownerships" %></.back>
+<.back navigate={~p"/ownerships"}><%= gettext("Back to ownerships") %></.back>
 
-<.modal :if={@live_action == :edit} id="ownership-modal" show on_cancel={JS.patch(~p"/ownerships/#{@ownership}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="ownership-modal"
+  show
+  on_cancel={JS.patch(~p"/ownerships/#{@ownership}")}
+>
   <.live_component
     module={PrepairWeb.OwnershipLive.FormComponent}
     id={@ownership.id}

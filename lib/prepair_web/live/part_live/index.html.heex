@@ -1,8 +1,8 @@
 <.header>
-  <%= gettext "Listing Parts" %>
+  <%= gettext("Listing Parts") %>
   <:actions>
     <.link patch={~p"/parts/new"}>
-      <.button><%= gettext "New Part" %></.button>
+      <.button><%= gettext("New Part") %></.button>
     </.link>
   </:actions>
 </.header>
@@ -12,36 +12,55 @@
   rows={@streams.parts}
   row_click={fn {_id, part} -> JS.navigate(~p"/parts/#{part}") end}
 >
-  <:col :let={{_id, part}} label={gettext "Name"}><%= part.name %></:col>
-  <:col :let={{_id, part}} label={gettext "Reference"}><%= part.reference %></:col>
-  <:col :let={{_id, part}} label={gettext "Description"}><%= part.description %></:col>
-  <:col :let={{_id, part}} label={gettext "Image"}><%= part.image %></:col>
-  <:col :let={{_id, part}} label={gettext "Average lifetime m"}><%= part.average_lifetime_m %></:col>
-  <:col :let={{_id, part}} label={gettext "Country of origin"}><%= part.country_of_origin %></:col>
-  <:col :let={{_id, part}} label={gettext "Main material"}><%= part.main_material %></:col>
-  <:col :let={{_id, part}} label={gettext "Start of production"}><%= part.start_of_production %></:col>
-  <:col :let={{_id, part}} label={gettext "End of production"}><%= part.end_of_production %></:col>
+  <:col :let={{_id, part}} label={gettext("Name")}><%= part.name %></:col>
+  <:col :let={{_id, part}} label={gettext("Reference")}>
+    <%= part.reference %>
+  </:col>
+  <:col :let={{_id, part}} label={gettext("Description")}>
+    <%= part.description %>
+  </:col>
+  <:col :let={{_id, part}} label={gettext("Image")}><%= part.image %></:col>
+  <:col :let={{_id, part}} label={gettext("Average lifetime m")}>
+    <%= part.average_lifetime_m %>
+  </:col>
+  <:col :let={{_id, part}} label={gettext("Country of origin")}>
+    <%= part.country_of_origin %>
+  </:col>
+  <:col :let={{_id, part}} label={gettext("Main material")}>
+    <%= part.main_material %>
+  </:col>
+  <:col :let={{_id, part}} label={gettext("Start of production")}>
+    <%= part.start_of_production %>
+  </:col>
+  <:col :let={{_id, part}} label={gettext("End of production")}>
+    <%= part.end_of_production %>
+  </:col>
   <:action :let={{_id, part}}>
     <div class="sr-only">
-      <.link navigate={~p"/parts/#{part}"}><%= gettext "Show" %></.link>
+      <.link navigate={~p"/parts/#{part}"}><%= gettext("Show") %></.link>
     </div>
     <%= if @current_user.role == :admin do %>
-      <.link patch={~p"/parts/#{part}/edit"}><%= gettext "Edit" %></.link>
+      <.link patch={~p"/parts/#{part}/edit"}><%= gettext("Edit") %></.link>
     <% end %>
   </:action>
   <:action :let={{id, part}}>
-  <%= if @current_user.role == :admin do %>
-    <.link
-      phx-click={JS.push("delete", value: %{id: part.id}) |> hide("##{id}")}
-      data-confirm={gettext "Are you sure?"}
-    >
-      <%= gettext "Delete" %>
-    </.link>
-  <% end %>
+    <%= if @current_user.role == :admin do %>
+      <.link
+        phx-click={JS.push("delete", value: %{id: part.id}) |> hide("##{id}")}
+        data-confirm={gettext("Are you sure?")}
+      >
+        <%= gettext("Delete") %>
+      </.link>
+    <% end %>
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="part-modal" show on_cancel={JS.patch(~p"/parts")}>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="part-modal"
+  show
+  on_cancel={JS.patch(~p"/parts")}
+>
   <.live_component
     module={PrepairWeb.PartLive.FormComponent}
     id={@part.id || :new}

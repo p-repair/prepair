@@ -1,25 +1,37 @@
 <.header>
-  <%= gettext "Category" %> <%= @category.id %>
-  <:subtitle><%= gettext "This is a category record from your database." %></:subtitle>
+  <%= gettext("Category") %> <%= @category.id %>
+  <:subtitle>
+    <%= gettext("This is a category record from your database.") %>
+  </:subtitle>
   <:actions>
-<%= if @current_user.role == :admin do %>
-    <.link patch={~p"/categories/#{@category}/show/edit"} phx-click={JS.push_focus()}>
-      <.button><%= gettext "Edit category" %></.button>
-    </.link>
-  <% end %>
+    <%= if @current_user.role == :admin do %>
+      <.link
+        patch={~p"/categories/#{@category}/show/edit"}
+        phx-click={JS.push_focus()}
+      >
+        <.button><%= gettext("Edit category") %></.button>
+      </.link>
+    <% end %>
   </:actions>
 </.header>
 
 <.list>
-  <:item title={gettext "Name"}><%= @category.name %></:item>
-  <:item title={gettext "Description"}><%= @category.description %></:item>
-  <:item title={gettext "Image"}><%= @category.image %></:item>
-  <:item title={gettext "Average lifetime m"}><%= @category.average_lifetime_m %></:item>
+  <:item title={gettext("Name")}><%= @category.name %></:item>
+  <:item title={gettext("Description")}><%= @category.description %></:item>
+  <:item title={gettext("Image")}><%= @category.image %></:item>
+  <:item title={gettext("Average lifetime m")}>
+    <%= @category.average_lifetime_m %>
+  </:item>
 </.list>
 
-<.back navigate={~p"/categories"}><%= gettext "Back to categories" %></.back>
+<.back navigate={~p"/categories"}><%= gettext("Back to categories") %></.back>
 
-<.modal :if={@live_action == :edit} id="category-modal" show on_cancel={JS.patch(~p"/categories/#{@category}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="category-modal"
+  show
+  on_cancel={JS.patch(~p"/categories/#{@category}")}
+>
   <.live_component
     module={PrepairWeb.CategoryLive.FormComponent}
     id={@category.id}
