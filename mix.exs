@@ -37,6 +37,8 @@ defmodule Prepair.MixProject do
   defp deps do
     [
       # Project dependencies
+      {:ash, "~> 3.0"},
+      {:ash_postgres, "~> 2.0"},
       {:bcrypt_elixir, "~> 3.0"},
       {:ecto_sql, "~> 3.6"},
       {:finch, "~> 0.13"},
