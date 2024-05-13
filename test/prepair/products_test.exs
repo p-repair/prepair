@@ -223,9 +223,7 @@ defmodule Prepair.ProductsTest do
       product_1 = product_fixture()
       product_2 = product_fixture()
 
-      assert Products.list_products(
-               product_ids: [product_1.id, product_2.id]
-             ) ==
+      assert Products.list_products(product_ids: [product_1.id, product_2.id]) ==
                [
                  product_1,
                  product_2
@@ -260,9 +258,7 @@ defmodule Prepair.ProductsTest do
       product = product_fixture()
       _product_2 = product_fixture()
 
-      assert Products.list_products(
-               manufacturer_id: [product.manufacturer_id]
-             ) ==
+      assert Products.list_products(manufacturer_id: [product.manufacturer_id]) ==
                [
                  product
                ]

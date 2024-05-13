@@ -136,9 +136,7 @@ defmodule Prepair.NotificationsTest do
         notification_template_fixture(%{part_ids: [part_2_id]})
         |> remove_virtual_fields()
 
-      assert Notifications.list_notification_templates(
-               part_ids: [part_1_id]
-             ) ==
+      assert Notifications.list_notification_templates(part_ids: [part_1_id]) ==
                [
                  notification_template_1,
                  notification_template_2
@@ -147,9 +145,7 @@ defmodule Prepair.NotificationsTest do
 
     test "list_notification_templates/1 returns an empty list when :part_ids
     value is a list of ids that does not exists in the database" do
-      assert Notifications.list_notification_templates(
-               part_ids: [@random_id_1]
-             ) ==
+      assert Notifications.list_notification_templates(part_ids: [@random_id_1]) ==
                []
     end
 
@@ -262,9 +258,7 @@ defmodule Prepair.NotificationsTest do
         notification_template_fixture()
         |> preload_notification_template_relations()
 
-      assert Notifications.get_notification_template!(
-               notification_template.id
-             ) ==
+      assert Notifications.get_notification_template!(notification_template.id) ==
                notification_template
     end
 

@@ -198,9 +198,7 @@ defmodule PrepairWeb.Api.Profiles.ProfileControllerTest do
       id = profile.id
 
       conn =
-        put(conn, ~p"/api/v1/profiles/profiles/#{id}",
-          profile: @invalid_attrs
-        )
+        put(conn, ~p"/api/v1/profiles/profiles/#{id}", profile: @invalid_attrs)
 
       assert json_response(conn, 422)["errors"] != %{}
     end
