@@ -4,8 +4,11 @@
 # This configuration file is loaded before any dependency and
 # is restricted to this project.
 
-# General application configuration
 import Config
+
+# ---------------------------------------------------------------------------- #
+#                      General application configuration                       #
+# ---------------------------------------------------------------------------- #
 
 config :prepair,
   ecto_repos: [Prepair.Repo]
@@ -15,7 +18,10 @@ config :prepair,
        default_locale: "en",
        locales: ~w(en fr)
 
-# Configures the endpoint
+# ---------------------------------------------------------------------------- #
+#                            Endpoint configuration                            #
+# ---------------------------------------------------------------------------- #
+
 config :prepair, PrepairWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [
@@ -28,8 +34,10 @@ config :prepair, PrepairWeb.Endpoint,
   pubsub_server: Prepair.PubSub,
   live_view: [signing_salt: "QOrvxyAg"]
 
-# Configures the mailer
-#
+# ---------------------------------------------------------------------------- #
+#                             Mailer configuration                             #
+# ---------------------------------------------------------------------------- #
+
 # By default it uses the "Local" adapter which stores the emails
 # locally. You can see the emails in your browser, at "/dev/mailbox".
 #
@@ -44,7 +52,11 @@ config :prepair, :emails,
     {"Jean-Philippe Cugnet", "jpc+prepair@ejpcmac.net"}
   ]
 
-# Configure esbuild (the version is required)
+# ---------------------------------------------------------------------------- #
+#                            Esbuild configuration                             #
+# ---------------------------------------------------------------------------- #
+
+# (the version is required)
 config :esbuild,
   version: "0.14.41",
   default: [
@@ -54,7 +66,11 @@ config :esbuild,
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
   ]
 
-# Configure tailwind (the version is required)
+# ---------------------------------------------------------------------------- #
+#                            Tailwind configuration                            #
+# ---------------------------------------------------------------------------- #
+
+# (the version is required)
 config :tailwind,
   version: "3.2.4",
   default: [
@@ -66,13 +82,24 @@ config :tailwind,
     cd: Path.expand("../assets", __DIR__)
   ]
 
-# Configures Elixir's Logger
+# ---------------------------------------------------------------------------- #
+#                        Elixir's Logger configuration                         #
+# ---------------------------------------------------------------------------- #
+
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+# ---------------------------------------------------------------------------- #
+#                          API related configurations                          #
+# ---------------------------------------------------------------------------- #
+
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+# ---------------------------------------------------------------------------- #
+#                      Environment related configurations                      #
+# ---------------------------------------------------------------------------- #
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
