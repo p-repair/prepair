@@ -1,0 +1,107 @@
+{
+    "attributes": [
+        {
+            "default": "nil",
+            "size": null,
+            "type": "uuid",
+            "source": "id",
+            "references": {
+                "name": "profiles_id_fkey",
+                "table": "users",
+                "destination_attribute": "id",
+                "primary_key?": true,
+                "schema": "public",
+                "multitenancy": {
+                    "global": null,
+                    "attribute": null,
+                    "strategy": null
+                },
+                "on_delete": "delete",
+                "on_update": null,
+                "deferrable": false,
+                "match_with": null,
+                "match_type": null,
+                "destination_attribute_default": null,
+                "destination_attribute_generated": null
+            },
+            "allow_nil?": false,
+            "primary_key?": true,
+            "generated?": false
+        },
+        {
+            "default": "nil",
+            "size": null,
+            "type": "string",
+            "source": "username",
+            "references": null,
+            "allow_nil?": false,
+            "primary_key?": false,
+            "generated?": false
+        },
+        {
+            "default": "nil",
+            "size": null,
+            "type": "boolean",
+            "source": "newsletter",
+            "references": null,
+            "allow_nil?": false,
+            "primary_key?": false,
+            "generated?": false
+        },
+        {
+            "default": "nil",
+            "size": null,
+            "type": "integer",
+            "source": "people_in_household",
+            "references": null,
+            "allow_nil?": false,
+            "primary_key?": false,
+            "generated?": false
+        },
+        {
+            "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
+            "size": null,
+            "type": "utc_datetime",
+            "source": "inserted_at",
+            "references": null,
+            "allow_nil?": false,
+            "primary_key?": false,
+            "generated?": false
+        },
+        {
+            "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
+            "size": null,
+            "type": "utc_datetime",
+            "source": "updated_at",
+            "references": null,
+            "allow_nil?": false,
+            "primary_key?": false,
+            "generated?": false
+        }
+    ],
+    "table": "profiles",
+    "hash": "54F6D346F48F24087F1C8EE21C6D8194578D4A1ED2456312AEE2EDF2E362E390",
+    "identities": [
+        {
+            "name": "username",
+            "keys": [
+                "username"
+            ],
+            "base_filter": null,
+            "all_tenants?": false,
+            "index_name": "profiles_username_index"
+        }
+    ],
+    "repo": "Elixir.Prepair.Repo",
+    "custom_statements": [],
+    "schema": null,
+    "check_constraints": [],
+    "custom_indexes": [],
+    "multitenancy": {
+        "global": null,
+        "attribute": null,
+        "strategy": null
+    },
+    "base_filter": null,
+    "has_create_action": false
+}

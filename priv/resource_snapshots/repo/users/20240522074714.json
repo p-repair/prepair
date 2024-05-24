@@ -1,0 +1,124 @@
+{
+    "attributes": [
+        {
+            "default": "fragment(\"gen_random_uuid()\")",
+            "size": null,
+            "type": "uuid",
+            "source": "id",
+            "references": null,
+            "allow_nil?": false,
+            "primary_key?": true,
+            "generated?": false
+        },
+        {
+            "default": "nil",
+            "size": null,
+            "type": "text",
+            "source": "email",
+            "references": null,
+            "allow_nil?": false,
+            "primary_key?": false,
+            "generated?": false
+        },
+        {
+            "default": "nil",
+            "size": null,
+            "type": "string",
+            "source": "hashed_password",
+            "references": null,
+            "allow_nil?": false,
+            "primary_key?": false,
+            "generated?": false
+        },
+        {
+            "default": "\"user\"",
+            "size": null,
+            "type": "string",
+            "source": "role",
+            "references": null,
+            "allow_nil?": false,
+            "primary_key?": false,
+            "generated?": false
+        },
+        {
+            "default": "nil",
+            "size": null,
+            "type": "naive_datetime",
+            "source": "confirmed_at",
+            "references": null,
+            "allow_nil?": true,
+            "primary_key?": false,
+            "generated?": false
+        },
+        {
+            "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
+            "size": null,
+            "type": "utc_datetime",
+            "source": "inserted_at",
+            "references": null,
+            "allow_nil?": false,
+            "primary_key?": false,
+            "generated?": false
+        },
+        {
+            "default": "fragment(\"(now() AT TIME ZONE 'utc')\")",
+            "size": null,
+            "type": "utc_datetime",
+            "source": "updated_at",
+            "references": null,
+            "allow_nil?": false,
+            "primary_key?": false,
+            "generated?": false
+        }
+    ],
+    "table": "users",
+    "hash": "DF6A782407CCF6034F384D1521AFDE785AFDBB5F9FA88908BB6B771FF28887BA",
+    "identities": [
+        {
+            "name": "email",
+            "keys": [
+                "email"
+            ],
+            "base_filter": null,
+            "all_tenants?": false,
+            "index_name": "users_email_index"
+        }
+    ],
+    "repo": "Elixir.Prepair.Repo",
+    "custom_statements": [
+        {
+            "name": "users_id_fkey",
+            "up": "ALTER TABLE ONLY public.users\n            ADD CONSTRAINT users_id_fkey FOREIGN KEY (id)\n            REFERENCES public.profiles(id)\n            ON DELETE CASCADE\n            DEFERRABLE INITIALLY DEFERRED;",
+            "down": "DROP CONSTRAINT users_id_fkey",
+            "code?": false
+        },
+        {
+            "name": "create_citext_extension",
+            "up": "CREATE EXTENSION IF NOT EXISTS citext;",
+            "down": "DROP EXTENSION IF EXISTS citext;",
+            "code?": false
+        },
+        {
+            "name": "email_type",
+            "up": "ALTER TABLE ONLY public.users\n            ALTER COLUMN email\n            SET DATA TYPE CITEXT;",
+            "down": "ALTER TABLE ONLY public.users\n            ALTER COLUMN email\n            SET DATA TYPE TEXT;",
+            "code?": false
+        },
+        {
+            "name": "role_type",
+            "up": "ALTER TABLE ONLY public.users\n            ALTER COLUMN role\n            SET DATA TYPE VARCHAR(15);",
+            "down": "ALTER TABLE ONLY public.users\n            ALTER COLUMN role\n            SET DATA TYPE VARCHAR;",
+            "code?": false
+        }
+    ],
+    "schema": null,
+    "check_constraints": [],
+    "custom_indexes": [],
+    "multitenancy": {
+        "global": null,
+        "attribute": null,
+        "strategy": null
+    },
+    "base_filter": null,
+    "has_create_action": false
+}

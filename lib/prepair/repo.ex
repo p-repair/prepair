@@ -19,7 +19,10 @@
 defmodule Prepair.Repo do
   @moduledoc false
 
-  use Ecto.Repo,
-    otp_app: :prepair,
-    adapter: Ecto.Adapters.Postgres
+  use AshPostgres.Repo,
+    otp_app: :prepair
+
+  def installed_extensions do
+    ["ash-functions"]
+  end
 end

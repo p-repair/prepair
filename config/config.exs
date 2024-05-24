@@ -91,6 +91,32 @@ config :logger, :console,
   metadata: [:request_id]
 
 # ---------------------------------------------------------------------------- #
+#                         Ash Framework configuration                          #
+# ---------------------------------------------------------------------------- #
+
+config :prepair, :ash_domains, [
+  Prepair.AshDomains.Accounts,
+  Prepair.AshDomains.Newsletter,
+  Prepair.AshDomains.Notifications,
+  Prepair.AshDomains.Products,
+  Prepair.AshDomains.Profiles
+]
+
+config :spark, :formatter,
+  remove_parens?: true,
+  "Ash.Domain": [],
+  "Ash.Resource": [
+    section_order: [
+      # Any section not in this list is left where it is.
+      # But these sections will always appear in this order in a resource.
+      :postgres,
+      :attributes,
+      :relationships,
+      :identities,
+    ]
+  ]
+
+# ---------------------------------------------------------------------------- #
 #                          API related configurations                          #
 # ---------------------------------------------------------------------------- #
 
