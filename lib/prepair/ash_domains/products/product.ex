@@ -11,6 +11,8 @@ defmodule Prepair.AshDomains.Products.Product do
   alias Prepair.AshDomains.Products.{Category, Manufacturer, Part, ProductParts}
   alias Prepair.AshDomains.Profiles.Ownership
 
+  require Ash.Query
+
   postgres do
     table "products"
     repo Prepair.Repo
@@ -79,5 +81,129 @@ defmodule Prepair.AshDomains.Products.Product do
 
   identities do
     identity :reference_manufacturer_id, [:reference, :manufacturer_id]
+  end
+
+  code_interface do
+    define :list
+    define :list_by_id, args: [:ids]
+    define :get, args: [:id]
+    define :create
+    define :update
+    define :delete, action: :destroy
+  end
+
+  actions do
+    default_accept [
+      :average_lifetime_m,
+      :category_id,
+      :country_of_origin,
+      :description,
+      :end_of_production,
+      :image,
+      :manufacturer_id,
+      :name,
+      :reference,
+      :start_of_production
+    ]
+
+    defaults [:destroy]
+
+    read :list do
+      primary? true
+      argument :product_ids, {:array, :uuid}
+      argument :category_ids, {:array, :uuid}
+      argument :manufacturer_ids, {:array, :uuid}
+
+      prepare fn query, _ ->
+        case Ash.Query.fetch_argument(query, :product_ids) do
+          {:ok, value} when is_list(value) ->
+            Ash.Query.filter(query, id in ^value)
+
+          _ ->
+            query
+        end
+      end
+
+      prepare fn query, _ ->
+        case Ash.Query.fetch_argument(query, :category_ids) do
+          {:ok, value} when is_list(value) ->
+            Ash.Query.filter(query, category_id in ^value)
+
+          _ ->
+            query
+        end
+      end
+
+      prepare fn query, _ ->
+        case Ash.Query.fetch_argument(query, :manufacturer_ids) do
+          {:ok, value} when is_list(value) ->
+            Ash.Query.filter(query, manufacturer_id in ^value)
+
+          _ ->
+            query
+        end
+      end
+
+      prepare build(sort: [:inserted_at])
+    end
+
+    read :list_by_id do
+      argument :ids, {:array, :uuid}
+      filter expr(id in ^arg(:ids))
+    end
+
+    read :get do
+      get_by :id
+
+      prepare build(
+                load: [
+                  :category,
+                  :manufacturer,
+                  :parts,
+                  :notification_templates
+                ]
+              )
+    end
+
+    create :create do
+      primary? true
+      argument :part_ids, {:array, :uuid}
+      argument :notification_template_ids, {:array, :uuid}
+
+      change manage_relationship(
+               :part_ids,
+               :parts,
+               type: :append_and_remove,
+               on_no_match: :ignore
+             )
+
+      change manage_relationship(
+               :notification_template_ids,
+               :notification_templates,
+               type: :append_and_remove,
+               on_no_match: :ignore
+             )
+    end
+
+    update :update do
+      primary? true
+      argument :part_ids, {:array, :uuid}
+      argument :notification_template_ids, {:array, :uuid}
+      require_atomic? false
+
+      change manage_relationship(
+               :part_ids,
+               :parts,
+               type: :append_and_remove,
+               on_no_match: :ignore
+             )
+
+      change manage_relationship(
+               :notification_template_ids,
+               :notification_templates,
+               type: :append_and_remove,
+               on_no_match: :ignore
+             )
+    end
   end
 end

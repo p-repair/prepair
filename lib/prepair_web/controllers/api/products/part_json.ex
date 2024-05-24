@@ -1,6 +1,7 @@
 defmodule PrepairWeb.Api.Products.PartJSON do
   alias PrepairWeb.Api.Products.{CategoryJSON, ManufacturerJSON}
   alias Prepair.LegacyContexts.Products.Part
+  alias Prepair.AshDomains.Products.Part, as: AshPart
   alias Prepair.Repo
 
   @doc """
@@ -19,6 +20,26 @@ defmodule PrepairWeb.Api.Products.PartJSON do
 
   def data(%Part{} = part) do
     part = Repo.preload(part, [:category, :manufacturer])
+
+    %{
+      id: part.id,
+      category: CategoryJSON.data(part.category),
+      manufacturer: ManufacturerJSON.data(part.manufacturer),
+      name: part.name,
+      reference: part.reference,
+      description: part.description,
+      image: part.image,
+      average_lifetime_m: part.average_lifetime_m,
+      country_of_origin: part.country_of_origin,
+      start_of_production: part.start_of_production,
+      end_of_production: part.end_of_production,
+      main_material: part.main_material
+    }
+  end
+
+  # NOTE: Need this to pass tests with the fixture now using Ash
+  def data(%AshPart{} = part) do
+    part = Ash.load!(part, [:category, :manufacturer])
 
     %{
       id: part.id,

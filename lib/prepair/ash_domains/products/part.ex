@@ -79,4 +79,90 @@ defmodule Prepair.AshDomains.Products.Part do
   identities do
     identity :reference_manufacturer_id, [:reference, :manufacturer_id]
   end
+
+  code_interface do
+    define :list, action: :read
+    define :list_by_id
+    define :get, args: [:id]
+    define :create
+    define :update
+    define :delete, action: :destroy
+  end
+
+  actions do
+    default_accept [
+      :average_lifetime_m,
+      :category_id,
+      :country_of_origin,
+      :description,
+      :end_of_production,
+      :image,
+      :main_material,
+      :manufacturer_id,
+      :name,
+      :reference,
+      :start_of_production
+    ]
+
+    defaults [:read, :destroy]
+
+    read :list_by_id do
+      argument :id, {:array, :uuid}
+      filter expr(id in ^arg(:id))
+    end
+
+    read :get do
+      get_by :id
+
+      prepare build(
+                load: [
+                  :category,
+                  :manufacturer,
+                  :products,
+                  :notification_templates
+                ]
+              )
+    end
+
+    create :create do
+      primary? true
+      argument :product_ids, {:array, :uuid}
+      argument :notification_template_ids, {:array, :uuid}
+
+      change manage_relationship(
+               :product_ids,
+               :products,
+               type: :append_and_remove,
+               on_no_match: :ignore
+             )
+
+      change manage_relationship(
+               :notification_template_ids,
+               :notification_templates,
+               type: :append_and_remove,
+               on_no_match: :ignore
+             )
+    end
+
+    update :update do
+      primary? true
+      argument :product_ids, {:array, :uuid}
+      argument :notification_template_ids, {:array, :uuid}
+      require_atomic? false
+
+      change manage_relationship(
+               :product_ids,
+               :products,
+               type: :append_and_remove,
+               on_no_match: :ignore
+             )
+
+      change manage_relationship(
+               :notification_template_ids,
+               :notification_templates,
+               type: :append_and_remove,
+               on_no_match: :ignore
+             )
+    end
+  end
 end

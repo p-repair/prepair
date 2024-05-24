@@ -113,6 +113,9 @@ config :spark, :formatter,
       :attributes,
       :relationships,
       :identities,
+      :code_interface,
+      :actions,
+      :validations,
     ]
   ]
 

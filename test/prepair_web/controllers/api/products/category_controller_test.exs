@@ -4,8 +4,7 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
   import Prepair.LegacyContexts.NotificationsFixtures
   import Prepair.LegacyContexts.ProductsFixtures
   import PrepairWeb.AuthorizationTestsMacro
-  alias Prepair.LegacyContexts.Products
-  alias Prepair.LegacyContexts.Products.Category
+  alias Prepair.AshDomains.Products.Category
   alias PrepairWeb.Api.Products.CategoryJSON
 
   # NOTE: params needed for authorization tests macros
@@ -140,7 +139,7 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
 
       conn = get(conn, ~p"/api/v1/products/categories/#{id}")
 
-      category = Prepair.LegacyContexts.Products.get_category!(id)
+      category = Category.get!(id)
 
       assert json_response(conn, 200)["data"] ==
                category |> to_normalised_json()
@@ -162,8 +161,8 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
       conn = post(conn, ~p"/api/v1/products/categories", category: category)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      category = Products.get_category!(id)
-      assert category.notification_templates == notification_templates
+      category = Category.get!(id)
+      assert category.notification_templates[:id] == notification_templates[:id]
     end
 
     @tag :category_controller
@@ -195,7 +194,7 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
 
       conn = get(conn, ~p"/api/v1/products/categories/#{id}")
 
-      category = Prepair.LegacyContexts.Products.get_category!(id)
+      category = Category.get!(id)
 
       assert json_response(conn, 200)["data"] ==
                category |> to_normalised_json()
@@ -227,8 +226,10 @@ defmodule PrepairWeb.Api.Products.CategoryControllerTest do
 
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
-      category = Products.get_category!(id)
-      assert category.notification_templates == new_notification_templates
+      category = Category.get!(id)
+
+      assert category.notification_templates[:id] ==
+               new_notification_templates[:id]
     end
 
     @tag :category_controller

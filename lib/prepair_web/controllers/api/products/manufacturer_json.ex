@@ -1,6 +1,8 @@
 defmodule PrepairWeb.Api.Products.ManufacturerJSON do
   alias Prepair.LegacyContexts.Products.Manufacturer
 
+  alias Prepair.AshDomains.Products.Manufacturer, as: AshManufacturer
+
   @doc """
   Renders a list of manufacturers.
   """
@@ -16,6 +18,16 @@ defmodule PrepairWeb.Api.Products.ManufacturerJSON do
   end
 
   def data(%Manufacturer{} = manufacturer) do
+    %{
+      id: manufacturer.id,
+      description: manufacturer.description,
+      image: manufacturer.image,
+      name: manufacturer.name
+    }
+  end
+
+  # NOTE: Need this to pass tests with the fixture now using Ash
+  def data(%AshManufacturer{} = manufacturer) do
     %{
       id: manufacturer.id,
       description: manufacturer.description,

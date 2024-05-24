@@ -4,6 +4,8 @@ defmodule Prepair.LegacyContexts.NotificationsFixtures do
   entities via the `Prepair.LegacyContexts.Notifications` context.
   """
 
+  alias Prepair.AshDomains.Notifications.NotificationTemplate
+
   @doc """
   Generate a unique notification_template name.
   """
@@ -17,10 +19,9 @@ defmodule Prepair.LegacyContexts.NotificationsFixtures do
     {:ok, notification_template} =
       attrs
       |> Enum.into(notification_template_valid_attrs())
-      |> Prepair.LegacyContexts.Notifications.create_notification_template()
+      |> NotificationTemplate.create()
 
     notification_template
-    |> unload_notification_template_relations()
   end
 
   def notification_template_valid_attrs() do
@@ -37,19 +38,8 @@ defmodule Prepair.LegacyContexts.NotificationsFixtures do
 
   def create_notification_templates() do
     [notification_template_fixture(), notification_template_fixture()]
-    |> Enum.map(&unload_notification_template_relations/1)
   end
 
   def create_notification_template_ids(notification_templates),
     do: notification_templates |> Enum.map(fn x -> x.id end)
-
-  @doc """
-  A helper function to unload notification template relations.
-  """
-  def unload_notification_template_relations(notification_template) do
-    notification_template
-    |> Prepair.DataCase.unload(:categories, :many)
-    |> Prepair.DataCase.unload(:products, :many)
-    |> Prepair.DataCase.unload(:parts, :many)
-  end
 end

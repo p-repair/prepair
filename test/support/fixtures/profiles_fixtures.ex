@@ -7,6 +7,8 @@ defmodule Prepair.LegacyContexts.ProfilesFixtures do
   alias Prepair.LegacyContexts.AccountsFixtures
   alias Prepair.LegacyContexts.ProductsFixtures
 
+  alias Prepair.AshDomains.Profiles.Ownership
+
   def unique_username, do: "User#{System.unique_integer()}"
 
   @doc """
@@ -52,7 +54,7 @@ defmodule Prepair.LegacyContexts.ProfilesFixtures do
     attrs = attrs |> Enum.into(ownership_valid_attrs())
 
     {:ok, ownership} =
-      Prepair.LegacyContexts.Profiles.create_ownership(profile_id, attrs)
+      Ownership.create(profile_id, attrs)
 
     ownership
   end

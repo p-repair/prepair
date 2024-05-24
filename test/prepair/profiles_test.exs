@@ -86,7 +86,7 @@ defmodule Prepair.LegacyContexts.ProfilesTest do
   end
 
   describe "ownerships" do
-    alias Prepair.LegacyContexts.Profiles.Ownership
+    alias Prepair.AshDomains.Profiles.Ownership
 
     import Prepair.LegacyContexts.ProfilesFixtures
     import Prepair.LegacyContexts.ProductsFixtures
@@ -99,29 +99,34 @@ defmodule Prepair.LegacyContexts.ProfilesTest do
       price_of_purchase: nil
     }
 
-    test "list_ownerships/0 returns all ownerships" do
+    @tag :ownership_resource
+    test "Ownership.list/0 returns all ownerships" do
       ownership = ownership_fixture()
-      assert Profiles.list_ownerships() == [ownership]
+      assert {:ok, [o]} = Ownership.list()
+      assert o.id == ownership.id
     end
 
-    test "list_ownerships_by_profile/2 returns only the profile public
+    @tag :ownership_resource
+    test "Ownership.list_by_profile/1 returns only the profile public
     ownerships by default" do
       profile_id = profile_fixture().id
 
-      private_ownership = ownership_fixture(profile_id)
+      _private_ownership = ownership_fixture(profile_id)
 
       public_ownership = ownership_fixture(profile_id, %{public: true})
 
-      third_ownership = ownership_fixture()
+      _third_ownership = ownership_fixture()
 
-      assert Profiles.list_ownerships() ==
-               [private_ownership, public_ownership, third_ownership]
+      assert {:ok, [_private_o, _public_o, _third_o]} = Ownership.list()
 
-      assert Profiles.list_ownerships_by_profile(profile_id) ==
-               [public_ownership]
+      assert {:ok, [public_o]} =
+               Ownership.list_by_profile(%{profile_id: profile_id})
+
+      assert public_o.id == public_ownership.id
     end
 
-    test "list_ownerships_by_profile/2 returns all the profile ownerships when
+    @tag :ownership_resource
+    test "Ownership.list_by_profile/1 returns all the profile ownerships when
     :include_private is set to true" do
       profile_id = profile_fixture().id
 
@@ -129,22 +134,26 @@ defmodule Prepair.LegacyContexts.ProfilesTest do
 
       public_ownership = ownership_fixture(profile_id, %{public: true})
 
-      third_ownership = ownership_fixture()
+      _third_ownership = ownership_fixture()
 
-      assert Profiles.list_ownerships() ==
-               [private_ownership, public_ownership, third_ownership]
+      assert {:ok, [_private_o, _public_o, _third_o]} = Ownership.list()
 
-      assert Profiles.list_ownerships_by_profile(profile_id,
-               include_private: true
-             ) ==
-               [private_ownership, public_ownership]
+      assert {:ok, [public_o, private_o]} =
+               Ownership.list_by_profile(%{
+                 profile_id: profile_id,
+                 include_private: true
+               })
+
+      assert [public_o.id, private_o.id] ==
+               [private_ownership.id, public_ownership.id]
     end
 
-    test "list_ownerships_by_product/2 returns only the product public
+    @tag :ownership_resource
+    test "Ownership.list_by_product/1 returns only the product public
     ownerships by default" do
       product_id = product_fixture().id
 
-      private_ownership =
+      _private_ownership =
         ownership_fixture(profile_fixture().id, %{product_id: product_id})
 
       public_ownership =
@@ -153,17 +162,19 @@ defmodule Prepair.LegacyContexts.ProfilesTest do
           public: true
         })
 
-      third_ownership = ownership_fixture()
+      _third_ownership = ownership_fixture()
 
-      assert Profiles.list_ownerships() ==
-               [private_ownership, public_ownership, third_ownership]
+      assert {:ok, [_private_o, _public_o, _third_o]} = Ownership.list()
 
-      assert Profiles.list_ownerships_by_product(product_id) ==
-               [public_ownership]
+      assert {:ok, [public_o]} =
+               Ownership.list_by_product(%{product_id: product_id})
+
+      assert public_o.id == public_ownership.id
     end
 
-    test "list_ownerships_by_product/2 returns all the product ownerships when
-    include_private: is set to true" do
+    @tag :ownership_resource
+    test "Ownership.list_by_product/1 returns all the product ownerships when
+    :include_private is set to true" do
       product_id = product_fixture().id
 
       private_ownership =
@@ -175,18 +186,24 @@ defmodule Prepair.LegacyContexts.ProfilesTest do
           public: true
         })
 
-      third_ownership = ownership_fixture()
+      _third_ownership = ownership_fixture()
 
-      assert Profiles.list_ownerships() ==
-               [private_ownership, public_ownership, third_ownership]
+      assert {:ok, [_private_o, _public_o, _third_o]} = Ownership.list()
 
-      assert Profiles.list_ownerships_by_product(product_id,
-               include_private: true
-             ) ==
-               [private_ownership, public_ownership]
+      assert {:ok, [pivate_o, public_o]} =
+               Ownership.list_by_product(%{
+                 product_id: product_id,
+                 include_private: true
+               })
+
+      assert [pivate_o.id, public_o.id] == [
+               private_ownership.id,
+               public_ownership.id
+             ]
     end
 
-    test "count_ownerships_by_product returns the ownership count for the given
+    @tag :ownership_resource
+    test "Ownership.count_by_product/1 returns the ownership count for the given
     product" do
       product_id = product_fixture().id
 
@@ -201,18 +218,21 @@ defmodule Prepair.LegacyContexts.ProfilesTest do
 
       _third_ownership = ownership_fixture()
 
-      assert Profiles.list_ownerships() |> Enum.count() == 3
-      assert Profiles.count_ownerships_by_product(product_id) == 2
+      assert Ownership.list!() |> Enum.count() == 3
+      assert Ownership.count_by_product(product_id) == 2
     end
 
-    test "get_ownership!/1 returns the ownership with given id" do
+    @tag :ownership_resource
+    test "Ownership.get/1 returns the ownership with given id" do
       ownership = ownership_fixture()
-      assert Profiles.get_ownership!(ownership.id) == ownership
+      assert {:ok, o} = Ownership.get(ownership.id)
+      assert o.id == ownership.id
     end
 
-    test "create_ownership/2 with valid data creates an ownership" do
+    @tag :ownership_resource
+    test "Ownership.create/2 with valid data creates an ownership" do
       assert {:ok, %Ownership{} = ownership} =
-               Profiles.create_ownership(
+               Ownership.create(
                  profile_id(),
                  ownership_valid_attrs()
                )
@@ -223,12 +243,14 @@ defmodule Prepair.LegacyContexts.ProfilesTest do
       assert ownership.price_of_purchase == 400
     end
 
-    test "create_ownership/2 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} =
-               Profiles.create_ownership(profile_id(), @invalid_attrs)
+    @tag :ownership_resource
+    test "Ownership.create/2 with invalid data returns error changeset" do
+      assert {:error, %Ash.Error.Invalid{}} =
+               Ownership.create(profile_id(), @invalid_attrs)
     end
 
-    test "update_ownership/2 with valid data updates the ownership" do
+    @tag :ownership_resource
+    test "Ownership.update/2 with valid data updates the ownership" do
       ownership = ownership_fixture()
 
       update_attrs = %{
@@ -239,7 +261,7 @@ defmodule Prepair.LegacyContexts.ProfilesTest do
       }
 
       assert {:ok, %Ownership{} = ownership} =
-               Profiles.update_ownership(ownership, update_attrs)
+               Ownership.update(ownership, update_attrs)
 
       assert ownership.public == true
       assert ownership.date_of_purchase == ~D[2024-01-15]
@@ -247,27 +269,32 @@ defmodule Prepair.LegacyContexts.ProfilesTest do
       assert ownership.price_of_purchase == 43
     end
 
-    test "update_ownership/2 with invalid data returns error changeset" do
+    @tag :ownership_resource
+    test "Ownership.update/2 with invalid data returns error changeset" do
       ownership = ownership_fixture()
 
-      assert {:error, %Ecto.Changeset{}} =
-               Profiles.update_ownership(ownership, @invalid_attrs)
+      assert {:error, %Ash.Error.Invalid{}} =
+               Ownership.update(ownership, @invalid_attrs)
 
-      assert ownership == Profiles.get_ownership!(ownership.id)
+      assert ownership.date_of_purchase ==
+               Ownership.get!(ownership.id).date_of_purchase
     end
 
-    test "delete_ownership/1 deletes the ownership" do
+    @tag :ownership_resource
+    test "Ownership.delete/1 deletes the ownership" do
       ownership = ownership_fixture()
-      assert {:ok, %Ownership{}} = Profiles.delete_ownership(ownership)
+      assert :ok == Ownership.delete(ownership)
 
-      assert_raise Ecto.NoResultsError, fn ->
-        Profiles.get_ownership!(ownership.id)
+      assert_raise Ash.Error.Query.NotFound, fn ->
+        Ownership.get!(ownership.id)
       end
     end
 
-    test "change_ownership/1 returns an ownership changeset" do
+    # NOTE: Do we need to create a code_interface like Ownership.change?
+    @tag :ownership_resource
+    test "Ash.Changeset.new(ownership) returns an ownership changeset" do
       ownership = ownership_fixture()
-      assert %Ecto.Changeset{} = Profiles.change_ownership(ownership)
+      assert %Ash.Changeset{} = Ash.Changeset.new(ownership)
     end
   end
 end

@@ -28,4 +28,23 @@ defmodule Prepair.AshDomains.Newsletter.Contact do
   identities do
     identity :email, :email
   end
+
+  code_interface do
+    define :list, action: :read
+    define :get, action: :read, get_by: :id
+    define :create
+    define :update
+    define :delete, action: :destroy
+  end
+
+  actions do
+    default_accept [:email, :lang, :mailerlite_id]
+    defaults [:read, :update, :destroy]
+
+    create :create do
+      primary? true
+
+      change Prepair.AshDomains.Newsletter.Contact.Create
+    end
+  end
 end

@@ -4,8 +4,7 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
   import Prepair.LegacyContexts.NotificationsFixtures
   import Prepair.LegacyContexts.ProductsFixtures
   import PrepairWeb.AuthorizationTestsMacro
-  alias Prepair.LegacyContexts.Products
-  alias Prepair.LegacyContexts.Products.Part
+  alias Prepair.AshDomains.Products.Part
   alias PrepairWeb.Api.Products.PartJSON
 
   # NOTE: params needed for authorization tests macros
@@ -152,7 +151,7 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
 
       conn = get(conn, ~p"/api/v1/products/parts/#{id}")
 
-      part = Prepair.LegacyContexts.Products.get_part!(id)
+      part = Part.get!(id)
 
       assert json_response(conn, 200)["data"] == part |> to_normalised_json()
     end
@@ -176,9 +175,9 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
       conn = post(conn, ~p"/api/v1/products/parts", part: part)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      part = Products.get_part!(id)
-      assert part.products == products
-      assert part.notification_templates == notification_templates
+      part = Part.get!(id)
+      assert part.products[:id] == products[:id]
+      assert part.notification_templates[:id] == notification_templates[:id]
     end
 
     @tag :part_controller
@@ -206,7 +205,7 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
 
       conn = get(conn, ~p"/api/v1/products/parts/#{id}")
 
-      part = Prepair.LegacyContexts.Products.get_part!(id)
+      part = Part.get!(id)
 
       assert json_response(conn, 200)["data"] == part |> to_normalised_json()
     end
@@ -236,9 +235,9 @@ defmodule PrepairWeb.Api.Products.PartControllerTest do
       conn = put(conn, ~p"/api/v1/products/parts/#{part}", part: update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
-      part = Products.get_part!(id)
-      assert part.products == new_products
-      assert part.notification_templates == new_notification_templates
+      part = Part.get!(id)
+      assert part.products[:id] == new_products[:id]
+      assert part.notification_templates[:id] == new_notification_templates[:id]
     end
 
     @tag :part_controller

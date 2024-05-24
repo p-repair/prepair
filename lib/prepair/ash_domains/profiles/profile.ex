@@ -28,7 +28,6 @@ defmodule Prepair.AshDomains.Profiles.Profile do
   end
 
   relationships do
-    # Should be OK
     belongs_to :user, User do
       define_attribute? false
       source_attribute :id
@@ -43,5 +42,28 @@ defmodule Prepair.AshDomains.Profiles.Profile do
 
   identities do
     identity :username, [:username]
+  end
+
+  code_interface do
+    define :list, action: :read
+    define :get, action: :read, get_by: :id
+    define :create, args: [:user_id]
+    define :update
+  end
+
+  actions do
+    default_accept [
+      :username,
+      :newsletter,
+      :people_in_household
+    ]
+
+    defaults [:read, :update]
+
+    create :create do
+      primary? true
+      argument :user_id, :uuid
+      change set_attribute(:id, arg(:user_id))
+    end
   end
 end

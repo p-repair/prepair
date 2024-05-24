@@ -2,6 +2,7 @@ defmodule PrepairWeb.Api.Profiles.OwnershipJSON do
   alias PrepairWeb.Api.Products.ProductJSON
   alias PrepairWeb.Api.Profiles.ProfileJSON
   alias Prepair.LegacyContexts.Profiles.Ownership
+  alias Prepair.AshDomains.Profiles.Ownership, as: AshOwnership
   alias Prepair.Repo
 
   @doc """
@@ -20,6 +21,20 @@ defmodule PrepairWeb.Api.Profiles.OwnershipJSON do
 
   def data(%Ownership{} = ownership) do
     ownership = Repo.preload(ownership, [:profile, :product])
+
+    %{
+      id: ownership.id,
+      profile: ProfileJSON.data(ownership.profile),
+      product: ProductJSON.data(ownership.product),
+      price_of_purchase: ownership.price_of_purchase,
+      date_of_purchase: ownership.date_of_purchase,
+      warranty_duration_m: ownership.warranty_duration_m,
+      public: ownership.public
+    }
+  end
+
+  def data(%AshOwnership{} = ownership) do
+    ownership = Ash.load!(ownership, [:profile, :product])
 
     %{
       id: ownership.id,

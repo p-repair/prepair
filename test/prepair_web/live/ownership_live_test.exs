@@ -1,8 +1,6 @@
 defmodule PrepairWeb.OwnershipLiveTest do
   use PrepairWeb.ConnCase
 
-  alias Prepair.Repo
-
   import Phoenix.LiveViewTest
   import Prepair.LegacyContexts.ProfilesFixtures
   import Prepair.LegacyContexts.ProductsFixtures
@@ -25,7 +23,7 @@ defmodule PrepairWeb.OwnershipLiveTest do
 
     public_ownership =
       ownership_fixture(profile_id, ownership_valid_attrs())
-      |> Repo.preload([:product, :profile])
+      |> Ash.load!([:product, :profile])
 
     %{public_ownership: public_ownership}
   end

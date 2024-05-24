@@ -35,4 +35,8 @@ defmodule Prepair.AshDomains.Products.ProductParts do
       allow_nil? false
     end
   end
+
+  actions do
+    defaults [:create, :read, :destroy]
+  end
 end

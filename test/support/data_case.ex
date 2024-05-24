@@ -60,16 +60,18 @@ defmodule Prepair.DataCase do
     end)
   end
 
+  # NOTE: We should not need it for now, but it works if needed.
   @doc """
-  Unloads a preloaded relation in a schema.
+  Unloads a preloaded relation inside an Ash Resource.
   """
-  def unload(struct, field, cardinality \\ :one) do
+
+  # NOTE: We should not need it, but it works if needed
+  def unload(struct, field, type \\ :relationship) do
     %{
       struct
-      | field => %Ecto.Association.NotLoaded{
-          __field__: field,
-          __owner__: struct.__struct__,
-          __cardinality__: cardinality
+      | field => %Ash.NotLoaded{
+          field: field,
+          type: type
         }
     }
   end

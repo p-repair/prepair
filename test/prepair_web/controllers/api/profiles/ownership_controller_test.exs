@@ -1,8 +1,8 @@
 defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
   use PrepairWeb.ConnCase
 
-  alias Prepair.Repo
   alias PrepairWeb.Api.Profiles.OwnershipJSON
+  alias Prepair.AshDomains.Profiles.Ownership
 
   import Prepair.LegacyContexts.ProfilesFixtures
   import PrepairWeb.AuthorizationTestsMacro
@@ -45,12 +45,12 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
 
   defp create_private_ownership(profile_id) do
     ownership_fixture(profile_id)
-    |> Repo.preload([:profile, :product, product: :manufacturer])
+    |> Ash.load!([:profile, :product, product: :manufacturer])
   end
 
   defp create_public_ownership(profile_id) do
     ownership_fixture(profile_id, %{public: true})
-    |> Repo.preload([:profile, :product, product: :manufacturer])
+    |> Ash.load!([:profile, :product, product: :manufacturer])
   end
 
   defp to_normalised_json(data) do
@@ -279,8 +279,8 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
       conn = get(conn, ~p"/api/v1/profiles/ownerships/#{id}")
 
       ownership =
-        Prepair.LegacyContexts.Profiles.get_ownership!(id)
-        |> Repo.preload([:profile, :product, product: :manufacturer])
+        Ownership.get!(id)
+        |> Ash.load!([:profile, :product, product: :manufacturer])
 
       assert json_response(conn, 200)["data"] ==
                ownership |> to_normalised_json()
@@ -327,8 +327,8 @@ defmodule PrepairWeb.Api.Profiles.OwnershipControllerTest do
       conn = get(conn, ~p"/api/v1/profiles/ownerships/#{id}")
 
       ownership =
-        Prepair.LegacyContexts.Profiles.get_ownership!(id)
-        |> Repo.preload([[:profile, :product, product: :manufacturer]])
+        Ownership.get!(id)
+        |> Ash.load!([:profile, :product, product: :manufacturer])
 
       assert json_response(conn, 200)["data"] ==
                ownership |> to_normalised_json()

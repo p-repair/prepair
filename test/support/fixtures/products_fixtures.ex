@@ -4,7 +4,7 @@ defmodule Prepair.LegacyContexts.ProductsFixtures do
   entities via the `Prepair.LegacyContexts.Products` context.
   """
 
-  alias Prepair.Repo
+  alias Prepair.AshDomains.Products.{Category, Manufacturer, Product, Part}
 
   @doc """
   Generate a unique manufacturer name.
@@ -19,7 +19,7 @@ defmodule Prepair.LegacyContexts.ProductsFixtures do
     {:ok, manufacturer} =
       attrs
       |> Enum.into(manufacturer_valid_attrs())
-      |> Prepair.LegacyContexts.Products.create_manufacturer()
+      |> Manufacturer.create()
 
     manufacturer
   end
@@ -44,7 +44,7 @@ defmodule Prepair.LegacyContexts.ProductsFixtures do
     {:ok, category} =
       attrs
       |> Enum.into(category_valid_attrs())
-      |> Prepair.LegacyContexts.Products.create_category()
+      |> Category.create()
 
     category
   end
@@ -60,19 +60,10 @@ defmodule Prepair.LegacyContexts.ProductsFixtures do
 
   def create_categories() do
     [category_fixture(), category_fixture()]
-    |> Enum.map(&unload_category_relations/1)
   end
 
   def create_category_ids(categories),
     do: categories |> Enum.map(fn x -> x.id end)
-
-  @doc """
-  A helper function to unload category relations.
-  """
-  def unload_category_relations(category) do
-    category
-    |> Prepair.DataCase.unload(:notification_templates, :many)
-  end
 
   @doc """
   Generate a unique product reference.
@@ -87,10 +78,9 @@ defmodule Prepair.LegacyContexts.ProductsFixtures do
     {:ok, product} =
       attrs
       |> Enum.into(product_valid_attrs())
-      |> Prepair.LegacyContexts.Products.create_product()
+      |> Product.create()
 
     product
-    |> unload_product_relations()
   end
 
   def product_valid_attrs() do
@@ -113,22 +103,10 @@ defmodule Prepair.LegacyContexts.ProductsFixtures do
 
   def create_products() do
     [product_fixture(), product_fixture()]
-    |> Enum.map(&unload_product_relations/1)
   end
 
   def create_product_ids(products),
     do: products |> Enum.map(fn x -> x.id end)
-
-  @doc """
-  A helper function to unload product relations.
-  """
-  def unload_product_relations(product) do
-    product
-    |> Prepair.DataCase.unload(:category)
-    |> Prepair.DataCase.unload(:manufacturer)
-    |> Prepair.DataCase.unload(:parts, :many)
-    |> Prepair.DataCase.unload(:notification_templates, :many)
-  end
 
   @doc """
   Generate a unique part reference.
@@ -143,15 +121,9 @@ defmodule Prepair.LegacyContexts.ProductsFixtures do
     {:ok, part} =
       attrs
       |> Enum.into(part_valid_attrs())
-      |> Prepair.LegacyContexts.Products.create_part()
+      |> Part.create()
 
     part
-    |> Repo.preload([
-      :category,
-      :manufacturer,
-      :products,
-      :notification_templates
-    ])
   end
 
   def part_valid_attrs() do
@@ -175,19 +147,7 @@ defmodule Prepair.LegacyContexts.ProductsFixtures do
 
   def create_parts() do
     [part_fixture(), part_fixture()]
-    |> Enum.map(&unload_part_relations/1)
   end
 
   def create_part_ids(parts), do: parts |> Enum.map(fn x -> x.id end)
-
-  @doc """
-  A helper function to unload part relations.
-  """
-  def unload_part_relations(part) do
-    part
-    |> Prepair.DataCase.unload(:category)
-    |> Prepair.DataCase.unload(:manufacturer)
-    |> Prepair.DataCase.unload(:products, :many)
-    |> Prepair.DataCase.unload(:notification_templates, :many)
-  end
 end

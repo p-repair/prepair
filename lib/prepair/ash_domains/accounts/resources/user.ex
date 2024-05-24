@@ -4,6 +4,10 @@ defmodule Prepair.AshDomains.Accounts.User do
     data_layer: AshPostgres.DataLayer
 
   alias Prepair.AshDomains.Profiles.Profile
+  alias Prepair.AshDomains.Accounts.{User, Registration}
+
+  import Prepair.AshDomains.ValidationMacros
+  import PrepairWeb.Gettext
 
   postgres do
     table "users"
@@ -91,5 +95,89 @@ defmodule Prepair.AshDomains.Accounts.User do
 
   identities do
     identity :email, [:email]
+  end
+
+  code_interface do
+    define :list, action: :read
+    define :get_by_email, args: [:email]
+  end
+
+  actions do
+    defaults [:update, :destroy]
+
+    read :read do
+      primary? true
+      prepare build(load: :profile)
+    end
+
+    read :get_by_email do
+      argument :email, :string, allow_nil?: false
+      filter expr(email == ^arg(:email))
+      prepare build(load: :profile)
+    end
+
+    create :register do
+      accept [:email, :role]
+      argument :password, :string, allow_nil?: false
+      argument :password_confirmation, :string, allow_nil?: false
+    end
+  end
+
+  validations do
+    validate_email()
+    validate_password()
+  end
+
+  # -------------------------------------------------------------------------- #
+  #                              Helper functions                              #
+  # -------------------------------------------------------------------------- #
+
+  def register_user(registration_attrs) do
+    changeset =
+      Registration
+      |> Ash.Changeset.for_create(:register, registration_attrs,
+        domain: Registration
+      )
+
+    strategy =
+      AshAuthentication.Info.strategy!(User, :password)
+
+    if(changeset.valid?) do
+      Repo.transaction(fn ->
+        with {:ok, user} <-
+               AshAuthentication.Strategy.action(
+                 strategy,
+                 :register,
+                 filter_user_attrs(registration_attrs)
+               ),
+             {:ok, _profile} <-
+               Profile
+               |> Ash.Changeset.for_create(
+                 :create,
+                 Map.put(registration_attrs, :id, user.id),
+                 skip_unknown_inputs: [
+                   :email,
+                   :password,
+                   :password_confirmation,
+                   :role
+                 ]
+               )
+               |> Ash.create() do
+          Ash.get!(User, user.id, load: :profile)
+        else
+          {:error, value} -> Repo.rollback(value)
+        end
+      end)
+    else
+      {:error, changeset}
+    end
+  end
+
+  defp filter_user_attrs(params) do
+    Enum.reduce(params, %{}, fn {k, v}, acc ->
+      if k in [:email, :password, :password_confirmation, :role],
+        do: Map.put(acc, k, v),
+        else: acc
+    end)
   end
 end

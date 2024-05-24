@@ -38,4 +38,17 @@ defmodule Prepair.AshDomains.Products.Manufacturer do
   identities do
     identity :name, [:name]
   end
+
+  code_interface do
+    define :list, action: :read
+    define :get, action: :read, get_by: :id
+    define :create
+    define :update
+    define :delete, action: :destroy
+  end
+
+  actions do
+    default_accept [:description, :image, :name]
+    defaults [:create, :read, :update, :destroy]
+  end
 end

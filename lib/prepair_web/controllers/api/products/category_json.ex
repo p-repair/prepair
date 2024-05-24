@@ -1,6 +1,8 @@
 defmodule PrepairWeb.Api.Products.CategoryJSON do
   alias Prepair.LegacyContexts.Products.Category
 
+  alias Prepair.AshDomains.Products.Category, as: AshCategory
+
   @doc """
   Renders a list of categories.
   """
@@ -16,6 +18,17 @@ defmodule PrepairWeb.Api.Products.CategoryJSON do
   end
 
   def data(%Category{} = category) do
+    %{
+      id: category.id,
+      average_lifetime_m: category.average_lifetime_m,
+      description: category.description,
+      image: category.image,
+      name: category.name
+    }
+  end
+
+  # NOTE: Need this to pass tests with the fixture now using Ash
+  def data(%AshCategory{} = category) do
     %{
       id: category.id,
       average_lifetime_m: category.average_lifetime_m,
